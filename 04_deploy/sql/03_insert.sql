@@ -1,6 +1,6 @@
-\connect plan 
+\connect plan
 insert into building (name) VALUES ('Cheseaux');
-insert into floor (name, idx_building)  select 'E', id from building where name = 'Cheseaux';
+insert into floor (name, idx_building) select 'E', id from building where name = 'Cheseaux';
 insert into floor_geometry (idx_floor, type, geom) select id, 'line', ST_GeomFromGeoJSON('{"type":"MultiLineString","coordinates":[[[741324.1281103741,5906079.496000328,0],[741320.8371328366,5906083.537092276,0]]]}') from floor where name = 'E';
 insert into floor_geometry (idx_floor, type, geom) select id, 'line', ST_GeomFromGeoJSON('{"type":"MultiLineString","coordinates":[[[741323.7899802787,5906079.225389683,0],[741320.4990027412,5906083.2664816305,0]]]}') from floor where name = 'E';
 insert into floor_geometry (idx_floor, type, geom) select id, 'line', ST_GeomFromGeoJSON('{"type":"MultiLineString","coordinates":[[[741323.4518501833,5906078.954779036,0],[741320.1608726457,5906082.995870985,0]]]}') from floor where name = 'E';
