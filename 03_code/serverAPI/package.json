@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Klab93/quizzServer#readme",
   "dependencies": {
     "cors": "^2.8.5",
+    "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "pg": "^8.7.3"
   }
