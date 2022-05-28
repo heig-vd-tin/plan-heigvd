@@ -1,0 +1,25 @@
+{
+  "name": "quizzserver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Klab93/quizzServer.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Klab93/quizzServer/issues"
+  },
+  "homepage": "https://github.com/Klab93/quizzServer#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "pg": "^8.7.3"
+  }
+}
