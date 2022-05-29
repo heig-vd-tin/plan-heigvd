@@ -7,15 +7,14 @@ stages:
 
 build-server:
   stage: build
+  image: docker:latest
+  services:
+    - docker:dind
   script:
     - cd ./03_code/frontend
-    - npm install
-    - npm run build
-    - cd ..
-    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    # - docker build -f .\serverAPI\Dockerfile -t plan-heig/server-api .
-    # - docker push $CI_REGISTRY_IMAGE:$VERSION
-    # - docker push $CI_REGISTRY_IMAGE:latest
+    - docker login registry.gitlab.com
+    - docker build -t registry.gitlab.com/plan-heig/server .
+    - docker push registry.gitlab.com/plan-heig/server
       
     
 
@@ -25,11 +24,10 @@ buid-server-api:
   services:
     - docker:dind
   script:
-    - cd ./03_code/
-    # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-    # - docker build -f .\serverAPI\Dockerfile -t plan-heig/server-api .
-    # - docker push $CI_REGISTRY_IMAGE:$VERSION
-    # - docker push $CI_REGISTRY_IMAGE:latest
+    - cd ./03_code/serverAPI
+    - docker login registry.gitlab.com
+    - docker build -t registry.gitlab.com/plan-heig/server-api .
+    - docker push registry.gitlab.com/plan-heig/server-api
 
 
 
