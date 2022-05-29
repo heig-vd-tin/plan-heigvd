@@ -12,7 +12,7 @@ build-server:
     - docker:dind
   script:
     - cd ./03_code/frontend
-    - docker login registry.gitlab.com
+    - docker login registry.gitlab.com -u "$GITLAB_USER" -p "GITLAB_PASSWORD"
     - docker build -t registry.gitlab.com/plan-heig/server .
     - docker push registry.gitlab.com/plan-heig/server
       
@@ -25,7 +25,7 @@ buid-server-api:
     - docker:dind
   script:
     - cd ./03_code/serverAPI
-    - docker login registry.gitlab.com
+    - docker login registry.gitlab.com -u "$GITLAB_USER" -p "GITLAB_PASSWORD"
     - docker build -t registry.gitlab.com/plan-heig/server-api .
     - docker push registry.gitlab.com/plan-heig/server-api
 
