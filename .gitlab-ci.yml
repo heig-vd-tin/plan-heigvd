@@ -11,7 +11,7 @@ build-server:
     script:
         - cd ./03_code/frontend
         - npm run install
-        - vite build
+        - npm run build
         - cd ..
         # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
         # - docker build -f .\serverAPI\Dockerfile -t plan-heig/server-api .
