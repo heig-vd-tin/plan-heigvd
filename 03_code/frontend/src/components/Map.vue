@@ -15,8 +15,8 @@ import {GeoJSON} from "ol/format";
 
 const props = defineProps<{
   zoom : number,
-  center : [],
-  selectedRoom : string
+  center : number[],
+  selectedRoom? : string
 }>()
 
 const maproot = ref<HTMLElement | undefined>(undefined)
@@ -52,7 +52,7 @@ onMounted(async () => {
 })
 
 watch(() => props.selectedRoom, async (newRoom) => {
-  if (map.value != undefined) {
+  if (map.value != undefined && newRoom != undefined) {
     const view = map.value.getView()
     const source = roomLayer.getSource()
     const roomFeature = new GeoJSON().readFeatures( await getRoomGis(newRoom))

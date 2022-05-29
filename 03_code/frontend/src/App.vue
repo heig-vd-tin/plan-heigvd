@@ -9,7 +9,7 @@ import {fromLonLat} from "ol/proj";
 import ListRoom from "./components/listRoom.vue";
 import {ref} from "vue";
 
-const center = fromLonLat([6.66, 46.779])
+const center = [741387.81, 5906075.56]
 const zoom = 18
 const currentRoom = ref<string | undefined>(undefined)
 
