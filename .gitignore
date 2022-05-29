@@ -114,7 +114,7 @@ dist
 annexe
 *.gpkg
 prototype
-
+dockerCommand.txt
 
 
 

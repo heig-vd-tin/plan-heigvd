@@ -1,21 +1,37 @@
-<script setup lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://vuejs.org/api/sfc-script-setup.html#script-setup
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <img alt="Vue logo" src="./assets/logo.png" />
-  <HelloWorld msg="Hello Vue 3 + TypeScript + Vite" />
+  <list-room @selected="setCurrentRoom"></list-room>
+  <Map :center="center" :zoom="zoom" :selected-room="currentRoom"></Map>
 </template>
 
+<script setup lang="ts">
+import Map from "./components/Map.vue";
+import {fromLonLat} from "ol/proj";
+import ListRoom from "./components/listRoom.vue";
+import {ref} from "vue";
+
+const center = fromLonLat([6.66, 46.779])
+const zoom = 18
+const currentRoom = ref<string | undefined>(undefined)
+
+function setCurrentRoom(selectedRoom : string) {
+  currentRoom.value = selectedRoom
+}
+
+</script>
+
 <style>
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  height: 100%;
 }
 </style>
