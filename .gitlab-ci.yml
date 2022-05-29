@@ -9,7 +9,6 @@ build-server:
   stage: build
   script:
     - cd ./03_code/frontend
-    - apt-get 
     - npm run install
     - npm run build
     - cd ..
