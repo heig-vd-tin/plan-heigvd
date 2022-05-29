@@ -1,16 +1,15 @@
-stages:          # List of stages for jobs, and their order of execution 
+default:
+  image: node:latest
+
+stages:         
   - test
   - build
 
-image: node:latest
-
 build-server:
   stage: build
-  image: docker:latest
-  services:
-    - docker:dind
   script:
     - cd ./03_code/frontend
+    - apt-get 
     - npm run install
     - npm run build
     - cd ..
