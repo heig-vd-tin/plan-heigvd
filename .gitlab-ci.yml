@@ -9,7 +9,8 @@ build-server:
   stage: build
   script:
     - cd ./03_code/frontend
-    - npm run install
+    - apt-get 
+    - npm install
     - npm run build
     - cd ..
     # - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
