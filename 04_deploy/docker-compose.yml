@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  database :
+    container_name: plan-heig-database
+    image: postgis/postgis
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    ports: 
+      - 5432:5432
+    volumes: 
+      - database:/var/lib/postgresql/data
+      - ./sql/01_init.sql:/docker-entrypoint-initdb.d/01_init.sql
+      - ./sql/02_create.sql:/docker-entrypoint-initdb.d/02_create.sql
+      - ./sql/03_insert.sql:/docker-entrypoint-initdb.d/03_insert.sql
+  server-api:
+    container_name: plan-heig-server-api
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
+    environment: 
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=database
+    ports:
+      - 3001:3001
+    depends_on:
+      - database
+  server:
+    container_name: plan-heig-server
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    ports:
+      - 80:80    
+volumes:
+  database:
