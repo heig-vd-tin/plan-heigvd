@@ -15,6 +15,8 @@ build-server:
     - docker login registry.gitlab.com -u "$GITLAB_USERNAME" -p "$GITLAB_TOKEN"
     - docker build -t registry.gitlab.com/tb-heig/plan-heig-vd/server .
     - docker push registry.gitlab.com/tb-heig/plan-heig-vd/server
+  only: 
+    - tags
       
     
 
@@ -28,6 +30,5 @@ buid-server-api:
     - docker login registry.gitlab.com -u "$GITLAB_USERNAME" -p "$GITLAB_TOKEN"
     - docker build -t registry.gitlab.com/tb-heig/plan-heig-vd/server-api .
     - docker push registry.gitlab.com/tb-heig/plan-heig-vd/server-api
-
-
-
+  only: 
+    - tags
