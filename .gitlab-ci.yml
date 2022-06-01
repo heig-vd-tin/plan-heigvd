@@ -8,6 +8,7 @@ stages:
 frontend-test:
   stage: test
   script:
+    - cd ./03_code/frontend
     - npm install
     - npm run test
 
