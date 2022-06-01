@@ -2,6 +2,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
+// @ts-ignore
 export default defineConfig({
-  plugins: [vue()]
+  plugins: [vue()],
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ['./test/mockServer/mockServer.ts'],
+  },
 })

@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 async function getLines() {
     return await fetch(`http://localhost:3001/line`).then(res => res.json())
 }
