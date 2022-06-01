@@ -5,6 +5,12 @@ stages:
   - test
   - build
 
+frontend-test:
+  stage: test
+  script:
+    - npm install
+    - npm run test
+
 build-server:
   stage: build
   image: docker:latest
