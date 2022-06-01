@@ -17,6 +17,7 @@
     "@vitejs/plugin-vue": "^2.3.3",
     "@vue/test-utils": "^2.0.0-rc.18",
     "cross-fetch": "^3.1.5",
+    "dotenv": "^16.0.1",
     "jsdom": "^19.0.0",
     "msw": "^0.42.0",
     "typescript": "^4.5.4",
