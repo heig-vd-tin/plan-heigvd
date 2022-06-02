@@ -3,9 +3,6 @@ import { setupServer } from 'msw/node'
 import { rest } from 'msw'
 import {features, roomNames} from "./response";
 
-
-
-
 export const restHandlers = [
     rest.get(`${import.meta.env.VITE_API_URL}/line`, (req, res, ctx) => {
         return res(ctx.status(200), ctx.json(features))
