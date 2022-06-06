@@ -26,6 +26,8 @@ services:
   server:
     container_name: plan-heig-server
     image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    environment:
+      - VITE_API_URL=http://localhost:3001
     ports:
       - 80:80    
 volumes:

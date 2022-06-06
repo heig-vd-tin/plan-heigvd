@@ -2,9 +2,9 @@
   "name": "quizzserver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -22,5 +22,8 @@
     "dotenv": "^16.0.1",
     "express": "^4.17.3",
     "pg": "^8.7.3"
+  },
+  "devDependencies": {
+    "typescript": "^4.7.3"
   }
 }

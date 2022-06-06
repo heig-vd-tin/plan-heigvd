@@ -3,57 +3,58 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, ref, watch} from "vue";
+import {onMounted, onUpdated, ref, watch} from "vue";
 
-import {View, Map} from "ol";
+import {View, Map, Feature} from "ol";
 
 import {getLines, getPolygons, getRoomGis, getRoomsGis} from "../api/api";
-import {labelStyleFunction, lineStyle, polygonStyle, roomStyle} from "../mapComponent/style";
-import {createEmptyVectorLayer, createVectorLayer, getOpenStreetMapLayer} from "../mapComponent/Layer";
+import {labelStyleFunction, lineStyle, polygonStyle, roomStyle} from "../mapElement/style";
+import {createEmptyVectorLayer, createVectorLayer, getOpenStreetMapLayer} from "../mapElement/Layer";
 import 'ol/ol.css'
 import {GeoJSON} from "ol/format";
+import {FloorFeature} from "../mapElement/Feature";
 
 const props = defineProps<{
   zoom : number,
   center : number[],
+  floorFeatures? : FloorFeature,
   selectedRoom? : string
 }>()
 
 const maproot = ref<HTMLElement | undefined>(undefined)
 const map     = ref<Map | undefined>(undefined)
 let roomLayer = createEmptyVectorLayer(roomStyle)
+let view = new View({
+  center: props.center,
+  zoom: props.zoom,
+  constrainResolution: true
+})
 
 //mount the map
-onMounted(async () => {
-  const polygons = await getPolygons()
-  const lines = await getLines()
-  const rooms = await getRoomsGis()
+onUpdated(() => {
+  if (props.floorFeatures != undefined) {
+    const osmLayer = getOpenStreetMapLayer()
+    const lineLayer = createVectorLayer(props.floorFeatures.lines, lineStyle)
+    const polygonLayer = createVectorLayer(props.floorFeatures.polygons, polygonStyle)
+    const labelsLayer = createVectorLayer(props.floorFeatures.labels, labelStyleFunction)
 
-  const osmLayer = getOpenStreetMapLayer()
-  const lineLayer = createVectorLayer(lines, lineStyle)
-  const polygonLayer = createVectorLayer(polygons, polygonStyle)
-  const labelsLayer = createVectorLayer(rooms, labelStyleFunction)
-
-  map.value = new Map({
-    target : maproot.value,
-    layers: [
-      osmLayer,
-      polygonLayer,
-      roomLayer,
-      lineLayer,
-      labelsLayer
-    ],
-    view: new View({
-      center: props.center,
-      zoom: props.zoom,
-      constrainResolution: true
+    map.value = new Map({
+      target : maproot.value,
+      layers: [
+        osmLayer,
+        polygonLayer,
+        roomLayer,
+        lineLayer,
+        labelsLayer
+      ],
+      view: view
     })
-  })
+  }
+
 })
 
 watch(() => props.selectedRoom, async (newRoom) => {
-  if (map.value != undefined && newRoom != undefined) {
-    const view = map.value.getView()
+  if (newRoom != undefined) {
     const source = roomLayer.getSource()
     const roomFeature = new GeoJSON().readFeatures( await getRoomGis(newRoom))
 

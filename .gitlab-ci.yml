@@ -5,6 +5,13 @@ stages:
   - test
   - build
 
+frontend-test:
+  stage: test
+  script:
+    - cd ./03_code/frontend
+    - npm install
+    - npm run test
+
 build-server:
   stage: build
   image: docker:latest
@@ -16,9 +23,7 @@ build-server:
     - docker build -t registry.gitlab.com/tb-heig/plan-heig-vd/server .
     - docker push registry.gitlab.com/tb-heig/plan-heig-vd/server
   only: 
-    - main
-      
-    
+    - main   
 
 buid-server-api:
   stage: build

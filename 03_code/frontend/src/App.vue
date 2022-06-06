@@ -1,13 +1,18 @@
 <template>
   <list-room @selected="setCurrentRoom"></list-room>
-  <Map :center="center" :zoom="zoom" :selected-room="currentRoom"></Map>
+  <Map
+      :center="center"
+      :zoom="zoom"
+      :floor-features="floorFeatures"
+      :selected-room="currentRoom"
+  ></Map>
 </template>
 
 <script setup lang="ts">
 import Map from "./components/Map.vue";
-import {fromLonLat} from "ol/proj";
 import ListRoom from "./components/listRoom.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
+import {fetchBaseFeatures, FloorFeature, floorsFeatures} from "./mapElement/Feature";
 
 const center = [741387.81, 5906075.56]
 const zoom = 18
@@ -16,6 +21,16 @@ const currentRoom = ref<string | undefined>(undefined)
 function setCurrentRoom(selectedRoom : string) {
   currentRoom.value = selectedRoom
 }
+
+const floorFeatures = ref<FloorFeature | undefined>()
+
+onMounted(async () => {
+  await fetchBaseFeatures()
+  const features = floorsFeatures.get('E')
+  if (features != undefined) {
+    floorFeatures.value = new FloorFeature(features.lines, features.polygons, features.labels)
+  }
+})
 
 </script>
 
