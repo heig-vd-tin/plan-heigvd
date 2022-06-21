@@ -3,7 +3,7 @@ import {FeatureLike} from "ol/Feature";
 
 const lineStyle = new Style({
     stroke: new Stroke({
-        color: 'rgba(20, 20, 20, 1)',
+        color: 'rgba(100, 100, 100, 1)',
         width: 1,
     }),
 })
@@ -13,7 +13,7 @@ const polygonStyle = new Style({
         width: 0,
     }),
     fill: new Fill({
-        color: 'rgba(220, 220, 220, 1)',
+        color: 'rgba(214, 118, 155, 1)',
     })
 })
 

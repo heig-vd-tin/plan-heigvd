@@ -1,5 +1,10 @@
 <template>
+  <Header @btnClick="changeMenuState"/>
   <list-room @selected="setCurrentRoom"></list-room>
+  <FloorChange @floor-updated="changeCurrentFloor"/>
+  <FilterMenu v-show="menuState">
+
+  </FilterMenu>
   <Map
       :center="center"
       :zoom="zoom"
@@ -10,9 +15,13 @@
 
 <script setup lang="ts">
 import Map from "./components/Map.vue";
+import Header from "./components/Header.vue";
+import FloorChange from "./components/FloorChange.vue";
 import ListRoom from "./components/listRoom.vue";
+
 import {onMounted, ref} from "vue";
-import {fetchBaseFeatures, FloorFeature, floorsFeatures} from "./mapElement/Feature";
+import {fetchBaseFeatures, fetchOtherFeatures, FloorFeature, floorsFeatures} from "./mapElement/Feature";
+import FilterMenu from "./components/FilterMenu.vue";
 
 const center = [741387.81, 5906075.56]
 const zoom = 18
@@ -24,17 +33,37 @@ function setCurrentRoom(selectedRoom : string) {
 
 const floorFeatures = ref<FloorFeature | undefined>()
 
-onMounted(async () => {
-  await fetchBaseFeatures()
-  const features = floorsFeatures.get('E')
+function getFeatures(floor : string) {
+  const features = floorsFeatures.get(floor)
   if (features != undefined) {
     floorFeatures.value = new FloorFeature(features.lines, features.polygons, features.labels)
   }
+}
+
+onMounted(async () => {
+  await fetchBaseFeatures()
+  getFeatures('E')
+  await fetchOtherFeatures()
 })
+
+function changeCurrentFloor (newFloor : string) {
+  getFeatures(newFloor)
+}
+
+const menuState = ref(false)
+
+function changeMenuState (newState : boolean) {
+  menuState.value = newState
+
+}
 
 </script>
 
 <style>
+
+*{
+  box-sizing: border-box;
+}
 
 html, body {
   height: 100%;
@@ -45,7 +74,6 @@ html, body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   height: 100%;
 }

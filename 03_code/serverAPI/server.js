@@ -6,22 +6,22 @@ const request = require("./database")
 
 app.use(cors())
 
-app.get('/line', async (req, res) => {
+app.get('/:floor/lines', async (req, res) => {
 
-    const data = await request.getFloorGis("floor_geometry", 'line');
+    const data = await request.getFloorGis(req.params.floor, 'line');
     console.log(data.rows[0].json_build_object)
     res.json(data.rows[0].json_build_object)
 })
 
 
-app.get('/polygon', async (req, res) => {
-    const data = await request.getFloorGis("floor_geometry", 'polygon');
+app.get('/:floor/polygons', async (req, res) => {
+    const data = await request.getFloorGis(req.params.floor, 'polygon');
     res.json(data.rows[0].json_build_object)
 })
 
 
-app.get('/rooms/gis', async (req, res) => {
-    const data = await request.getAllRoomGis();
+app.get('/:floor/labels', async (req, res) => {
+    const data = await request.getFloorLabels(req.params.floor);
     res.json(data.rows[0].json_build_object)
 })
 

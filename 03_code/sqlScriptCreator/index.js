@@ -1,8 +1,12 @@
 const fs = require('fs')
 
-const inputPath = '../../02_plan/geojson'
-const outputPath = '../../04_deploy/sql'
-const dbName = 'plan'
+if (process.argv.length != 5) {
+    throw 'command : node index.js <input path> <output path> <database Name>'
+}
+
+const inputPath = process.argv[2] // '../../02_plan/geojson'
+const outputPath = process.argv[3] // '../../04_deploy/sql'
+const dbName =  process.argv[4] // 'plan'
 
 function main () {
     const init = `CREATE DATABASE ${dbName}`
@@ -16,13 +20,17 @@ function main () {
     create += `create table if not exists room (id serial primary key, name varchar(255), idx_floor int, geometry geometry);\n`
     write('02_create', create)
 
+    const buildings = fs.readdirSync(`${inputPath}`)
     let insert = `\\connect ${dbName}\n`
-    const buildingName = 'Cheseaux'
-    const floorName = 'E'
-    insert += `insert into building (name) VALUES ('${buildingName}');\n`
-    insert += `insert into floor (name, idx_building) select '${floorName}', id from building where name = 'Cheseaux';\n`
-    insert += insertFloorGeom(floorName)
-    insert += insertRoomData(floorName)
+    for (const building of buildings) {
+        insert += `insert into building (name) VALUES ('${building}');\n`
+        const floors = fs.readdirSync(`${inputPath}/${building}`)
+        for (const floor of floors) {
+            insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
+            insert += insertFloorGeom(building, floor)
+            insert += insertRoomData(building, floor)
+        }
+    }
     write('03_insert', insert)
 }
 
@@ -34,18 +42,17 @@ function write(filename, content) {
     })
 }
 
-function insertFloorGeom (floorName) {
+function insertFloorGeom (buildingName, floorName) {
     try {
-        const arrayOfFiles = fs.readdirSync(`${inputPath}/${floorName}_Step`)
+        const arrayOfFiles = fs.readdirSync(`${inputPath}/${buildingName}/${floorName}`)
         let content = ''
         for (const file of arrayOfFiles) {
-            if (file.endsWith('geojson') && file != 'E_Lines.geojson' && file != 'E_polylines.geojson' ) {
-                const json = JSON.parse(fs.readFileSync(`${inputPath}/${floorName}_Step/${file}`));
-                let type = ""
+            if (file.endsWith('.geojson') && file != 'E_Lines.geojson' && file != 'E_polylines.geojson' ) {
+                const f = fs.readFileSync(`${inputPath}/${buildingName}/${floorName}/${file}`)
+                const json = JSON.parse(f);
+                let type = "line"
                 if (json.features[0].geometry.type == 'MultiPolygon') {
                     type = "polygon"
-                } else {
-                    type = "line"
                 }
                 for (const feature of json.features) {
                     content += `insert into floor_geometry (idx_floor, type, geom) select id, '${type}', ST_GeomFromGeoJSON('${JSON.stringify(feature.geometry)}') from floor where name = '${floorName}';\n`
@@ -59,12 +66,12 @@ function insertFloorGeom (floorName) {
     }
 }
 
-function insertRoomData (floorName) {
-    const arrayOfFiles = fs.readdirSync(`${inputPath}/${floorName}_Step/rooms`)
+function insertRoomData (buildingName, floorName) {
+    const arrayOfFiles = fs.readdirSync(`${inputPath}/${buildingName}/${floorName}/rooms`)
     content = ''
     for (const file of arrayOfFiles) {
         if (file.endsWith('geojson')) {
-            const json = JSON.parse(fs.readFileSync(`${inputPath}/${floorName}_Step/rooms/${file}`));
+            const json = JSON.parse(fs.readFileSync(`${inputPath}/${buildingName}/${floorName}/rooms/${file}`));
 
             let name = file.split('.')[0].replaceAll('_', ' ')
             if (name.startsWith('wc')) {name = 'WC'}

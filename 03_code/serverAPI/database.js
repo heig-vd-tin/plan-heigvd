@@ -10,21 +10,23 @@ const credentials = {
 
 const pool = new Pool(credentials);
 
-async function getFloorGis(tableName, type) {
+async function getFloorGis(floor, type) {
     const text = `SELECT json_build_object(
     'type', 'FeatureCollection',
-    'features', json_agg(ST_AsGeoJSON(${tableName}.*)::json)
-    ) FROM ${tableName}
-    WHERE idx_floor = '1' and type = '${type}'` ;
+    'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
+    ) FROM floor_geometry 
+    WHERE idx_floor = (select id from floor where name = '${floor}' Limit 1) and type = '${type}';`
+    console.log(text)
     return pool.query(text);
 }
 
-async function getAllRoomGis() {
+async function getFloorLabels(floor) {
     const text = `SELECT json_build_object(
         'type', 'FeatureCollection',
         'features', json_agg(ST_AsGeoJSON(room.*)::json)
     )
-    FROM room` ;
+    FROM room
+    WHERE idx_floor = (select id from floor where name = '${floor}' limit 1) ;`
     return pool.query(text);
 }
 
@@ -43,4 +45,4 @@ async function getAllRoomName() {
     return pool.query(text);
 }
 
-module.exports = {getAllRoomName, getRoomGis, getFloorGis, getAllRoomGis}
+module.exports = {getAllRoomName, getRoomGis, getFloorGis, getFloorLabels}
