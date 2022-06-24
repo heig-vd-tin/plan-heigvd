@@ -3,100 +3,151 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted, onUpdated, ref, watch} from "vue";
+import {onMounted, ref, watch} from "vue";
 
 import {View, Map, Feature} from "ol";
-
-import {getLines, getPolygons, getRoomGis, getLabels} from "../api/api";
-import {labelStyleFunction, lineStyle, polygonStyle, roomStyle} from "../mapElement/style";
-import {createEmptyVectorLayer, createVectorLayer, getOpenStreetMapLayer} from "../mapElement/Layer";
 import 'ol/ol.css'
-import {GeoJSON} from "ol/format";
+
+import {getRoomGis} from "../api/api";
+import {
+  backgroundStyle1, backgroundStyle2,
+  emptyStyle,
+  labelStyleFunction,
+  lineStyle,
+  polygonStyle, selectedRoomStyleFunction
+} from "../mapElement/style";
+import {
+  createEmptyVectorLayer,
+  getOpenStreetMapLayer,
+  setFeaturesToLayer
+} from "../mapElement/Layer";
 import {FloorFeature} from "../mapElement/Feature";
-import VectorLayer from "ol/layer/Vector";
-import {Geometry} from "ol/geom";
+import {Select} from "ol/interaction";
 
 const props = defineProps<{
   zoom : number,
   center : number[],
+  rotation : number,
+  maxZoom : number,
+  minZoom : number,
+
   floorFeatures? : FloorFeature,
+  backgroundFeatures? : Feature[],
+  interestsFeatures? : Feature[],
   selectedRoom? : string
 }>()
 
-const maproot = ref<HTMLElement | undefined>(undefined)
-const map     = ref<Map | undefined>(undefined)
-
-let lineLayer = createEmptyVectorLayer(lineStyle)
-let polygonLayer = createEmptyVectorLayer(polygonStyle)
-let labelsLayer = createEmptyVectorLayer(labelStyleFunction)
-let roomLayer = createEmptyVectorLayer(roomStyle)
+const emit = defineEmits(['roomSelected', 'roomUnselected'])
 
 let view = new View({
   center: props.center,
   zoom: props.zoom,
-  constrainResolution: true
+  rotation: props.rotation,
+  constrainResolution: true,
+  maxZoom : props.maxZoom,
+  minZoom : props.minZoom
 })
 
-//mount the map
+// the element which the map is attached
+const maproot = ref<HTMLElement | undefined>(undefined)
+
+// the reactive map
+const map = ref<Map | undefined>(undefined)
+
+// Declaration of the map layers
+let lineLayer = createEmptyVectorLayer(lineStyle)
+let polygonLayer = createEmptyVectorLayer(polygonStyle)
+let labelsLayer = createEmptyVectorLayer(polygonStyle)
+// let roomLayer = createEmptyVectorLayer()
+let backgroundLayer = createEmptyVectorLayer(backgroundStyle1)
+let ressourceLayer = createEmptyVectorLayer(emptyStyle)
+
+const select = new Select({
+  style : selectedRoomStyleFunction,
+  layers : [labelsLayer]
+})
+
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
 
+  //mount the map
   map.value = new Map({
     target : maproot.value,
     layers: [
       osmLayer,
+      backgroundLayer,
       polygonLayer,
-      roomLayer,
+      // roomLayer,
+      labelsLayer,
       lineLayer,
-      labelsLayer
+      ressourceLayer
     ],
     view: view
   })
+
+  // change map when map move
+  map.value.on('moveend', () => {
+    const zoom = view.getZoom()
+    if (zoom != undefined) {
+      if (zoom >= 20) {
+        labelsLayer.setStyle(labelStyleFunction)
+        backgroundLayer.setStyle(backgroundStyle2)
+      } else {
+        labelsLayer.setStyle(polygonStyle)
+        backgroundLayer.setStyle(backgroundStyle1)
+      }
+    }
+  })
+
+  map.value.addInteraction(select)
+  select.on('select', (e) => {
+    console.log(e.target.getFeatures())
+    emit('roomSelected', 'test')
+  })
+
+})
+
+watch(() => props.backgroundFeatures, (newFeatures) => {
+  setFeaturesToLayer(backgroundLayer, newFeatures)
 })
 
 watch(() => props.floorFeatures, (newFeatures) => {
   if (newFeatures != undefined) {
-
-    const lineSource = lineLayer.getSource()
-    const lineFeatures = new GeoJSON().readFeatures(newFeatures.lines)
-    if (lineSource != null) {
-      lineSource.clear()
-      lineSource.addFeatures(lineFeatures)
-    }
-
-    const polygonSource = polygonLayer.getSource()
-    const polygonFeatures = new GeoJSON().readFeatures(newFeatures.polygons)
-    if (polygonSource != null) {
-      polygonSource.clear()
-      polygonSource.addFeatures(polygonFeatures)
-    }
-
-    const labelSource = labelsLayer.getSource()
-    const labelFeatures = new GeoJSON().readFeatures(newFeatures.labels)
-    if (labelSource != null) {
-      labelSource.clear()
-      labelSource.addFeatures(labelFeatures)
-    }
+    setFeaturesToLayer(lineLayer, newFeatures.lines)
+    setFeaturesToLayer(polygonLayer, newFeatures.polygons)
+    setFeaturesToLayer(labelsLayer, newFeatures.labels)
   }
 })
 
-watch(() => props.selectedRoom, async (newRoom) => {
-  if (newRoom != undefined) {
-    const source = roomLayer.getSource()
-    const roomFeature = new GeoJSON().readFeatures( await getRoomGis(newRoom))
-
+watch(() => props.interestsFeatures, (newFeatures) => {
+  /*if (newFeatures != undefined) {
+    const source = ressourceLayer.getSource()
     if (source != null) {
       source.clear()
-      source.addFeatures(roomFeature)
+      source.addFeatures(newFeatures)
+      console.log(source)
+    }
+  }*/
+  setFeaturesToLayer(ressourceLayer, newFeatures)
+})
+/*
+watch(() => props.selectedRoom, async (newRoom) => {
+  if (newRoom != undefined) {
+    const features = await getRoomGis(newRoom)
+    const source = setFeatureToLayer(roomLayer, features)
+    if (source != undefined) {
       view.fit(source.getExtent())
     }
   }
-})
+})*/
+
+
 
 </script>
 
 <style scoped>
 .map {
+  margin-top: 50px;
   height: 100%;
   width: 100%;
 }

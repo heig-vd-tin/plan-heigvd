@@ -18,17 +18,25 @@ function main () {
     create += `create table if not exists floor (id serial primary key, name varchar(255), idx_building int);\n`
     create += `create table if not exists floor_geometry (id serial primary key, idx_floor int, type varchar(255), geom geometry);\n`
     create += `create table if not exists room (id serial primary key, name varchar(255), idx_floor int, geometry geometry);\n`
+    create += `create table if not exists resource (id serial primary key, type varchar(255), attached_to varchar(255), localisation geometry);\n`
+    // create += `create table if not exists resource_type (id serial primary key, type varchar(255), icon varchar(255));\n`
     write('02_create', create)
 
     const buildings = fs.readdirSync(`${inputPath}`)
     let insert = `\\connect ${dbName}\n`
     for (const building of buildings) {
         insert += `insert into building (name) VALUES ('${building}');\n`
+        insert += insertGlobalResourceData(building)
+
         const floors = fs.readdirSync(`${inputPath}/${building}`)
         for (const floor of floors) {
-            insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
-            insert += insertFloorGeom(building, floor)
-            insert += insertRoomData(building, floor)
+            if (floor != 'resource'){
+                //insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
+                //insert += insertFloorGeom(building, floor)
+                //insert += insertRoomData(building, floor)
+                insert += insertFloorRessourceData(building, floor)
+            }
+
         }
     }
     write('03_insert', insert)
@@ -49,6 +57,7 @@ function insertFloorGeom (buildingName, floorName) {
         for (const file of arrayOfFiles) {
             if (file.endsWith('.geojson') && file != 'E_Lines.geojson' && file != 'E_polylines.geojson' ) {
                 const f = fs.readFileSync(`${inputPath}/${buildingName}/${floorName}/${file}`)
+                console.log(file)
                 const json = JSON.parse(f);
                 let type = "line"
                 if (json.features[0].geometry.type == 'MultiPolygon') {
@@ -81,8 +90,39 @@ function insertRoomData (buildingName, floorName) {
     }
     return content
 }
+
 function insertRoom(roomName, floorName, gis) {
     return `insert into room (name, idx_floor, geometry) select '${roomName}', id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
+}
+
+function insertGlobalResourceData(buildingName) {
+    const arrayOfFiles = fs.readdirSync(`${inputPath}/${buildingName}/resource`)
+    content = ''
+    for (const file of arrayOfFiles) {
+        if (file.endsWith('geojson')) {
+            const json = JSON.parse(fs.readFileSync(`${inputPath}/${buildingName}/resource/${file}`));
+            const type = file.split('.')[0]
+            for (const feature of json.features){
+                content +=  `insert into resource (type, attached_to, localisation) VALUES ('${type}', '${buildingName}', ST_GeomFromGeoJSON('${JSON.stringify(feature.geometry)}'));\n`
+            }
+        }
+    }
+    return content
+}
+
+function insertFloorRessourceData (buildingName, floorName) {
+    const arrayOfFiles = fs.readdirSync(`${inputPath}/${buildingName}/${floorName}/resource`)
+    content = ''
+    for (const file of arrayOfFiles) {
+        if (file.endsWith('geojson')) {
+            const json = JSON.parse(fs.readFileSync(`${inputPath}/${buildingName}/${floorName}/resource/${file}`));
+            const type = file.split('.')[0]
+            for(feature of json.features){
+                content +=  `insert into resource (type, attached_to, localisation) VALUES ('${type}', '${floorName}', ST_GeomFromGeoJSON('${JSON.stringify(feature.geometry)}'));\n`
+            }
+        }
+    }
+    return content
 }
 
 main()

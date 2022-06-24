@@ -20,6 +20,16 @@ async function getFloorGis(floor, type) {
     return pool.query(text);
 }
 
+async function getAllPolygons(type) {
+    const text = `SELECT json_build_object(
+    'type', 'FeatureCollection',
+    'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
+    ) FROM floor_geometry 
+    WHERE type = 'polygon';`
+    console.log(text)
+    return pool.query(text);
+}
+
 async function getFloorLabels(floor) {
     const text = `SELECT json_build_object(
         'type', 'FeatureCollection',
@@ -45,4 +55,14 @@ async function getAllRoomName() {
     return pool.query(text);
 }
 
-module.exports = {getAllRoomName, getRoomGis, getFloorGis, getFloorLabels}
+async function getRessources(floorName) {
+    const text =  `SELECT json_build_object(
+        'type', 'FeatureCollection',
+        'features', json_agg(ST_AsGeoJSON(resource.*)::json)
+    )
+    FROM resource
+    WHERE attached_to = '${floorName}';` ;
+    return pool.query(text);
+}
+
+module.exports = {getAllRoomName, getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessources}

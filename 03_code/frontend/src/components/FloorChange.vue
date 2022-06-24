@@ -1,17 +1,17 @@
 <template>
   <div class="floor-change">
-    <div class="arrow-left">
-      <a href="#" @click="floorDown" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-left']" /></a>
+    <div class="arrow-up">
+      <a href="#" @click="floorUp" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-up']" /></a>
     </div>
-    <div>
-      <a href="#" @click="floorDown" class="floor-change-item arrow-btn">{{floorItems[0]}}</a>
-    </div>
-    <div class="floor-change-item floor-change-selected-item">{{floorItems[[1]]}}</div>
     <div>
       <a href="#" @click="floorUp" class="floor-change-item arrow-btn">{{floorItems[2]}}</a>
     </div>
-    <div class="arrow-right">
-      <a href="#" @click="floorUp" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-right']" /></a>
+    <div class="floor-change-item floor-change-selected-item">{{floorItems[[1]]}}</div>
+    <div>
+      <a href="#" @click="floorDown" class="floor-change-item arrow-btn">{{floorItems[0]}}</a>
+    </div>
+    <div class="arrow-down">
+      <a href="#" @click="floorDown" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-down']" /></a>
     </div>
   </div>
 </template>
@@ -19,17 +19,26 @@
 <script setup lang="ts">
 
 import {ref} from "vue";
-import {context} from "msw";
-import {floors} from "../data/data";
+import {buildingsInfo} from "../data/data";
 
-const f = floors.get('Cheseaux')
-let currentFloorId = Math.ceil( f.length / 2 ) - 1 // todo change value
-const floorItems = ref(['B  ', 'E', 'G']) // todo Change the default value
+const props = defineProps<{
+  floors : string[]
+  groundFloor : string
+}>()
 
 const emit = defineEmits(['floorUpdated'])
 
+const buildingData = buildingsInfo.get('Cheseaux')
+const floors = props.floors
+let currentFloorId = floors.indexOf(props.groundFloor)
+const floorItems = ref(
+    [floors[currentFloorId - 1],
+      floors[currentFloorId],
+      floors[currentFloorId + 1]]
+)
+
 function floorUp() {
-  if (currentFloorId < f?.length - 1) {
+  if (currentFloorId < floors.length - 1) {
     currentFloorId++
     floorChange()
   }
@@ -43,22 +52,21 @@ function floorDown() {
 }
 
 function floorChange() {
-  const selectedFloor = f[currentFloorId]
+  const selectedFloor = floors[currentFloorId]
   let nextFloor = ' '
   let previousFloor = ' '
 
-  if (currentFloorId < f.length - 1) {
-    nextFloor = f[currentFloorId + 1]
+  if (currentFloorId < floors.length - 1) {
+    nextFloor = floors[currentFloorId + 1]
   }
 
   if (currentFloorId > 0) {
-    previousFloor = f[currentFloorId - 1]
+    previousFloor = floors[currentFloorId - 1]
   }
 
   floorItems.value = [previousFloor, selectedFloor, nextFloor]
 
-
-  emit('floorUpdated', f[currentFloorId])
+  emit('floorUpdated', floors[currentFloorId])
 }
 
 </script>
@@ -66,16 +74,17 @@ function floorChange() {
 <style scoped>
   .floor-change {
     position: fixed;
-    top: 50px;
-    right: 0;
+    top: 300px;
+    left: 0;
     z-index: 1;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     background-color: white;
   }
 
   .floor-change-item {
     padding: 10px 0;
+    height: 35px;
     width: 40px;
     text-align: center;
     white-space: pre;
@@ -100,12 +109,12 @@ function floorChange() {
 
   }
 
-  .arrow-left {
-    border-right: 1px solid lightgrey;
+  .arrow-up {
+    border-bottom: 1px solid lightgrey;
   }
 
-  .arrow-right {
-    border-left: 1px solid lightgrey;
+  .arrow-down {
+    border-top: 1px solid lightgrey;
   }
 
 </style>

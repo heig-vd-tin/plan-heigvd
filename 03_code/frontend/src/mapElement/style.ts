@@ -1,5 +1,7 @@
-import {Text, Fill, Stroke, Style} from "ol/style";
+import {Text, Fill, Stroke, Style, Icon} from "ol/style";
 import {FeatureLike} from "ol/Feature";
+
+const emptyStyle = new Style({})
 
 const lineStyle = new Style({
     stroke: new Stroke({
@@ -13,17 +15,53 @@ const polygonStyle = new Style({
         width: 0,
     }),
     fill: new Fill({
-        color: 'rgba(214, 118, 155, 1)',
+        color: 'rgba(245, 245, 245 , 1)',
     })
 })
 
-const roomStyle = new Style({
+const backgroundStyle1 = new Style({
+    stroke: new Stroke({
+        width: 0,
+    }),
+    fill: new Fill({
+        color: 'rgba(235, 235, 235 , 1)',
+    })
+})
+
+const backgroundStyle2 = new Style({
+    fill: new Fill({
+        color: 'rgba(200, 200, 200 , 1)',
+    })
+})
+
+const selectedRoomStyle = new Style({
+    stroke: new Stroke({
+        width: 0,
+    }),
     fill: new Fill({
         color: 'rgba(220, 0, 0, 1)',
-    })
+    }),
+    text: new Text({
+        font: '15px Calibri,sans-serif',
+        fill: new Fill({
+            color: '#000',
+        }),
+        stroke: new Stroke({
+            color: '#ffffff',
+            width: 4,
+        }),
+    }),
 })
 
+function selectedRoomStyleFunction (feature : FeatureLike) {
+    selectedRoomStyle.getText().setText(`${feature.get('name')}`)
+    return selectedRoomStyle
+}
+
 const labelStyle = new Style({
+    fill: new Fill({
+        color: 'rgba(245, 245, 245 , 1)',
+    }),
     text: new Text({
         font: '15px Calibri,sans-serif',
         fill: new Fill({
@@ -41,4 +79,14 @@ function labelStyleFunction(feature : FeatureLike) {
     return labelStyle
 }
 
-export {polygonStyle, lineStyle, labelStyleFunction, roomStyle}
+function ressourceStyleFunction (img : string) : Style {
+    return new Style({
+        image: new Icon({
+            scale : 0.05,
+            crossOrigin: 'anonymous',
+            src: `src/assets/${img}`,
+        })
+    })
+}
+
+export {emptyStyle, polygonStyle, backgroundStyle1, backgroundStyle2, lineStyle, labelStyleFunction, selectedRoomStyleFunction, ressourceStyleFunction}
