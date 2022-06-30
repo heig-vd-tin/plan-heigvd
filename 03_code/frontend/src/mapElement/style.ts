@@ -1,5 +1,6 @@
 import {Text, Fill, Stroke, Style, Icon} from "ol/style";
 import {FeatureLike} from "ol/Feature";
+import {images} from "../data/image";
 
 const emptyStyle = new Style({})
 
@@ -108,33 +109,47 @@ function labelHoverStyleFunction(feature : FeatureLike) {
 }
 
 function ressourceStyleFunction (feature : FeatureLike) : Style {
-    return new Style({
-        image: new Icon({
-            scale : 0.2,
-            crossOrigin: 'anonymous',
-            src: `src/assets/${feature.get('type')}.png`,
+    const img = images.get(feature.get('type'))
+    if (img != undefined) {
+        return new Style({
+            image: new Icon({
+                scale : 0.2,
+                crossOrigin: 'anonymous',
+                src: img,//`src/assets/${feature.get('type')}.png`,
+            })
         })
-    })
+    }
+    else return new Style()
 }
 
 function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
-    return new Style({
-        image: new Icon({
-            scale : 0.25,
-            crossOrigin: 'anonymous',
-            src: `src/assets/${feature.get('type')}.png`,
+    const img = images.get(feature.get('type'))
+    if (img != undefined) {
+        return new Style({
+            image: new Icon({
+                scale : 0.25,
+                crossOrigin: 'anonymous',
+                src: img,// `src/assets/${feature.get('type')}.png`,
+            })
         })
-    })
+    }
+    else return new Style()
 }
 
 function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
-    return new Style({
-        image: new Icon({
-            scale : 0.25,
-            crossOrigin: 'anonymous',
-            src: `src/assets/${feature.get('type')}_selected.png`,
+    const img = images.get(`${feature.get('type')}_selected`)
+    if (img != undefined) {
+        return new Style({
+            image: new Icon({
+                scale : 0.25,
+                crossOrigin: 'anonymous',
+                src: img,
+            })
         })
-    })
+    }
+    else {
+        return new Style()
+    }
 }
 
 export {
