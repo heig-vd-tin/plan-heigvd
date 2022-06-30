@@ -3,6 +3,7 @@ import {mount} from "@vue/test-utils"
 import Map from "../../src/components/Map.vue"
 import {FloorFeature} from "../../src/mapElement/Feature";
 import {Feature} from "ol";
+import {createTestingPinia} from "@pinia/testing";
 
 
 const randomFeature : any = {
@@ -14,15 +15,20 @@ const randomFeature : any = {
     ]
 }
 
-const floorFeatures = new FloorFeature(randomFeature, randomFeature, randomFeature)
+const floorFeatures = new FloorFeature(randomFeature, randomFeature, randomFeature, [])
+
+
 
 const wrapper = mount(Map, {
     props: {
         center : [0, 0],
         zoom : 0,
-        floorFeatures : floorFeatures
+    },
+    global: {
+        plugins: [createTestingPinia()],
     },
 })
+
 
 test('mount map', async () => {
     expect(wrapper.isVisible())

@@ -16,7 +16,7 @@ import {currentBuildingStore} from "../stores/currentBuilding";
 const buildings = currentBuildingStore()
 
 function changeSelected(e : Event) {
-  buildings.change((e.target as HTMLElement).text)
+  buildings.change((e.target as HTMLElement).innerText)
 }
 
 </script>

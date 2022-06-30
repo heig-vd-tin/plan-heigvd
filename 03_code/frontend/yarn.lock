@@ -90,6 +90,13 @@
   "resolved" "https://registry.npmjs.org/@petamoriken/float16/-/float16-3.6.3.tgz"
   "version" "3.6.3"
 
+"@pinia/testing@^0.0.12":
+  "integrity" "sha512-OGJ5kZihiuNua9trREAVLiv8wAlxT2+gZAz3Cen1L4ch51MbSgY5/nbo9htYsP2my9dhbggBhecgYWlhejhRcQ=="
+  "resolved" "https://registry.npmjs.org/@pinia/testing/-/testing-0.0.12.tgz"
+  "version" "0.0.12"
+  dependencies:
+    "vue-demi" "*"
+
 "@tootallnate/once@2":
   "integrity" "sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A=="
   "resolved" "https://registry.npmjs.org/@tootallnate/once/-/once-2.0.0.tgz"
@@ -1162,7 +1169,7 @@
   "resolved" "https://registry.npmjs.org/picomatch/-/picomatch-2.3.1.tgz"
   "version" "2.3.1"
 
-"pinia@^2.0.14":
+"pinia@^2.0.14", "pinia@>=2.0.14":
   "integrity" "sha512-0nPuZR4TetT/WcLN+feMSjWJku3SQU7dBbXC6uw+R6FLQJCsg+/0pzXyD82T1FmAYe0lsx+jnEDQ1BLgkRKlxA=="
   "resolved" "https://registry.npmjs.org/pinia/-/pinia-2.0.14.tgz"
   "version" "2.0.14"

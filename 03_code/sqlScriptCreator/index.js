@@ -14,7 +14,7 @@ function main () {
 
 
 
-    const init = `CREATE DATABASE ${dbName} WITH OWNER "postgres"  ENCODING 'UTF8' LC_COLLATE = 'fr_FR.UTF8' LC_CTYPE = 'fr_FR.UTF8' TEMPLATE template0;`
+    const init = `CREATE DATABASE ${dbName} WITH OWNER "postgres"  ENCODING 'UTF8';`
 
     write('01_init', init)
 
@@ -41,9 +41,9 @@ function main () {
         const floors = fs.readdirSync(`${inputPath}/${building}`)
         for (const floor of floors) {
             if (floor != 'resource' && floor != 'roomInfo.csv' && floor != 'roomInfo.xlsx' ){
-                //insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
-                //insert += insertFloorGeom(building, floor)
-                //insert += insertRoomData(building, floor)
+                insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
+                insert += insertFloorGeom(building, floor)
+                insert += insertRoomData(building, floor)
                 insert += insertFloorRessourceData(building, floor)
             }
 
