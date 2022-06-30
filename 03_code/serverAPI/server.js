@@ -6,33 +6,47 @@ const request = require("./database")
 
 app.use(cors())
 
-app.get('/line', async (req, res) => {
+app.get('/:floor/lines', async (req, res) => {
 
-    const data = await request.getFloorGis("floor_geometry", 'line');
-    console.log(data.rows[0].json_build_object)
+    const data = await request.getFloorGis(req.params.floor, 'line');
     res.json(data.rows[0].json_build_object)
 })
 
 
-app.get('/polygon', async (req, res) => {
-    const data = await request.getFloorGis("floor_geometry", 'polygon');
+app.get('/:floor/polygons', async (req, res) => {
+    const data = await request.getFloorGis(req.params.floor, 'polygon');
     res.json(data.rows[0].json_build_object)
 })
 
 
-app.get('/rooms/gis', async (req, res) => {
-    const data = await request.getAllRoomGis();
+app.get('/:floor/labels', async (req, res) => {
+    const data = await request.getFloorLabels(req.params.floor);
+    res.json(data.rows[0].json_build_object)
+})
+
+app.get('/polygons', async (req, res) => {
+    const data = await request.getAllPolygons();
+    console.log(data)
     res.json(data.rows[0].json_build_object)
 })
 
 app.get('/rooms/name', async (req, res) => {
     const data = await request.getAllRoomName();
-    console.log(data)
     res.json(data.rows)
 })
 
 app.get('/rooms/:name', async (req, res) => {
     const data = await request.getRoomGis(req.params.name);
+    res.json(data.rows[0].json_build_object)
+})
+
+app.get('/resource', async (req, res) => {
+    const data = await request.getRessources('Cheseaux');
+    res.json(data.rows[0].json_build_object)
+})
+
+app.get('/:floor/resource', async (req, res) => {
+    const data = await request.getRessources(req.params.floor);
     res.json(data.rows[0].json_build_object)
 })
 

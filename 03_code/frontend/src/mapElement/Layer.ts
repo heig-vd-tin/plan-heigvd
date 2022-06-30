@@ -1,6 +1,5 @@
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
-import {GeoJSON} from "ol/format";
 import {Feature} from "ol";
 import {StyleLike} from "ol/style/Style";
 import TileLayer from "ol/layer/Tile";
@@ -13,11 +12,15 @@ function getOpenStreetMapLayer() {
     })
 }
 
-function createVectorLayer(features : Feature[], style : StyleLike){
-    return new VectorLayer({
-        source : new VectorSource({ features: new GeoJSON().readFeatures(features)}),
-        style: style,
-    })
+function setFeaturesToLayer (layer : VectorLayer<VectorSource>, features : Feature[] | undefined) : VectorSource | undefined {
+    if (features != undefined) {
+        const source = layer.getSource()
+        if (source != null) {
+            source.clear()
+            source.addFeatures(features)
+            return source
+        }
+    }
 }
 
 function createEmptyVectorLayer(style : StyleLike) {
@@ -27,4 +30,4 @@ function createEmptyVectorLayer(style : StyleLike) {
     })
 }
 
-export {getOpenStreetMapLayer, createVectorLayer, createEmptyVectorLayer}
+export {getOpenStreetMapLayer, setFeaturesToLayer, createEmptyVectorLayer}
