@@ -25,19 +25,12 @@ export class FloorFeature {
 }
 
 export const floorsFeatures = new Map<string, FloorFeature>()
-
-/*
-interface Resource {
-    img : string
-    coordinates :Feature
-}*/
-
-export let globalResourcesFeatures : Feature[]
-
 export let backgroundFeatures : Feature[]
+let globalResourcesFeatures : Feature[]
 
 const geojsonTool = new GeoJSON()
 
+// Fetch data to display when user ask the website
 export async function fetchBaseFeatures(groundFloor : string) {
     await fetchFloorFeatures(groundFloor)
 
@@ -70,7 +63,6 @@ async function fetchFloorFeatures(floor : string) {
     } else {
         resources = null
     }
-
     floorsFeatures.set(floor, new FloorFeature(lines, polygons, labels, resources))
 }
 
@@ -86,22 +78,17 @@ export function getDisplayedResource(filters : string[], floor : string) {
         return filters.some(e => e === feature.getProperties().type)
     })
     features.forEach( feature => {
-        const style = ressourceStyleFunction(`${feature.getProperties().type}.png`)
-        feature.setStyle(style)
+        feature.setStyle(ressourceStyleFunction)
     })
     return features
 }
 
-export function getAllRessourceType() : string[] {
-    return ['restaurant', 'bus']
+export function getResourcesList() : string[] {
+    const set = new Set<string>()
+    Array.from(floorsFeatures.values())
+        .forEach(v => {
+            v.resources?.forEach(w => set.add(w.getProperties().type))
+        })
+    globalResourcesFeatures.forEach(v => set.add(v.getProperties().type))
+    return Array.from(set)
 }
-
-/*
-function createInterest(coordinates : number[][],  style : StyleLike) {
-    const feature = new Feature({
-        geometry : new MultiPoint(coordinates),
-    })
-    feature.setStyle(style)
-    return feature
-}
-*/

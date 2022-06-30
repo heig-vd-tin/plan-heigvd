@@ -10,43 +10,41 @@ import 'ol/ol.css'
 
 import {getRoomGis} from "../api/api";
 import {
-  backgroundStyle1, backgroundStyle2,
+  backgroundStyle1,
+  backgroundStyle2,
   emptyStyle,
+  labelHoverStyleFunction,
   labelStyleFunction,
   lineStyle,
-  polygonStyle, selectedRoomStyleFunction
+  polygonStyle,
+  ressourceHoverStyleFunction,
+  ressourceSelectedStyleFunction,
+  ressourceStyleFunction,
+  selectedRoomStyleFunction
 } from "../mapElement/style";
 import {
   createEmptyVectorLayer,
   getOpenStreetMapLayer,
   setFeaturesToLayer
 } from "../mapElement/Layer";
-import {FloorFeature} from "../mapElement/Feature";
+import {FloorFeature, floorsFeatures, getDisplayedResource} from "../mapElement/Feature";
 import {Select} from "ol/interaction";
+import {pointerMove} from "ol/events/condition";
+import {currentFloorStore} from "../stores/currentFloor";
+import {filtersStore} from "../stores/Filters";
+import {currentBuildingStore} from "../stores/currentBuilding";
 
 const props = defineProps<{
-  zoom : number,
-  center : number[],
-  rotation : number,
-  maxZoom : number,
-  minZoom : number,
-
-  floorFeatures? : FloorFeature,
   backgroundFeatures? : Feature[],
-  interestsFeatures? : Feature[],
   selectedRoom? : string
 }>()
 
 const emit = defineEmits(['roomSelected', 'roomUnselected'])
 
-let view = new View({
-  center: props.center,
-  zoom: props.zoom,
-  rotation: props.rotation,
-  constrainResolution: true,
-  maxZoom : props.maxZoom,
-  minZoom : props.minZoom
-})
+const currentBuilding = currentBuildingStore()
+// currentFloorStore().initStore(currentBuilding.info.floors, currentBuilding.info.groundFloor)
+
+let view = new View()
 
 // the element which the map is attached
 const maproot = ref<HTMLElement | undefined>(undefined)
@@ -60,12 +58,31 @@ let polygonLayer = createEmptyVectorLayer(polygonStyle)
 let labelsLayer = createEmptyVectorLayer(polygonStyle)
 // let roomLayer = createEmptyVectorLayer()
 let backgroundLayer = createEmptyVectorLayer(backgroundStyle1)
-let ressourceLayer = createEmptyVectorLayer(emptyStyle)
+let resourceLayer = createEmptyVectorLayer(emptyStyle)
 
 const select = new Select({
   style : selectedRoomStyleFunction,
   layers : [labelsLayer]
 })
+
+const selectResource = new Select({
+  style : ressourceSelectedStyleFunction,
+  layers : [resourceLayer]
+})
+
+const selectHover = new Select({
+  condition: pointerMove,
+  style: labelHoverStyleFunction,
+  layers : [labelsLayer]
+});
+
+const selectResourceHover = new Select({
+  condition: pointerMove,
+  style : ressourceHoverStyleFunction,
+  layers : [resourceLayer]
+})
+
+let selectedData: { name: string, type: string | null, surface: string | null, capacity: string | null }[] = []
 
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
@@ -80,7 +97,7 @@ onMounted(() => {
       // roomLayer,
       labelsLayer,
       lineLayer,
-      ressourceLayer
+      resourceLayer
     ],
     view: view
   })
@@ -92,44 +109,105 @@ onMounted(() => {
       if (zoom >= 20) {
         labelsLayer.setStyle(labelStyleFunction)
         backgroundLayer.setStyle(backgroundStyle2)
-      } else {
+      }
+      else if (zoom <= 16 ){
+        console.log('empty')
+        resourceLayer.setStyle(emptyStyle)
+      }
+      else {
         labelsLayer.setStyle(polygonStyle)
         backgroundLayer.setStyle(backgroundStyle1)
+        resourceLayer.setStyle(ressourceStyleFunction)
       }
     }
   })
 
   map.value.addInteraction(select)
+  map.value.addInteraction(selectResource)
+  map.value.addInteraction(selectHover)
+  map.value.addInteraction(selectResourceHover)
+
   select.on('select', (e) => {
-    console.log(e.target.getFeatures())
-    emit('roomSelected', 'test')
+    selectedData = []
+    const features = e.target.getFeatures()
+    if (features.getLength() > 0) {
+      for (let i = 0; i < features.getLength(); i++) {
+        const properties = features.item(i).getProperties()
+        selectedData.push({
+          name: properties.name,
+          type: properties.type,
+          surface: properties.surface,
+          capacity: properties.capacity
+        })
+      }
+      console.log(selectedData)
+      emit('roomSelected', selectedData)
+    } else {
+
+      emit('roomUnselected')
+    }
   })
 
+  selectResource.on('select', (e) => {
+    selectedData = []
+    const features = e.target.getFeatures()
+    if (features.getLength() > 0) {
+      for (let i = 0; i < features.getLength(); i++) {
+        const properties = features.item(i).getProperties()
+        selectedData.push({
+          name: properties.type,
+          type: null,
+          surface: null,
+          capacity: null
+        })
+      }
+      emit('roomSelected', selectedData)
+    } else {
+      selectedData = []
+      emit('roomUnselected')
+    }
+  })
 })
 
 watch(() => props.backgroundFeatures, (newFeatures) => {
   setFeaturesToLayer(backgroundLayer, newFeatures)
 })
 
-watch(() => props.floorFeatures, (newFeatures) => {
-  if (newFeatures != undefined) {
-    setFeaturesToLayer(lineLayer, newFeatures.lines)
-    setFeaturesToLayer(polygonLayer, newFeatures.polygons)
-    setFeaturesToLayer(labelsLayer, newFeatures.labels)
+const currentFloor = currentFloorStore()
+
+watch(() => currentFloor.floor, (newFloor : string) => {
+  const features = floorsFeatures.get(newFloor)
+  if (features != undefined) {
+    setFeaturesToLayer(lineLayer, features.lines)
+    setFeaturesToLayer(polygonLayer, features.polygons)
+    setFeaturesToLayer(labelsLayer, features.labels)
+  }
+  setResourcesLayer(filter.checked, newFloor)
+})
+
+const filter = filtersStore()
+
+watch(() => filter.checked, (newFilters : string[]) => {
+  setResourcesLayer(newFilters, currentFloor.floor)
+})
+
+function setResourcesLayer(filters : string[], floor : string) {
+  const resourcesFeatures = getDisplayedResource(filters, floor)
+  setFeaturesToLayer(resourceLayer, resourcesFeatures)
+}
+
+watch(() => currentBuilding.selected, (newBuilding : string) => {
+  if (currentBuilding.info != undefined) {
+    view.setCenter(currentBuilding.info.center)
+    view.setZoom(currentBuilding.info.zoom)
+    view.setRotation(currentBuilding.info.rotation)
+    view.setMaxZoom(currentBuilding.info.maxZoom)
+    view.setMinZoom(currentBuilding.info.minZoom)
+    currentFloorStore().initStore(newBuilding, currentBuilding.info.floors, currentBuilding.info.groundFloor)
+
   }
 })
 
-watch(() => props.interestsFeatures, (newFeatures) => {
-  /*if (newFeatures != undefined) {
-    const source = ressourceLayer.getSource()
-    if (source != null) {
-      source.clear()
-      source.addFeatures(newFeatures)
-      console.log(source)
-    }
-  }*/
-  setFeaturesToLayer(ressourceLayer, newFeatures)
-})
 /*
 watch(() => props.selectedRoom, async (newRoom) => {
   if (newRoom != undefined) {
@@ -140,9 +218,6 @@ watch(() => props.selectedRoom, async (newRoom) => {
     }
   }
 })*/
-
-
-
 </script>
 
 <style scoped>

@@ -2,7 +2,7 @@ import {Feature} from "ol";
 
 
 
-interface BuildingInfo {
+export interface BuildingInfo {
  floors : string[],
  groundFloor : string,
  center : number[]
@@ -14,21 +14,23 @@ interface BuildingInfo {
 
 export const buildingsInfo = new Map<string, BuildingInfo>()
 
-/*
-resources.set('bus', {
-  img : 'bus.png',
-  coordinates : [[741250.0, 5906010], [741270.0, 5905975]]
-})
-*/
-
  buildingsInfo.set('Cheseaux', {
   floors : ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K'],
   groundFloor : 'E',
-  center : [741325.0, 5906150],
+  center : [741335.0, 5906150],
   rotation : 0.674,
   zoom : 18,
   minZoom : 16,
   maxZoom : 23,
  })
 
+buildingsInfo.set('St-Roch', {
+ floors : ['0', '1', '2', '3', '4'],
+ groundFloor : '0',
+ center : [739955.0, 5906400],
+ rotation : -0.495,
+ zoom : 19,
+ minZoom : 16,
+ maxZoom : 23,
+})
 

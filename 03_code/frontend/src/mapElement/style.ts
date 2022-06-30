@@ -62,6 +62,27 @@ const labelStyle = new Style({
     fill: new Fill({
         color: 'rgba(245, 245, 245 , 1)',
     }),
+    image: new Icon({
+        scale : 0.05,
+        crossOrigin: 'anonymous',
+        src: `src/assets/bus.png`,
+    }),
+    text: new Text({
+        font: '15px Avenir,sans-serif',
+        fill: new Fill({
+            color: '#000',
+        }),
+        stroke: new Stroke({
+            color: '#ffffff',
+            width: 4,
+        }),
+    }),
+})
+
+const labelHoverStyle = new Style({
+    fill: new Fill({
+        color: 'rgba(200, 200, 200 , 1)',
+    }),
     text: new Text({
         font: '15px Calibri,sans-serif',
         fill: new Fill({
@@ -75,18 +96,57 @@ const labelStyle = new Style({
 })
 
 function labelStyleFunction(feature : FeatureLike) {
-    labelStyle.getText().setText(`${feature.get('name')}`)
+    const name =  feature.get('name')
+    labelStyle.getText().setText(`${name}`)
     return labelStyle
+
 }
 
-function ressourceStyleFunction (img : string) : Style {
+function labelHoverStyleFunction(feature : FeatureLike) {
+    labelHoverStyle.getText().setText(`${feature.get('name')}`)
+    return labelHoverStyle
+}
+
+function ressourceStyleFunction (feature : FeatureLike) : Style {
     return new Style({
         image: new Icon({
-            scale : 0.05,
+            scale : 0.2,
             crossOrigin: 'anonymous',
-            src: `src/assets/${img}`,
+            src: `src/assets/${feature.get('type')}.png`,
         })
     })
 }
 
-export {emptyStyle, polygonStyle, backgroundStyle1, backgroundStyle2, lineStyle, labelStyleFunction, selectedRoomStyleFunction, ressourceStyleFunction}
+function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
+    return new Style({
+        image: new Icon({
+            scale : 0.25,
+            crossOrigin: 'anonymous',
+            src: `src/assets/${feature.get('type')}.png`,
+        })
+    })
+}
+
+function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
+    return new Style({
+        image: new Icon({
+            scale : 0.25,
+            crossOrigin: 'anonymous',
+            src: `src/assets/${feature.get('type')}_selected.png`,
+        })
+    })
+}
+
+export {
+    emptyStyle,
+    polygonStyle,
+    backgroundStyle1,
+    backgroundStyle2,
+    lineStyle,
+    labelStyleFunction,
+    selectedRoomStyleFunction,
+    ressourceStyleFunction,
+    labelHoverStyleFunction,
+    ressourceHoverStyleFunction,
+    ressourceSelectedStyleFunction
+}

@@ -1,93 +1,70 @@
 <template>
   <div class="floor-change">
-    <div class="arrow-up">
-      <a href="#" @click="floorUp" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-up']" /></a>
-    </div>
-    <div>
-      <a href="#" @click="floorUp" class="floor-change-item arrow-btn">{{floorItems[2]}}</a>
-    </div>
-    <div class="floor-change-item floor-change-selected-item">{{floorItems[[1]]}}</div>
-    <div>
-      <a href="#" @click="floorDown" class="floor-change-item arrow-btn">{{floorItems[0]}}</a>
-    </div>
-    <div class="arrow-down">
-      <a href="#" @click="floorDown" class="floor-change-item arrow-btn"><font-awesome-icon :icon="['fas', 'angle-down']" /></a>
-    </div>
+    <ToolButton class="arrow-up" @click="floorUp">
+      <font-awesome-icon :icon="['fas', 'angle-up']" />
+    </ToolButton>
+    <ToolButton @click="floorUp" >{{floorItems[2]}}</ToolButton>
+    <ToolButton :selected="true">{{floorItems[[1]]}}</ToolButton>
+    <ToolButton @click="floorDown">{{floorItems[0]}}</ToolButton>
+    <ToolButton @click="floorDown" class="arrow-down">
+      <font-awesome-icon :icon="['fas', 'angle-down']" />
+    </ToolButton>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {buildingsInfo} from "../data/data";
+import ToolButton from "./ToolButton.vue";
+import {currentFloorStore} from "../stores/currentFloor";
 
 const props = defineProps<{
   floors : string[]
   groundFloor : string
 }>()
 
-const emit = defineEmits(['floorUpdated'])
-
-const buildingData = buildingsInfo.get('Cheseaux')
 const floors = props.floors
-let currentFloorId = floors.indexOf(props.groundFloor)
-const floorItems = ref(
-    [floors[currentFloorId - 1],
-      floors[currentFloorId],
-      floors[currentFloorId + 1]]
-)
+let currentFloor = currentFloorStore()
+
+const floorItems = ref<string[]>(['','',''])
+
+watch(() => currentFloor.floor, () => {
+  floorItems.value = getFloorState()
+})
 
 function floorUp() {
-  if (currentFloorId < floors.length - 1) {
-    currentFloorId++
-    floorChange()
-  }
+  currentFloor.up()
 }
 
 function floorDown() {
-  if (currentFloorId > 0) {
-    currentFloorId--
-    floorChange()
-  }
+  currentFloor.down()
 }
 
-function floorChange() {
-  const selectedFloor = floors[currentFloorId]
-  let nextFloor = ' '
-  let previousFloor = ' '
-
-  if (currentFloorId < floors.length - 1) {
-    nextFloor = floors[currentFloorId + 1]
-  }
-
-  if (currentFloorId > 0) {
-    previousFloor = floors[currentFloorId - 1]
-  }
-
-  floorItems.value = [previousFloor, selectedFloor, nextFloor]
-
-  emit('floorUpdated', floors[currentFloorId])
+function getFloorState() : string[]{
+  return [
+    currentFloor.previousFloorName,
+    currentFloor.currentFloorName,
+    currentFloor.nextFloorName
+  ]
 }
-
 </script>
 
 <style scoped>
   .floor-change {
-    position: fixed;
-    top: 300px;
-    left: 0;
     z-index: 1;
     display: flex;
     flex-direction: column;
-    background-color: white;
+    background-color: rgb(240,240,240);
   }
 
   .floor-change-item {
     padding: 10px 0;
     height: 35px;
-    width: 40px;
+    width: 100%;
     text-align: center;
     white-space: pre;
+    background-color: white;
   }
 
   .floor-change-selected-item {
@@ -105,7 +82,10 @@ function floorChange() {
     background-color: lightgrey;
   }
 
-  .arrow-btn::selection {
+  .small-text {
+    width: 100%;
+    text-align: center;
+    font-size: 12px;
 
   }
 
@@ -115,6 +95,10 @@ function floorChange() {
 
   .arrow-down {
     border-top: 1px solid lightgrey;
+  }
+
+  .step-number{
+    font-size: 10px;
   }
 
 </style>

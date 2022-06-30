@@ -8,8 +8,14 @@ const inputPath = process.argv[2] // '../../02_plan/geojson'
 const outputPath = process.argv[3] // '../../04_deploy/sql'
 const dbName =  process.argv[4] // 'plan'
 
+
+
 function main () {
-    const init = `CREATE DATABASE ${dbName}`
+
+
+
+    const init = `CREATE DATABASE ${dbName} WITH OWNER "postgres"  ENCODING 'UTF8' LC_COLLATE = 'fr_FR.UTF8' LC_CTYPE = 'fr_FR.UTF8' TEMPLATE template0;`
+
     write('01_init', init)
 
     let create = `\\connect ${dbName}\n`
@@ -17,20 +23,24 @@ function main () {
     create += `create table if not exists building (id serial primary key, name varchar(255));\n`
     create += `create table if not exists floor (id serial primary key, name varchar(255), idx_building int);\n`
     create += `create table if not exists floor_geometry (id serial primary key, idx_floor int, type varchar(255), geom geometry);\n`
-    create += `create table if not exists room (id serial primary key, name varchar(255), idx_floor int, geometry geometry);\n`
+    create += `create table if not exists room (id serial primary key, name varchar(255) not null, type varchar(255), surface Float, capacity int,  idx_floor int, geometry geometry);\n`
     create += `create table if not exists resource (id serial primary key, type varchar(255), attached_to varchar(255), localisation geometry);\n`
     // create += `create table if not exists resource_type (id serial primary key, type varchar(255), icon varchar(255));\n`
     write('02_create', create)
 
     const buildings = fs.readdirSync(`${inputPath}`)
     let insert = `\\connect ${dbName}\n`
+
     for (const building of buildings) {
         insert += `insert into building (name) VALUES ('${building}');\n`
         insert += insertGlobalResourceData(building)
+        if (building === 'Cheseaux') {
+            readRoomData(building)
+        }
 
         const floors = fs.readdirSync(`${inputPath}/${building}`)
         for (const floor of floors) {
-            if (floor != 'resource'){
+            if (floor != 'resource' && floor != 'roomInfo.csv' && floor != 'roomInfo.xlsx' ){
                 //insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
                 //insert += insertFloorGeom(building, floor)
                 //insert += insertRoomData(building, floor)
@@ -38,12 +48,53 @@ function main () {
             }
 
         }
+
     }
     write('03_insert', insert)
 }
 
+const data = new Map()
+
+function readRoomData(buiding) {
+    const file = fs.readFileSync(`${inputPath}/${buiding}/roomInfo.csv`).toString()
+    const lines = file.split('\n')
+    for(const line of lines) {
+        const roomData = line.split(',')
+        let room = roomData[0]
+        console.log(roomData[0])
+        if (roomData[0] == ' A01') {
+            console.log('here')
+        }
+        let type = 'NULL'
+
+        if (roomData[2] != ''){
+            type = `'${roomData[2]}'`
+        }
+
+        const surface = parseFloat(roomData[1])
+
+        let capacity
+        if (roomData[3] === '\r' || roomData[3] === '') {
+            capacity = 'Null'
+        }
+        else {
+            capacity = parseInt(roomData[3])
+        }
+
+        d =  {
+            type : type,
+            surface : surface,
+            capacity : capacity
+        }
+
+        data.set(room, d)
+
+    }
+    console.log(data)
+}
+
 function write(filename, content) {
-    fs.writeFile(`${outputPath}/${filename}.sql`, content, err => {
+    fs.writeFile(`${outputPath}/${filename}.sql`, content, 'utf8', err => {
         if (err) {
             console.error(err);
         }
@@ -86,13 +137,44 @@ function insertRoomData (buildingName, floorName) {
             if (name.startsWith('wc')) {name = 'WC'}
 
             content +=  insertRoom(name, floorName, json.features[0].geometry)
+
         }
     }
+    console.log(content)
     return content
 }
 
 function insertRoom(roomName, floorName, gis) {
-    return `insert into room (name, idx_floor, geometry) select '${roomName}', id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
+
+    let d
+    if (roomName === 'WC') {
+        d = {
+            type : "'wc'",
+            surface : 'NULL',
+            capacity : 'NULL'
+        }
+    }
+    else if (roomName === 'Ascenseur') {
+        d = {
+            type : "'Ascenceur'",
+            surface : 'NULL',
+            capacity : 'NULL'
+        }
+    }
+    else if (roomName === 'vidoir') {
+        d = {
+            type : "'Vidoir'",
+            surface : 'NULL',
+            capacity : 'NULL'
+        }
+    }
+    else {
+        d = data.get(roomName)
+    }
+    console.log(roomName)
+    const text = `insert into room (name, type, surface, capacity, idx_floor, geometry) select '${roomName}', ${d.type}, ${d.surface}, ${d.capacity}, id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
+    console.log(text)
+    return text
 }
 
 function insertGlobalResourceData(buildingName) {

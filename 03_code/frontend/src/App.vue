@@ -1,30 +1,27 @@
 <template>
-  <Header @btnClick="changeMenuState"/>
- <!-- <list-room @selected="setCurrentRoom"></list-room>-->
-  <FloorChange
-      :floors="buildingData.floors"
-      :ground-floor="buildingData.groundFloor"
-      @floor-updated="changeCurrentFloor"
-  />
-  <FilterMenu
-      v-show="filterMenuVisibility"
-      @filter-updated="filtersChange"
-      :filter-list="filterList"
-  />
-  <InfoPanel v-show="infoPanelVisibility"/>
-  <Map
-      :center="buildingData.center"
-      :zoom="buildingData.zoom"
-      :rotation="buildingData.rotation"
-      :minZoom="buildingData.minZoom"
-      :maxZoom="buildingData.maxZoom"
+  <!-- <div v-show="!loading"> -->
+    <Header @btnClick="changeMenuState"/>
+   <!-- <FloorChange
+        :floors="buildingData.floors"
+        :ground-floor="buildingData.groundFloor"
+        @floor-updated="changeCurrentFloor"
+    /> -->
+    <ToolBar/>
+    <FilterMenu
+        v-show="filterMenuVisibility"
+    />
+    <InfoPanel
+        v-show="infoPanelVisibility"
+        :selected-room="roomInfo"
+        @close="undisplayRoomInfo"
+    />
+    <Map
+        :background-features="bgFeatures"
 
-      :floor-features="floorFeatures"
-      :background-features="bgFeatures"
-      :interests-features="resourceFeatures"
-      :selected-room="currentRoom"
-      @room-selected="displayRoomInfo"
-  ></Map>
+        @room-selected="displayRoomInfo"
+        @room-unselected="undisplayRoomInfo"
+    ></Map>
+  <!-- </div> -->
 </template>
 
 <script setup lang="ts">
@@ -35,25 +32,21 @@ import ListRoom from "./components/listRoom.vue";
 import FilterMenu from "./components/FilterMenu.vue";
 import InfoPanel from "./components/InfoPanel.vue";
 
-import {onMounted, ref} from "vue";
+import {onMounted, ref, watch} from "vue";
 import {
   backgroundFeatures, getDisplayedResource,
   fetchBaseFeatures,
   fetchOtherFeatures,
   FloorFeature,
-  floorsFeatures, getAllRessourceType,
+  floorsFeatures, getResourcesList,
 } from "./mapElement/Feature";
 
 import {Feature} from "ol";
 import {buildingsInfo} from "./data/data";
-
-// All the building data
-let buildingData = buildingsInfo.get('Cheseaux')
-
-let floor = ''
-let filters : string[] = []
-const filterList = ref<string[]>([])
-
+import ToolBar from "./components/ToolBar.vue";
+import {currentFloorStore} from "./stores/currentFloor";
+import {filtersStore} from "./stores/Filters";
+import {currentBuildingStore} from "./stores/currentBuilding";
 
 /*
 //room
@@ -64,39 +57,23 @@ function setCurrentRoom(selectedRoom : string) {
 }
 */
 
+
+const loading = ref(true)
+
 const bgFeatures = ref<Feature[] | undefined>()
-const floorFeatures = ref<FloorFeature | undefined>()
-const resourceFeatures = ref<Feature[] | undefined>()
-
-function getFeatures(newFloor : string) {
-  floor = newFloor
-  const features = floorsFeatures.get(floor)
-  if (features != undefined) {
-    floorFeatures.value = new FloorFeature(features.lines, features.polygons, features.labels, features.resources)
-  }
-}
-
-function changeCurrentFloor (newFloor : string) {
-  getFeatures(newFloor)
-  resourceFeatures.value = getDisplayedResource(filters, newFloor)
-}
-
-function filtersChange (newFilters : string[]) {
-  filters = newFilters
-  resourceFeatures.value = getDisplayedResource(newFilters, floor)
-}
 
 // info panel
 const infoPanelVisibility = ref(false)
+const roomInfo = ref<{name : string}[]>([])
 
-function displayRoomInfo (info : string) {
+function displayRoomInfo (info : {name : string, type : string | null, surface : string | null, capacity : string | null}[]) {
   infoPanelVisibility.value = true
-  console.log(info)
+  roomInfo.value = info
 }
 
-function undisplayRoomInfo (info : string) {
+function undisplayRoomInfo () {
   infoPanelVisibility.value = false
-  console.log(info)
+  roomInfo.value = []
 }
 
 // filter panel
@@ -107,28 +84,36 @@ function changeMenuState (newState : boolean) {
 }
 
 onMounted(async () => {
+  const currentBuilding = currentBuildingStore()
+  const buildingData = buildingsInfo.get('Cheseaux')
   if (buildingData != undefined) {
     await fetchBaseFeatures(buildingData.groundFloor)
+    currentBuildingStore().change('Cheseaux')
     bgFeatures.value = backgroundFeatures
-    filterList.value = getAllRessourceType()
-    filters = filterList.value
-    resourceFeatures.value = getDisplayedResource(filterList.value, buildingData.groundFloor)
-    floor = buildingData.groundFloor
-    getFeatures('E')
+    loading.value = false
     await fetchOtherFeatures(buildingData.floors, buildingData.groundFloor)
+    filtersStore().initStore()
+// ;
   }
 })
 </script>
 
 <style>
 
-*{
-  box-sizing: border-box;
+:root {
+  --primary-color: #E1251B;
+  --primary-background-color: #f4f4f4;
+  --secondary-background-color: #e9e9e9;
+  --border-color : #c6c6c6;
+  --font-color:#2c3e50;
+
 }
 
-html, body {
+*{
+  box-sizing: border-box;
   margin: 0;
 }
+
 html {
   height: 100%;
 }
@@ -141,7 +126,16 @@ body {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--font-color);
   height: 100%;
+}
+
+h2 {
+  font-size: 20px;
+  margin-bottom: 0;
+}
+
+.ol-control {
+  visibility: hidden;
 }
 </style>

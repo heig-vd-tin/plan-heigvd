@@ -1,7 +1,10 @@
 <template>
   <header class="header">
     <div class="left-header">
-      <a href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'bars']"/></a>
+      <div>
+        <a v-show="!menuBtnState" href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'bars']"/></a>
+        <a v-show="menuBtnState"  href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'xmark']"/></a>
+      </div>
       <div class="separator"></div>
       <img src="../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
       <h1 class="title-text">Plans</h1>
@@ -11,14 +14,16 @@
 
 <script setup lang="ts">
 
+import {ref} from "vue";
+
 const emit = defineEmits(['btnClick'])
 
 // menu button
-let menuBtnState = false
+let menuBtnState = ref(false)
 
 function changeBtnState () {
-  menuBtnState = !menuBtnState
-  emit('btnClick', menuBtnState)
+  menuBtnState.value = !menuBtnState.value
+  emit('btnClick', menuBtnState.value)
 }
 
 </script>
@@ -39,26 +44,27 @@ function changeBtnState () {
     width: 100%;
     height: 50px;
 
-    background-color: white;
-    //opacity: 0.8;
-
-    border-bottom: 1px solid lightgrey;
+    background-color: var(--primary-background-color);
+    border-bottom: 1px solid var(--border-color);
   }
 
   .left-header {
     display: flex;
     flex-direction: row;
     align-items: center;
+    text-align: center;
   }
 
   .menu-btn {
+    display: block;
     padding: 14px 20px;
     height: 100%;
-    vertical-align: center;
+    width: 69px;
   }
 
   .menu-btn:hover {
-    background-color: lightgrey;
+    background-color: var(--border-color);
+
   }
 
   .logo {
