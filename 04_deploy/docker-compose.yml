@@ -2,7 +2,7 @@ version: '3.9'
 services:
   database :
     container_name: plan-heig-database
-    image: postgis/postgis
+    # image: postgis/postgis
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD}
@@ -15,7 +15,8 @@ services:
       - ./sql/03_insert.sql:/docker-entrypoint-initdb.d/03_insert.sql
   server-api:
     container_name: plan-heig-server-api
-    image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
+    build: ../03_code/serverAPI
+    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
     environment: 
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=database
@@ -25,7 +26,8 @@ services:
       - database
   server:
     container_name: plan-heig-server
-    image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    build: ../03_code/frontend
+    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server
     environment:
      - VITE_API_URL=http://localhost:3001
     ports:

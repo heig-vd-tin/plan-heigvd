@@ -7,7 +7,7 @@
 
 
 
-import ToolButton from "./ToolButton.vue";
+import ToolButton from "./Utility/Button.vue";
 </script>
 
 <style scoped>

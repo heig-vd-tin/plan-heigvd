@@ -15,6 +15,13 @@
         :selected-room="roomInfo"
         @close="undisplayRoomInfo"
     />
+  <!--
+    <div class="zoomPanel">
+      <Tool tool-name="Zoom">
+        <ZoomChange/>
+      </Tool>
+    </div>
+-->
     <Map
         :background-features="bgFeatures"
 
@@ -26,11 +33,11 @@
 
 <script setup lang="ts">
 import Map from "./components/Map.vue";
-import Header from "./components/Header.vue";
-import FloorChange from "./components/FloorChange.vue";
+import Header from "./components/Header/Header.vue";
+import FloorChange from "./components/ToolPanel/FloorChange.vue";
 import ListRoom from "./components/listRoom.vue";
-import FilterMenu from "./components/FilterMenu.vue";
-import InfoPanel from "./components/InfoPanel.vue";
+import FilterMenu from "./components/FilterPanel/FilterPanel.vue";
+import InfoPanel from "./components/InfoPanel/InfoPanel.vue";
 
 import {onMounted, ref, watch} from "vue";
 import {
@@ -43,10 +50,12 @@ import {
 
 import {Feature} from "ol";
 import {buildingsInfo} from "./data/data";
-import ToolBar from "./components/ToolBar.vue";
+import ToolBar from "./components/ToolPanel/ToolBar.vue";
 import {currentFloorStore} from "./stores/currentFloor";
 import {filtersStore} from "./stores/Filters";
 import {currentBuildingStore} from "./stores/currentBuilding";
+import Tool from "./components/ToolPanel/Tool.vue";
+import ZoomChange from "./components/ZoomChange.vue";
 
 /*
 //room
@@ -137,5 +146,14 @@ h2 {
 
 .ol-control {
   visibility: hidden;
+}
+
+.zoomPanel {
+  position: absolute;
+  background-color: var(--secondary-background-color);
+  z-index: 2;
+  width: 60px;
+  right: 0;
+  bottom: 0;
 }
 </style>

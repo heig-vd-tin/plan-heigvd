@@ -6,7 +6,7 @@
         <a v-show="menuBtnState"  href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'xmark']"/></a>
       </div>
       <div class="separator"></div>
-      <img src="../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
+      <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
       <h1 class="title-text">Plans</h1>
     </div>
   </header>

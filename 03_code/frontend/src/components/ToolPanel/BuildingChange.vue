@@ -10,8 +10,8 @@
 </template>
 
 <script setup lang="ts">
-import ToolButton from "./ToolButton.vue";
-import {currentBuildingStore} from "../stores/currentBuilding";
+import ToolButton from "../Utility/Button.vue";
+import {currentBuildingStore} from "../../stores/currentBuilding";
 
 const buildings = currentBuildingStore()
 

@@ -19,6 +19,7 @@ export const filtersStore = defineStore('filters', () => {
 
     function initStore() {
         list.value = getResourcesList()
+        list.value.sort()
         checked.value = list.value
     }
 

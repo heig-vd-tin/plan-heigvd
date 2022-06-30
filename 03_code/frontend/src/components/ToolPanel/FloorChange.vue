@@ -15,9 +15,9 @@
 <script setup lang="ts">
 
 import {ref, watch} from "vue";
-import {buildingsInfo} from "../data/data";
-import ToolButton from "./ToolButton.vue";
-import {currentFloorStore} from "../stores/currentFloor";
+import {buildingsInfo} from "../../data/data";
+import ToolButton from "../Utility/Button.vue";
+import {currentFloorStore} from "../../stores/currentFloor";
 
 const props = defineProps<{
   floors : string[]

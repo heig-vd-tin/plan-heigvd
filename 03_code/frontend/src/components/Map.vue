@@ -169,6 +169,15 @@ onMounted(() => {
   })
 })
 
+selectResource.on('pointermove', (e) => {
+  console.log('here')
+  const features = e.target.getFeatures()
+  if (features.getLength() > 0) {
+    map.value.removeInteraction(select)
+    map.value.removeInteraction(selectHover)
+  }
+})
+
 watch(() => props.backgroundFeatures, (newFeatures) => {
   setFeaturesToLayer(backgroundLayer, newFeatures)
 })

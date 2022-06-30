@@ -1,11 +1,12 @@
 <template>
   <div class="info-panel">
-
+    <!--
     <div class="info-header">
       <ToolButton @click="$emit('close')">
         <font-awesome-icon :icon="['fas', 'xmark']" />
       </ToolButton>
     </div>
+    -->
     <div v-for="(room, index) in selectedRoom" class="info-item" key="index">
       <h3>{{room.name}}</h3>
       <p v-if="room.type != null">Type : <span>{{room.type}}</span></p>
@@ -21,7 +22,7 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import ToolButton from "./ToolButton.vue";
+import ToolButton from "../Utility/Button.vue";
 
 const props = defineProps<{
   selectedRoom : {name : string, type : string | null, surface : string | null, capacity : string | null}[]

@@ -11,18 +11,15 @@
           :ground-floor="buildingData.groundFloor"
       />
     </Tool>
-    <Tool tool-name="Zoom">
-      <ZoomChange/>
-    </Tool>
   </div>
 </template>
 
 <script setup lang="ts">
 import FloorChange from "./FloorChange.vue";
-import {buildingsInfo} from "../data/data";
+import {buildingsInfo} from "../../data/data";
 import BuildingChange from "./BuildingChange.vue";
 import Tool from "./Tool.vue";
-import ZoomChange from "./ZoomChange.vue";
+import ZoomChange from "../ZoomChange.vue";
 
 const emit = defineEmits(['floorUpdated'])
 
