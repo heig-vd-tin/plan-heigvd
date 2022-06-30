@@ -4,7 +4,7 @@
       <font-awesome-icon :icon="['fas', 'angle-up']" />
     </ToolButton>
     <ToolButton @click="floorUp" >{{floorItems[2]}}</ToolButton>
-    <ToolButton :selected="true">{{floorItems[[1]]}}</ToolButton>
+    <ToolButton :selected="true">{{floorItems[1]}}</ToolButton>
     <ToolButton @click="floorDown">{{floorItems[0]}}</ToolButton>
     <ToolButton @click="floorDown" class="arrow-down">
       <font-awesome-icon :icon="['fas', 'angle-down']" />

@@ -64,7 +64,7 @@ const bgFeatures = ref<Feature[] | undefined>()
 
 // info panel
 const infoPanelVisibility = ref(false)
-const roomInfo = ref<{name : string}[]>([])
+const roomInfo = ref<{name : string, type : string | null, surface : string | null, capacity : string | null}[]>([])
 
 function displayRoomInfo (info : {name : string, type : string | null, surface : string | null, capacity : string | null}[]) {
   infoPanelVisibility.value = true
