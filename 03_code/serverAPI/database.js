@@ -10,11 +10,21 @@ const credentials = {
 
 const pool = new Pool(credentials);
 
+async function getBuildings() {
+    const text = `SELECT * FROM building`
+    return pool.query(text);
+}
+
+async function getBuildingFloors(building) {
+    const text = `SELECT floor.name FROM floor INNER JOIN building ON floor.idx_building = building.id WHERE building.name = '${building}'`
+    return pool.query(text);
+}
+
 async function getFloorGis(floor, type) {
     const text = `SELECT json_build_object(
     'type', 'FeatureCollection',
     'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
-    ) FROM floor_geometry 
+    ) FROM floor_geometry
     WHERE idx_floor = (select id from floor where name = '${floor}' Limit 1) and type = '${type}';`
     console.log(text)
     return pool.query(text);
@@ -24,7 +34,7 @@ async function getAllPolygons(type) {
     const text = `SELECT json_build_object(
     'type', 'FeatureCollection',
     'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
-    ) FROM floor_geometry 
+    ) FROM floor_geometry
     WHERE type = 'polygon';`
     console.log(text)
     return pool.query(text);
@@ -65,4 +75,4 @@ async function getRessources(floorName) {
     return pool.query(text);
 }
 
-module.exports = {getAllRoomName, getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessources}
+module.exports = {getAllRoomName, getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessources, getBuildings, getBuildingFloors}

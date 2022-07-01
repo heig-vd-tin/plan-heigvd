@@ -1,10 +1,10 @@
 <template>
-  <div class="building-change" v-for="building in buildings.list">
+  <div class="building-change" v-for="b in buildings.list">
     <ToolButton
-        :selected="building === buildings.selected"
+        :selected="b === buildings.selected"
         @click="changeSelected"
     >
-      {{building}}
+      {{ b }}
     </ToolButton>
   </div>
 </template>
@@ -12,11 +12,18 @@
 <script setup lang="ts">
 import ToolButton from "../Utility/Button.vue";
 import {currentBuildingStore} from "../../stores/currentBuilding";
+import {currentFloorStore} from "../../stores/currentFloor";
 
 const buildings = currentBuildingStore()
 
 function changeSelected(e : Event) {
   buildings.change((e.target as HTMLElement).innerText)
+  currentFloorStore().initStore(
+      buildings.selected,
+      buildings.info.floors,
+      buildings.info.groundFloor
+  )
+
 }
 
 </script>

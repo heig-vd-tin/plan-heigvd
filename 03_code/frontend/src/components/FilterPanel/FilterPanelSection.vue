@@ -12,7 +12,7 @@
     <div v-show="visibility" v-for="filter in filters">
       <label :for="filter" class="container">
         {{getFormat(filter)}}
-        <input @change="inputChange" type="checkbox" :id="filter" :name="filter" checked >
+        <input @change="change" type="checkbox" :id="filter" :name="filter" checked >
         <span class="checkmark"></span>
       </label>
     </div>
@@ -28,9 +28,9 @@ const props = defineProps<{
   filters : string[]
 }>()
 
-const emit = ['change']
+const emit = defineEmits(['change'])
 
-function inputChange(e : Event) {
+function change(e : Event) {
   emit('change', e)
 }
 

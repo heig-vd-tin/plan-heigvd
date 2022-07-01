@@ -24,7 +24,6 @@
 -->
     <Map
         :background-features="bgFeatures"
-
         @room-selected="displayRoomInfo"
         @room-unselected="undisplayRoomInfo"
     ></Map>
@@ -34,22 +33,17 @@
 <script setup lang="ts">
 import Map from "./components/Map.vue";
 import Header from "./components/Header/Header.vue";
-import FloorChange from "./components/ToolPanel/FloorChange.vue";
-import ListRoom from "./components/listRoom.vue";
 import FilterMenu from "./components/FilterPanel/FilterPanel.vue";
 import InfoPanel from "./components/InfoPanel/InfoPanel.vue";
 
-import {onMounted, ref, watch} from "vue";
+import {onMounted, ref} from "vue";
 import {
-  backgroundFeatures, getDisplayedResource,
+  backgroundFeatures,
   fetchBaseFeatures,
   fetchOtherFeatures,
-  FloorFeature,
-  floorsFeatures, getResourcesList,
 } from "./mapElement/Feature";
 
 import {Feature} from "ol";
-import {buildingsInfo} from "./data/data";
 import ToolBar from "./components/ToolPanel/ToolBar.vue";
 import {currentFloorStore} from "./stores/currentFloor";
 import {filtersStore} from "./stores/Filters";
@@ -93,17 +87,18 @@ function changeMenuState (newState : boolean) {
 }
 
 onMounted(async () => {
+  await fetchBaseFeatures()
+  bgFeatures.value = backgroundFeatures
   const currentBuilding = currentBuildingStore()
-  const buildingData = buildingsInfo.get('Cheseaux')
-  if (buildingData != undefined) {
-    await fetchBaseFeatures(buildingData.groundFloor)
-    currentBuildingStore().change('Cheseaux')
-    bgFeatures.value = backgroundFeatures
-    loading.value = false
-    await fetchOtherFeatures(buildingData.floors, buildingData.groundFloor)
-    filtersStore().initStore()
-// ;
-  }
+  currentFloorStore().initStore(
+      currentBuilding.selected,
+      currentBuilding.info.floors,
+      currentBuilding.info.groundFloor
+  )
+  filtersStore().initStore()
+  loading.value = false
+  await fetchOtherFeatures(currentBuilding.info.floors, currentBuilding.info.groundFloor)
+  filtersStore().initStore()
 })
 </script>
 

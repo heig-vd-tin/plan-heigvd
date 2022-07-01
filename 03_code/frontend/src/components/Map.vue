@@ -4,36 +4,29 @@
 
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
-
 import {View, Map, Feature} from "ol";
 import 'ol/ol.css'
-
-import {getRoomGis} from "../api/api";
 import {
   backgroundStyle1,
   backgroundStyle2,
   emptyStyle,
-  labelHoverStyleFunction,
   labelStyleFunction,
   lineStyle,
   polygonStyle,
-  ressourceHoverStyleFunction,
-  ressourceSelectedStyleFunction,
   ressourceStyleFunction,
-  selectedRoomStyleFunction
 } from "../mapElement/style";
 import {
   createEmptyVectorLayer,
   getOpenStreetMapLayer,
   setFeaturesToLayer
 } from "../mapElement/Layer";
-import {FloorFeature, floorsFeatures, getDisplayedResource} from "../mapElement/Feature";
-import {Select} from "ol/interaction";
-import {pointerMove} from "ol/events/condition";
+import {floorsFeatures, getDisplayedResource} from "../mapElement/Feature";
 import {currentFloorStore} from "../stores/currentFloor";
 import {filtersStore} from "../stores/Filters";
 import {currentBuildingStore} from "../stores/currentBuilding";
+import {getSelect, setInteraction} from "../mapElement/select";
 
+// define the props component
 const props = defineProps<{
   backgroundFeatures? : Feature[],
   selectedRoom? : string
@@ -42,8 +35,8 @@ const props = defineProps<{
 const emit = defineEmits(['roomSelected', 'roomUnselected'])
 
 const currentBuilding = currentBuildingStore()
-// currentFloorStore().initStore(currentBuilding.info.floors, currentBuilding.info.groundFloor)
 
+// the view
 let view = new View()
 
 // the element which the map is attached
@@ -59,30 +52,6 @@ let labelsLayer = createEmptyVectorLayer(polygonStyle)
 // let roomLayer = createEmptyVectorLayer()
 let backgroundLayer = createEmptyVectorLayer(backgroundStyle1)
 let resourceLayer = createEmptyVectorLayer(emptyStyle)
-
-const select = new Select({
-  style : selectedRoomStyleFunction,
-  layers : [labelsLayer]
-})
-
-const selectResource = new Select({
-  style : ressourceSelectedStyleFunction,
-  layers : [resourceLayer]
-})
-
-const selectHover = new Select({
-  condition: pointerMove,
-  style: labelHoverStyleFunction,
-  layers : [labelsLayer]
-});
-
-const selectResourceHover = new Select({
-  condition: pointerMove,
-  style : ressourceHoverStyleFunction,
-  layers : [resourceLayer]
-})
-
-let selectedData: { name: string, type: string | null, surface: string | null, capacity: string | null }[] = []
 
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
@@ -122,60 +91,31 @@ onMounted(() => {
     }
   })
 
-  map.value.addInteraction(select)
-  map.value.addInteraction(selectResource)
-  map.value.addInteraction(selectHover)
-  map.value.addInteraction(selectResourceHover)
-
-  select.on('select', (e) => {
-    selectedData = []
-    const features = e.target.getFeatures()
-    if (features.getLength() > 0) {
-      for (let i = 0; i < features.getLength(); i++) {
-        const properties = features.item(i).getProperties()
-        selectedData.push({
-          name: properties.name,
-          type: properties.type,
-          surface: properties.surface,
-          capacity: properties.capacity
-        })
-      }
-      console.log(selectedData)
-      emit('roomSelected', selectedData)
-    } else {
-
-      emit('roomUnselected')
-    }
-  })
-
-  selectResource.on('select', (e) => {
-    selectedData = []
-    const features = e.target.getFeatures()
-    if (features.getLength() > 0) {
-      for (let i = 0; i < features.getLength(); i++) {
-        const properties = features.item(i).getProperties()
-        selectedData.push({
-          name: properties.type,
-          type: null,
-          surface: null,
-          capacity: null
-        })
-      }
-      emit('roomSelected', selectedData)
-    } else {
-      selectedData = []
-      emit('roomUnselected')
-    }
-  })
-})
-
-selectResource.on('pointermove', (e) => {
-  console.log('here')
-  const features = e.target.getFeatures()
-  if (features.getLength() > 0) {
-    map.value.removeInteraction(select)
-    map.value.removeInteraction(selectHover)
+  // add the selection interraction to the map
+  const selects = getSelect(labelsLayer, resourceLayer)
+  for (const select in selects) {
+    map.value.addInteraction(selects[select])
   }
+
+  function emitInteractionResult(data : string[]) {
+    if (data.length > 0) {
+      emit('roomSelected', data)
+    } else {
+      emit('roomUnselected')
+    }
+  }
+
+  // event on room selection
+  selects.selectRoom.on('select', (e) => {
+    const data = setInteraction(e)
+    emitInteractionResult(data)
+  })
+
+  // event on resource selection
+  selects.selectResource.on('select', (e) => {
+    const data = setInteraction(e)
+    emitInteractionResult(data)
+  })
 })
 
 watch(() => props.backgroundFeatures, (newFeatures) => {
@@ -212,8 +152,6 @@ watch(() => currentBuilding.selected, (newBuilding : string) => {
     view.setRotation(currentBuilding.info.rotation)
     view.setMaxZoom(currentBuilding.info.maxZoom)
     view.setMinZoom(currentBuilding.info.minZoom)
-    currentFloorStore().initStore(newBuilding, currentBuilding.info.floors, currentBuilding.info.groundFloor)
-
   }
 })
 

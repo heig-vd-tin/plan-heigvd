@@ -6,6 +6,16 @@ const request = require("./database")
 
 app.use(cors())
 
+app.get('/building', async (req, res) => {
+    const data = await request.getBuildings();
+    res.json(data.rows)
+})
+
+app.get('/:building/floors', async (req, res) => {
+    const data = await request.getBuildingFloors(req.params.building);
+    res.json(data.rows)
+})
+
 app.get('/:floor/lines', async (req, res) => {
 
     const data = await request.getFloorGis(req.params.floor, 'line');

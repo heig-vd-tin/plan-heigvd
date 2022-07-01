@@ -6,10 +6,7 @@
       />
     </Tool>
     <Tool tool-name="Etages">
-      <floor-change
-          :floors="buildingData.floors"
-          :ground-floor="buildingData.groundFloor"
-      />
+      <floor-change/>
     </Tool>
   </div>
 </template>
@@ -20,10 +17,11 @@ import {buildingsInfo} from "../../data/data";
 import BuildingChange from "./BuildingChange.vue";
 import Tool from "./Tool.vue";
 import ZoomChange from "../ZoomChange.vue";
+import {currentBuildingStore} from "../../stores/currentBuilding";
 
 const emit = defineEmits(['floorUpdated'])
 
-const buildingData = buildingsInfo.get('Cheseaux')
+const currentBuilding = currentBuildingStore()
 
 </script>
 

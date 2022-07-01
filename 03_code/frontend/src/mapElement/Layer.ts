@@ -5,14 +5,13 @@ import {StyleLike} from "ol/style/Style";
 import TileLayer from "ol/layer/Tile";
 import {OSM} from "ol/source";
 
-
-function getOpenStreetMapLayer() {
+export function getOpenStreetMapLayer() {
     return new TileLayer({
         source :new OSM()
     })
 }
 
-function setFeaturesToLayer (layer : VectorLayer<VectorSource>, features : Feature[] | undefined) : VectorSource | undefined {
+export function setFeaturesToLayer (layer : VectorLayer<VectorSource>, features : Feature[] | undefined) : VectorSource | undefined {
     if (features != undefined) {
         const source = layer.getSource()
         if (source != null) {
@@ -23,11 +22,9 @@ function setFeaturesToLayer (layer : VectorLayer<VectorSource>, features : Featu
     }
 }
 
-function createEmptyVectorLayer(style : StyleLike) {
+export function createEmptyVectorLayer(style : StyleLike) {
     return new VectorLayer({
         source : new VectorSource({ features: []}),
         style: style,
     })
 }
-
-export {getOpenStreetMapLayer, setFeaturesToLayer, createEmptyVectorLayer}

@@ -5,10 +5,11 @@ import {
     getLabels,
     getAllPolygons,
     getFloorRessource,
-    getGlobalResource
+    getGlobalResource, getBuildings, getBuildingsFloors
 } from "../api/api";
 import {ressourceStyleFunction} from "./style";
 import {GeoJSON} from "ol/format";
+import {currentBuildingStore} from "../stores/currentBuilding";
 
 export class FloorFeature {
     lines : Feature[]
@@ -31,8 +32,28 @@ let globalResourcesFeatures : Feature[]
 const geojsonTool = new GeoJSON()
 
 // Fetch data to display when user ask the website
-export async function fetchBaseFeatures(groundFloor : string) {
-    await fetchFloorFeatures(groundFloor)
+export async function fetchBaseFeatures() {
+    const buildings = await getBuildings()
+    const buildingStore = currentBuildingStore()
+    console.log(buildings)
+    for (const b of buildings) {
+        const floors : {name : string}[] = await getBuildingsFloors(b.name)
+        buildingStore.addBuildingInfo(
+            b.name,
+            floors.map(v => v.name),
+            b.groundfloor,
+            b.x,
+            b.y,
+            b.rotation,
+            b.minZoom,
+            b.maxZoom
+        )
+    }
+
+    buildingStore.initStore()
+    if (buildingStore.info !== undefined) {
+        await fetchFloorFeatures(buildingStore.info.groundFloor)
+    }
 
     const rawBackground = await getAllPolygons()
     backgroundFeatures = geojsonTool.readFeatures(rawBackground)
@@ -69,10 +90,11 @@ async function fetchFloorFeatures(floor : string) {
 export function getDisplayedResource(filters : string[], floor : string) {
     let features : Feature[] = []
     const f1 = floorsFeatures.get(floor)?.resources
-    features.push(...globalResourcesFeatures)
+    if (globalResourcesFeatures != undefined){
+        features.push(...globalResourcesFeatures)
+    }
     if (f1 != undefined) {
         features.push(...f1)
-        console.log(features)
     }
     features = features.filter(feature => {
         return filters.some(e => e === feature.getProperties().type)

@@ -2,7 +2,7 @@ version: '3.9'
 services:
   database :
     container_name: plan-heig-database
-    # image: postgis/postgis
+    image: postgis/postgis
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${DB_PASSWORD}

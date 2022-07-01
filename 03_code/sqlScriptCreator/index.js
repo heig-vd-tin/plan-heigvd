@@ -1,6 +1,6 @@
 const fs = require('fs')
 
-if (process.argv.length != 5) {
+if (process.argv.length !== 5) {
     throw 'command : node index.js <input path> <output path> <database Name>'
 }
 
@@ -11,16 +11,13 @@ const dbName =  process.argv[4] // 'plan'
 
 
 function main () {
-
-
-
     const init = `CREATE DATABASE ${dbName} WITH OWNER "postgres"  ENCODING 'UTF8';`
 
     write('01_init', init)
 
     let create = `\\connect ${dbName}\n`
     create += `CREATE EXTENSION postgis;\n`
-    create += `create table if not exists building (id serial primary key, name varchar(255));\n`
+    create += `create table if not exists building (id serial primary key, x float, y float, groundFloor varchar(6), rotation float, zoom int, minZoom int, maxZoom int,   name varchar(255));\n`
     create += `create table if not exists floor (id serial primary key, name varchar(255), idx_building int);\n`
     create += `create table if not exists floor_geometry (id serial primary key, idx_floor int, type varchar(255), geom geometry);\n`
     create += `create table if not exists room (id serial primary key, name varchar(255) not null, type varchar(255), surface Float, capacity int,  idx_floor int, geometry geometry);\n`
@@ -32,15 +29,17 @@ function main () {
     let insert = `\\connect ${dbName}\n`
 
     for (const building of buildings) {
-        insert += `insert into building (name) VALUES ('${building}');\n`
+        const json = JSON.parse(fs.readFileSync(`${inputPath}/${building}/buildingData.json`))
+        insert += `insert into building (name, x, y, groundFloor, rotation, zoom, minZoom, maxZoom) VALUES ('${building}', ${json.center[0]}, ${json.center[1]}, '${json.groundFloor}', ${json.rotation}, ${json.zoom}, ${json.minZoom}, ${json.maxZoom});\n`
         insert += insertGlobalResourceData(building)
         if (building === 'Cheseaux') {
             readRoomData(building)
         }
 
+
         const floors = fs.readdirSync(`${inputPath}/${building}`)
         for (const floor of floors) {
-            if (floor != 'resource' && floor != 'roomInfo.csv' && floor != 'roomInfo.xlsx' ){
+            if (floor !== 'resource' && floor !== 'roomInfo.csv' && floor !== 'roomInfo.xlsx' && floor !== 'buildingData.json'){
                 insert += `insert into floor (name, idx_building) select '${floor}', id from building where name = '${building}';\n`
                 insert += insertFloorGeom(building, floor)
                 insert += insertRoomData(building, floor)
@@ -48,9 +47,10 @@ function main () {
             }
 
         }
-
     }
-    write('03_insert', insert)
+   write('03_insert', insert)
+
+
 }
 
 const data = new Map()

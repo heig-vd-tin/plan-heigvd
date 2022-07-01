@@ -2,166 +2,116 @@ import {Text, Fill, Stroke, Style, Icon} from "ol/style";
 import {FeatureLike} from "ol/Feature";
 import {images} from "../data/image";
 
-const emptyStyle = new Style({})
+// colors
+const white     = 'rgba(245, 245, 245 , 1)'
+const lightGrey = 'rgba(235, 235, 235 , 1)'
+const grey      = 'rgba(200, 200, 200 , 1)'
+const darkGrey  = 'rgba(100, 100, 100, 1)'
+const black     = '#000'
+const red       = 'rgba(220, 0, 0, 1)'
 
-const lineStyle = new Style({
+const textLabel = new Text({
+    font: '15px Avenir,sans-serif',
+    fill: new Fill({
+        color: black,
+    }),
     stroke: new Stroke({
-        color: 'rgba(100, 100, 100, 1)',
+        color: white,
+        width: 4,
+    }),
+})
+
+export const emptyStyle = new Style({})
+
+export const lineStyle = new Style({
+    stroke: new Stroke({
+        color: darkGrey,
         width: 1,
     }),
 })
 
-const polygonStyle = new Style({
+export const polygonStyle = new Style({
+    fill: new Fill({
+        color: white,
+    })
+})
+export const backgroundStyle1 = new Style({
     stroke: new Stroke({
-        width: 0,
+        color: grey,
+        width: 1,
     }),
     fill: new Fill({
-        color: 'rgba(245, 245, 245 , 1)',
+        color: lightGrey,
     })
 })
 
-const backgroundStyle1 = new Style({
-    stroke: new Stroke({
-        width: 0,
-    }),
+export const backgroundStyle2 = new Style({
     fill: new Fill({
-        color: 'rgba(235, 235, 235 , 1)',
-    })
-})
-
-const backgroundStyle2 = new Style({
-    fill: new Fill({
-        color: 'rgba(200, 200, 200 , 1)',
+        color: grey,
     })
 })
 
 const selectedRoomStyle = new Style({
-    stroke: new Stroke({
-        width: 0,
-    }),
     fill: new Fill({
-        color: 'rgba(220, 0, 0, 1)',
+        color: red,
     }),
-    text: new Text({
-        font: '15px Calibri,sans-serif',
-        fill: new Fill({
-            color: '#000',
-        }),
-        stroke: new Stroke({
-            color: '#ffffff',
-            width: 4,
-        }),
-    }),
+    text: textLabel,
 })
 
-function selectedRoomStyleFunction (feature : FeatureLike) {
+export function selectedRoomStyleFunction (feature : FeatureLike) {
     selectedRoomStyle.getText().setText(`${feature.get('name')}`)
     return selectedRoomStyle
 }
 
+// label style
 const labelStyle = new Style({
     fill: new Fill({
-        color: 'rgba(245, 245, 245 , 1)',
+        color: white,
     }),
-    image: new Icon({
-        scale : 0.05,
-        crossOrigin: 'anonymous',
-        src: `src/assets/bus.png`,
-    }),
-    text: new Text({
-        font: '15px Avenir,sans-serif',
-        fill: new Fill({
-            color: '#000',
-        }),
-        stroke: new Stroke({
-            color: '#ffffff',
-            width: 4,
-        }),
-    }),
+    text: textLabel,
 })
-
-const labelHoverStyle = new Style({
-    fill: new Fill({
-        color: 'rgba(200, 200, 200 , 1)',
-    }),
-    text: new Text({
-        font: '15px Calibri,sans-serif',
-        fill: new Fill({
-            color: '#000',
-        }),
-        stroke: new Stroke({
-            color: '#ffffff',
-            width: 4,
-        }),
-    }),
-})
-
-function labelStyleFunction(feature : FeatureLike) {
+export function labelStyleFunction(feature : FeatureLike) {
     const name =  feature.get('name')
     labelStyle.getText().setText(`${name}`)
     return labelStyle
-
 }
 
-function labelHoverStyleFunction(feature : FeatureLike) {
+const labelHoverStyle = new Style({
+    fill: new Fill({
+        color: grey,
+    }),
+    text: textLabel,
+})
+export function labelHoverStyleFunction(feature : FeatureLike) {
     labelHoverStyle.getText().setText(`${feature.get('name')}`)
     return labelHoverStyle
 }
 
-function ressourceStyleFunction (feature : FeatureLike) : Style {
-    const img = images.get(feature.get('type'))
-    if (img != undefined) {
+// Ressource style
+function getRessourceStyle(imgUrl : string | undefined, scale : number) {
+    if (imgUrl != undefined) {
         return new Style({
             image: new Icon({
-                scale : 0.2,
+                scale : scale,
                 crossOrigin: 'anonymous',
-                src: img,//`src/assets/${feature.get('type')}.png`,
+                src: imgUrl,
             })
         })
     }
     else return new Style()
 }
 
-function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
+export function ressourceStyleFunction (feature : FeatureLike) : Style {
     const img = images.get(feature.get('type'))
-    if (img != undefined) {
-        return new Style({
-            image: new Icon({
-                scale : 0.25,
-                crossOrigin: 'anonymous',
-                src: img,// `src/assets/${feature.get('type')}.png`,
-            })
-        })
-    }
-    else return new Style()
+    return getRessourceStyle(img, 0.2)
 }
 
-function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
+export function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
+    const img = images.get(feature.get('type'))
+    return getRessourceStyle(img, 0.25)
+}
+
+export function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
     const img = images.get(`${feature.get('type')}_selected`)
-    if (img != undefined) {
-        return new Style({
-            image: new Icon({
-                scale : 0.25,
-                crossOrigin: 'anonymous',
-                src: img,
-            })
-        })
-    }
-    else {
-        return new Style()
-    }
-}
-
-export {
-    emptyStyle,
-    polygonStyle,
-    backgroundStyle1,
-    backgroundStyle2,
-    lineStyle,
-    labelStyleFunction,
-    selectedRoomStyleFunction,
-    ressourceStyleFunction,
-    labelHoverStyleFunction,
-    ressourceHoverStyleFunction,
-    ressourceSelectedStyleFunction
+    return getRessourceStyle(img, 0.25)
 }
