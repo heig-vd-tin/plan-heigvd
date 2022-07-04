@@ -21,6 +21,10 @@ export async function getResourceOfBuilding (building : string) {
     return await fetch(`${import.meta.env.VITE_API_URL}/${building}/resource`).then(res => res.json())
 }
 
+export async function getResourceOfRoom (building : string, room : string) {
+    return await fetch(`${import.meta.env.VITE_API_URL}/${building}/${room}/resource`).then(res => res.json())
+}
+
 export async function getRoomGis (roomName : string) {
     return await fetch(`${import.meta.env.VITE_API_URL}/rooms/${roomName}`).then(res => res.json())
 }

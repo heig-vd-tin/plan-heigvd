@@ -100,4 +100,16 @@ async function getRessourcesOfBuidling(buildingName) {
     return pool.query(text);
 }
 
-module.exports = { getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessourcesOfFloor, getRessourcesOfBuidling, getBuildings, getBuildingFloors}
+async function getResourceOfRoom(buildingName, roomName) {
+    const text =  `SELECT resource.name, resource.type
+    FROM resource
+    INNER JOIN building
+        ON building.id = resource.idx_building
+    INNER JOIN room
+        ON room.id = resource.idx_room
+    WHERE room.name = '${roomName}' AND building.name = '${buildingName}';` ;
+    console.log(text)
+    return pool.query(text);
+}
+
+module.exports = { getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessourcesOfFloor, getResourceOfRoom, getRessourcesOfBuidling, getBuildings, getBuildingFloors}

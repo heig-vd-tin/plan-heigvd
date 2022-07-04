@@ -16,6 +16,13 @@
         <p >Personnel : </p>
         <p  v-for="person in people[index]">- {{person}}</p>
       </div>
+      <div v-if="resources[index] !== undefined && resources[index].length !== 0">
+        <p >Ressources : </p>
+        <div v-for="resource in resources[index]">
+          <p>- {{resource.name}}</p>
+          <p>- {{resource.type}}</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,20 +30,25 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import ToolButton from "../Utility/Button.vue";
-import {getPersonsOfRoom} from "../../api/api";
+import {getPersonsOfRoom, getResourceOfRoom} from "../../api/api";
+import {currentBuildingStore} from "../../stores/currentBuilding";
 
 const props = defineProps<{
   selectedRoom : {name : string, type : string | null, surface : string | null, capacity : string | null}[]
 }>()
 
 const people = ref<string[][]>([])
+const resources = ref<{ name : string, type : string }[][]>([])
 
 
 watch(() => props.selectedRoom, async (newRooms) => {
   people.value = []
+  resources.value = []
   for (const room of newRooms) {
     const p = await getPersonsOfRoom(room.name)
     people.value.push(p)
+    const r = await getResourceOfRoom(currentBuildingStore().selected, room.name)
+    resources.value.push(r)
   }
 })
 

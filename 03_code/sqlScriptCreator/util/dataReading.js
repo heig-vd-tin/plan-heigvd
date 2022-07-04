@@ -21,22 +21,6 @@ function formatStringForSql(data) {
     return `'${data}'`
 }
 
-function readResourceData(inputPath) {
-    const resourceData = parseCsv(`${inputPath}/resourceData.csv`)
-    return readData(resourceData, (data) => {
-        return {
-            key :  data[0],
-            value : {
-                name : formatData(data[1], formatStringForSql),
-                type :formatData( data[2], formatStringForSql),
-                img : formatData(data[3], formatStringForSql)
-            }
-        }
-    })
-}
-
-
-
 function readRoomData(inputPath, buiding) {
     const roomData = parseCsv(`${inputPath}/${buiding}/roomInfo.csv`)
     return readData(roomData, (data) => {
@@ -51,4 +35,4 @@ function readRoomData(inputPath, buiding) {
     })
 }
 
-module.exports = {readRoomData, readResourceData}
+module.exports = {readRoomData}

@@ -40,6 +40,11 @@ app.get('/:building/:floor/features', async (req, res) => {
     })
 })
 
+app.get('/:building/:room/resource', async (req, res) => {
+    const data = await request.getResourceOfRoom(req.params.building, req.params.room);
+    res.json(data.rows)
+})
+
 app.get('/rooms/:name', async (req, res) => {
     const data = await request.getRoomGis(req.params.name);
     res.json(data.rows[0].json_build_object)

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const {parseCsv} = require("./utils");
-const {readResourceData, readRoomData} = require("./dataReading");
+const {readRoomData} = require("./dataReading");
 
 function insertDataIntoTables(inputPath, dbName) {
     let insert = `\\connect ${dbName}\n`
@@ -26,15 +26,15 @@ function visitBuildingFiles(inputPath) {
     return visitFiles(`${inputPath}`, (building) => {
         let insert = ''
         if (building !== 'resourceData.xlsx' && building !== 'resourceData.csv') {
-            // insert += insertDataIntoBuildingTable(inputPath, building)
-            insert += insertResourceDataIntoResourceTable(`${inputPath}/${building}/resource`)
+            insert += insertDataIntoBuildingTable(inputPath, building)
 
             let roomData
             if (building === 'Cheseaux') {
                 roomData = readRoomData(inputPath, building)
             }
 
-            // insert += visitFloorFiles(inputPath, building, roomData)
+            insert += visitFloorFiles(inputPath, building, roomData)
+            insert += insertResourceDataIntoResourceTable(`${inputPath}/${building}/resource`)
         }
         return insert
     })
@@ -85,7 +85,7 @@ INNER JOIN floor
     ON floor.idx_building = building.id
 INNER JOIN room
     ON floor.id = room.idx_floor
-WHERE building.name = '${properties.building} AND room.name = '${properties.room}';\n`
+WHERE building.name = '${properties.building}' AND room.name = '${properties.room}';\n`
             }
 
 

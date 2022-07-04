@@ -32,6 +32,7 @@ import wcHandicape from '../assets/wc_handicapé.png'
 import wcHandicapeSelected from '../assets/wc_handicapé_selected.png'
 import wcInclusif from '../assets/wc_inclusif.png'
 import wcInclusifSelected from '../assets/wc_inclusif_selected.png'
+import priseElectrique from '../assets/prise_électrique.png'
 
 
 export const images = new Map<string, string>()
@@ -68,3 +69,4 @@ images.set('wc_handicapé', wcHandicape)
 images.set('wc_handicapé_selected', wcHandicapeSelected)
 images.set('wc_inclusif', wcInclusif)
 images.set('wc_inclusif_selected', wcInclusifSelected)
+images.set('prise_électrique', priseElectrique)
