@@ -18,11 +18,14 @@ const buildings = currentBuildingStore()
 
 function changeSelected(e : Event) {
   buildings.change((e.target as HTMLElement).innerText)
-  currentFloorStore().initStore(
-      buildings.selected,
-      buildings.info.floors,
-      buildings.info.groundFloor
-  )
+  if (buildings.info !== undefined) {
+    currentFloorStore().initStore(
+        buildings.selected,
+        buildings.info.floors,
+        buildings.info.groundFloor
+    )
+  }
+
 
 }
 

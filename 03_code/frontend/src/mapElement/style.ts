@@ -102,16 +102,19 @@ function getRessourceStyle(imgUrl : string | undefined, scale : number) {
 }
 
 export function ressourceStyleFunction (feature : FeatureLike) : Style {
-    const img = images.get(feature.get('type'))
+    const imgName = feature.get('image_name').split('.')[0]
+    const img = images.get(imgName)
     return getRessourceStyle(img, 0.2)
 }
 
 export function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
-    const img = images.get(feature.get('type'))
+    const imgName = feature.get('image_name').split('.')[0]
+    const img = images.get(imgName)
     return getRessourceStyle(img, 0.25)
 }
 
 export function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
-    const img = images.get(`${feature.get('type')}_selected`)
+    const imgName = feature.get('image_name').split('.')[0]
+    const img = images.get(`${imgName}_selected`)
     return getRessourceStyle(img, 0.25)
 }

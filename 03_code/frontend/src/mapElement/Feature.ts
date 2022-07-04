@@ -1,11 +1,7 @@
 import {Feature} from "ol";
 import {
-    getLines,
-    getPolygons,
-    getLabels,
-    getAllPolygons,
-    getFloorRessource,
-    getGlobalResource, getBuildings, getBuildingsFloors
+    getAllPolygonsOfBuilding,
+    getBuildings, getBuildingsFloors, getFeaturesOfFloor, getResourceOfBuilding
 } from "../api/api";
 import {ressourceStyleFunction} from "./style";
 import {GeoJSON} from "ol/format";
@@ -35,52 +31,50 @@ const geojsonTool = new GeoJSON()
 export async function fetchBaseFeatures() {
     const buildings = await getBuildings()
     const buildingStore = currentBuildingStore()
-    console.log(buildings)
     for (const b of buildings) {
         const floors : {name : string}[] = await getBuildingsFloors(b.name)
         buildingStore.addBuildingInfo(
             b.name,
             floors.map(v => v.name),
-            b.groundfloor,
+            b.ground_floor,
             b.x,
             b.y,
             b.rotation,
-            b.minZoom,
-            b.maxZoom
+            b.min_zoom,
+            b.max_zoom
         )
     }
 
     buildingStore.initStore()
     if (buildingStore.info !== undefined) {
-        await fetchFloorFeatures(buildingStore.info.groundFloor)
+        await fetchFloorFeatures(buildingStore.selected, buildingStore.info.groundFloor)
     }
 
-    const rawBackground = await getAllPolygons()
+    const rawBackground = await getAllPolygonsOfBuilding(buildingStore.selected)
     backgroundFeatures = geojsonTool.readFeatures(rawBackground)
 
-    globalResourcesFeatures = geojsonTool.readFeatures(await getGlobalResource())
+    const globalResource = await getResourceOfBuilding(buildingStore.selected)
+    console.log(globalResource)
+    globalResourcesFeatures = geojsonTool.readFeatures(globalResource)
 }
 
 export async function fetchOtherFeatures(floors : string[], groundFloor : string) {
     for (const floor of floors) {
         if (floor != groundFloor) {
-            await fetchFloorFeatures(floor)
+            await fetchFloorFeatures(currentBuildingStore().selected, floor)
         }
     }
 }
 
-async function fetchFloorFeatures(floor : string) {
-    const rawPolygons  = await getPolygons(floor)
-    const rawLines     = await getLines(floor)
-    const rawLabels    = await getLabels(floor)
-    const rawResources = await getFloorRessource(floor)
+async function fetchFloorFeatures(building : string, floor : string) {
+    const floorFeatures = await getFeaturesOfFloor(building, floor)
 
-    const polygons  = geojsonTool.readFeatures(rawPolygons)
-    const lines     = geojsonTool.readFeatures(rawLines)
-    const labels    = geojsonTool.readFeatures(rawLabels)
+    const polygons  = geojsonTool.readFeatures(floorFeatures.polygons)
+    const lines     = geojsonTool.readFeatures(floorFeatures.lines)
+    const labels    = geojsonTool.readFeatures(floorFeatures.labels)
     let resources
-    if (rawResources.features != null) {
-        resources = geojsonTool.readFeatures(rawResources)
+    if (floorFeatures.resources.features != null) {
+        resources = geojsonTool.readFeatures(floorFeatures.resources)
     } else {
         resources = null
     }

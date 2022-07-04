@@ -90,14 +90,17 @@ onMounted(async () => {
   await fetchBaseFeatures()
   bgFeatures.value = backgroundFeatures
   const currentBuilding = currentBuildingStore()
-  currentFloorStore().initStore(
-      currentBuilding.selected,
-      currentBuilding.info.floors,
-      currentBuilding.info.groundFloor
-  )
-  filtersStore().initStore()
-  loading.value = false
-  await fetchOtherFeatures(currentBuilding.info.floors, currentBuilding.info.groundFloor)
+  if (currentBuilding.info !== undefined) {
+    currentFloorStore().initStore(
+        currentBuilding.selected,
+        currentBuilding.info.floors,
+        currentBuilding.info.groundFloor
+    )
+    filtersStore().initStore()
+    loading.value = false
+    await fetchOtherFeatures(currentBuilding.info.floors, currentBuilding.info.groundFloor)
+  }
+
   filtersStore().initStore()
 })
 </script>

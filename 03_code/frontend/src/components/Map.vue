@@ -93,12 +93,13 @@ onMounted(() => {
 
   // add the selection interraction to the map
   const selects = getSelect(labelsLayer, resourceLayer)
-  for (const select in selects) {
-    map.value.addInteraction(selects[select])
-  }
+  map.value.addInteraction(selects.selectRoom)
+  map.value.addInteraction(selects.selectResource)
+  map.value.addInteraction(selects.selectRoomHover)
+  map.value.addInteraction(selects.selectResourceHover)
 
-  function emitInteractionResult(data : string[]) {
-    if (data.length > 0) {
+  function emitInteractionResult(data : {name : string, type : string, surface : number | null, capacity : number | null}[] | null) {
+    if (data !== null) {
       emit('roomSelected', data)
     } else {
       emit('roomUnselected')

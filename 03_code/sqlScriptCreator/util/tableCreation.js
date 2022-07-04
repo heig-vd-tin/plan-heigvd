@@ -1,6 +1,18 @@
-\connect plan
-CREATE EXTENSION postgis;
-CREATE TABLE IF NOT EXISTS building ( 
+
+
+function createTable(dbName) {
+    let create = `\\connect ${dbName}\n`
+    create += `CREATE EXTENSION postgis;\n`
+    create += createBuildingTable()
+    create += createFloorTable()
+    create += createFloorGeometryTable()
+    create += createRoomTable()
+    create += createResourceTable()
+    return create
+}
+
+function createBuildingTable() {
+    return `CREATE TABLE IF NOT EXISTS building ( 
     id SERIAL PRIMARY KEY,
     x FLOAT NOT NULL,
     y FLOAT NOT NULL,
@@ -10,8 +22,11 @@ CREATE TABLE IF NOT EXISTS building (
     min_zoom INT NOT NULL,
     max_zoom INT NOT NULL,
     name VARCHAR(255)
-);
-CREATE TABLE IF NOT EXISTS floor (
+);\n`
+}
+
+function createFloorTable() {
+    return `CREATE TABLE IF NOT EXISTS floor (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     idx_building INT NOT NULL,
@@ -19,8 +34,11 @@ CREATE TABLE IF NOT EXISTS floor (
         FOREIGN KEY(idx_building)
             REFERENCES building(id)
             ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS floor_geometry (
+);\n`
+}
+
+function createFloorGeometryTable() {
+    return `CREATE TABLE IF NOT EXISTS floor_geometry (
     id SERIAL PRIMARY KEY,
     idx_floor INT NOT NULL,
     type VARCHAR(255) NOT NULL,
@@ -29,8 +47,11 @@ CREATE TABLE IF NOT EXISTS floor_geometry (
         FOREIGN KEY(idx_floor)
             REFERENCES floor(id)
             ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS room (
+);\n`
+}
+
+function createRoomTable() {
+    return `CREATE TABLE IF NOT EXISTS room (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255),
@@ -42,8 +63,11 @@ CREATE TABLE IF NOT EXISTS room (
         FOREIGN KEY(idx_floor)
             REFERENCES floor(id)
             ON DELETE CASCADE
-);
-CREATE TABLE IF NOT EXISTS resource (
+);\n`
+}
+
+function createResourceTable() {
+    return `CREATE TABLE IF NOT EXISTS resource (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     type VARCHAR(255) NOT NULL,
@@ -65,4 +89,7 @@ CREATE TABLE IF NOT EXISTS resource (
         FOREIGN KEY(idx_room)
             REFERENCES room(id)
             ON DELETE SET NULL
-);
+);\n`
+}
+
+module.exports = {createTable}

@@ -43,7 +43,7 @@ export function getSelect(
 }
 
 
-export function setInteraction(e : SelectEvent) {
+export function setInteraction(e : SelectEvent) : {name : string, type : string, surface : number | null, capacity : number | null}[] | null {
     const features = e.target.getFeatures()
     const data = []
     if (features.getLength() > 0) {
@@ -58,14 +58,16 @@ export function setInteraction(e : SelectEvent) {
                 })
             }
             else {
+                console.log(properties.name)
                 data.push({
-                    name: properties.type,
-                    type: null,
+                    name: properties.name,
+                    type: properties.type,
                     surface: null,
                     capacity: null
                 })
             }
         }
+        return data
     }
-    return data
+    else return null
 }

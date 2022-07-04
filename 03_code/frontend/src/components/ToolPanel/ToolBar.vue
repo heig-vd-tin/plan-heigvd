@@ -13,7 +13,6 @@
 
 <script setup lang="ts">
 import FloorChange from "./FloorChange.vue";
-import {buildingsInfo} from "../../data/data";
 import BuildingChange from "./BuildingChange.vue";
 import Tool from "./Tool.vue";
 import ZoomChange from "../ZoomChange.vue";

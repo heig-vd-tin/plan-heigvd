@@ -9,34 +9,33 @@ export async function getBuildingsFloors(building : string) {
     return await fetch(`${import.meta.env.VITE_API_URL}/${building}/floors`).then(res => res.json())
 }
 
-export async function getLines(floor : string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/${floor}/lines`).then(res => res.json())
+export async function getAllPolygonsOfBuilding(building : string) : Promise<Feature[]> {
+    return await fetch(`${import.meta.env.VITE_API_URL}/${building}/polygons`).then(res => res.json())
 }
 
-export async function getPolygons (floor : string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/${floor}/polygons`).then(res => res.json())
+export async function getFeaturesOfFloor(building : string, floor : string) {
+    return await fetch(`${import.meta.env.VITE_API_URL}/${building}/${floor}/features`).then(res => res.json())
 }
 
-export async function getAllPolygons() : Promise<Feature[]> {
-    return await fetch(`${import.meta.env.VITE_API_URL}/polygons`).then(res => res.json())
-}
-
-export async function getRoomsName () {
-    return await fetch(`${import.meta.env.VITE_API_URL}/rooms/name`).then(res => res.json())
-}
-
-export async function getLabels(floor : string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/${floor}/labels`).then(res => res.json())
+export async function getResourceOfBuilding (building : string) {
+    return await fetch(`${import.meta.env.VITE_API_URL}/${building}/resource`).then(res => res.json())
 }
 
 export async function getRoomGis (roomName : string) {
     return await fetch(`${import.meta.env.VITE_API_URL}/rooms/${roomName}`).then(res => res.json())
 }
 
-export async function getGlobalResource () {
-    return await fetch(`${import.meta.env.VITE_API_URL}/resource`).then(res => res.json())
+export async function getPersonsOfRoom (room : string) {
+    const resp = await fetch(`https://contacts.heig-vd.ch/search/${room}.json`).then(res => res.json())
+    const obj = resp.people
+    const p : string[] = []
+    for (const letter in obj) {
+        for (const person of obj[letter]){
+            p.push(`${person.first_name} ${person.last_name}`)
+        }
+    }
+    console.log(p)
+    return p
 }
 
-export async function getFloorRessource (floorName : string) {
-    return await fetch(`${import.meta.env.VITE_API_URL}/${floorName}/resource`).then(res => res.json())
-}
+

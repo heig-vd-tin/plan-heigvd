@@ -23,6 +23,7 @@
 <script setup lang="ts">
 import {ref, watch} from "vue";
 import ToolButton from "../Utility/Button.vue";
+import {getPersonsOfRoom} from "../../api/api";
 
 const props = defineProps<{
   selectedRoom : {name : string, type : string | null, surface : string | null, capacity : string | null}[]
@@ -34,14 +35,7 @@ const people = ref<string[][]>([])
 watch(() => props.selectedRoom, async (newRooms) => {
   people.value = []
   for (const room of newRooms) {
-    const resp = await fetch(`https://contacts.heig-vd.ch/search/${room.name}.json`).then(res => res.json())
-    const obj = resp.people
-    const p : string[] = []
-    for (const letter in obj) {
-      for (const person of obj[letter]){
-        p.push(`${person.first_name} ${person.last_name}`)
-      }
-    }
+    const p = await getPersonsOfRoom(room.name)
     people.value.push(p)
   }
 })
