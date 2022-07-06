@@ -1,15 +1,11 @@
 <template>
   <div class="filter-section">
-    <div class="filter-section-header">
-      <h2 class="section-title">{{ title }}</h2>
-      <ToolButton v-show="visibility" class="filter-section-btn" @click="changeVisibility">
-        <font-awesome-icon :icon="['fas', 'angle-down']" />
-      </ToolButton>
-      <ToolButton v-show="!visibility" class="filter-section-btn" @click="changeVisibility">
-        <font-awesome-icon :icon="['fas', 'angle-right']" />
-      </ToolButton>
-    </div>
-    <div v-show="visibility" v-for="filter in filters">
+    <CollapseHeader
+      :title="title"
+      @change="changeVisibility"
+      id="collapse-header"
+    />
+    <div v-show="visibility" v-for="filter in filters" class="section-list">
       <label :for="filter" class="container">
         {{getFormat(filter)}}
         <input @change="change" type="checkbox" :id="filter" :name="filter" checked >
@@ -22,6 +18,7 @@
 <script  setup lang="ts">
 import ToolButton from "../Utility/Button.vue";
 import {ref} from "vue";
+import CollapseHeader from "../Utility/CollapseHeader.vue";
 
 const props = defineProps<{
   title : string
@@ -36,8 +33,8 @@ function change(e : Event) {
 
 const visibility = ref(false)
 
-function changeVisibility(){
-  visibility.value = !visibility.value
+function changeVisibility(e : boolean){
+  visibility.value = e
 }
 
 function getFormat(name : string) : string{
@@ -45,9 +42,6 @@ function getFormat(name : string) : string{
   let n2
   if (n1.startsWith('wc')) {
     n2 = n1.slice(0,2).toUpperCase() + n1.slice(2)
-  }
-  else if (n1 === 'centre impression') {
-    n2 = 'Centre d\'impressions'
   }
   else {
     n2 = n1.charAt(0).toUpperCase() + n1.slice(1)

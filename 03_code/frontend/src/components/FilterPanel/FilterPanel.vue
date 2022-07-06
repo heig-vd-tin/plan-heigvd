@@ -12,13 +12,9 @@
 <script setup lang="ts">
 
 import {filtersStore} from "../../stores/Filters";
-import ToolButton from "../Utility/Button.vue";
-import {ref} from "vue";
 import FilterMenuSection from "./FilterPanelSection.vue";
 
 const filters = filtersStore()
-
-
 
 function change(e : Event) {
   const element = e.target as HTMLInputElement
@@ -27,12 +23,6 @@ function change(e : Event) {
   } else {
     filters.remove(element.name)
   }
-}
-
-let resourceVisibiltiy = ref(false)
-
-function changeVisibility(){
-  resourceVisibiltiy.value = !resourceVisibiltiy.value
 }
 
 </script>
@@ -48,7 +38,9 @@ function changeVisibility(){
     height: calc(100vh - 50px);
     border-right: 1px solid var(--border-color);
     padding: 20px;
+    overflow: auto;
   }
+
 
 
 </style>

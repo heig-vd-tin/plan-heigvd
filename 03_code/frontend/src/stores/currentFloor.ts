@@ -6,7 +6,6 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     let building = ''
     let floors = ref<string[]>([])
     const id = ref(0)
-    const floor = ref('')
     const currentFloorName = ref('')
     const previousFloorName = ref('')
     const nextFloorName = ref('')
@@ -26,8 +25,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     }
 
     function setFloors() {
-        floor.value = floors.value[id.value]
-        currentFloorName.value = floor.value
+        currentFloorName.value = floors.value[id.value]
 
         if (id.value === floors.value.length - 1) {
             nextFloorName.value = ' '
@@ -45,18 +43,21 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     }
 
     function initStore(b : string, f : string[], groundFloor : string) {
-        building = b
-        floors.value = f
-        id.value = floors.value.indexOf(groundFloor)
-        setFloors()
+        if (b !== ''  && groundFloor !== '' && f.indexOf(groundFloor) !== -1) {
+            building = b
+            floors.value = f
+            id.value = floors.value.indexOf(groundFloor)
+            setFloors()
+        }
     }
 
     return {
         id,
-        floor,
+        floors,
         previousFloorName,
         currentFloorName,
         nextFloorName,
+        building,
         down,
         up,
         initStore

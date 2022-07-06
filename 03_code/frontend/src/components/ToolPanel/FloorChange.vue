@@ -18,7 +18,7 @@ import {ref} from "vue";
 import ToolButton from "../Utility/Button.vue";
 import {currentFloorStore} from "../../stores/currentFloor";
 
-let currentFloor = currentFloorStore()
+const currentFloor = currentFloorStore()
 
 function floorUp() {
   currentFloor.up()
@@ -28,13 +28,6 @@ function floorDown() {
   currentFloor.down()
 }
 
-function getFloorState() : string[]{
-  return [
-    currentFloor.previousFloorName,
-    currentFloor.currentFloorName,
-    currentFloor.nextFloorName
-  ]
-}
 </script>
 
 <style scoped>

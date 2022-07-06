@@ -58,9 +58,16 @@ const selectedRoomStyle = new Style({
     text: textLabel,
 })
 
-export function selectedRoomStyleFunction (feature : FeatureLike) {
-    selectedRoomStyle.getText().setText(`${feature.get('name')}`)
-    return selectedRoomStyle
+export function selectedStyleFunction (feature : FeatureLike) {
+    if(feature.get('image_name') === undefined) {
+        selectedRoomStyle.getText().setText(`${feature.get('name')}`)
+        return selectedRoomStyle
+    }
+    else {
+        const imgName = feature.get('image_name').split('.')[0]
+        const img = images.get(`${imgName}_selected`)
+        return getRessourceStyle(img, 0.25)
+    }
 }
 
 // label style
@@ -82,9 +89,16 @@ const labelHoverStyle = new Style({
     }),
     text: textLabel,
 })
-export function labelHoverStyleFunction(feature : FeatureLike) {
-    labelHoverStyle.getText().setText(`${feature.get('name')}`)
-    return labelHoverStyle
+export function hoverStyleFunction(feature : FeatureLike) {
+    if(feature.get('image_name') === undefined) {
+        labelHoverStyle.getText().setText(`${feature.get('name')}`)
+        return labelHoverStyle
+    }
+    else {
+        const imgName = feature.get('image_name').split('.')[0]
+        const img = images.get(imgName)
+        return getRessourceStyle(img, 0.25)
+    }
 }
 
 // Ressource style
@@ -105,16 +119,4 @@ export function ressourceStyleFunction (feature : FeatureLike) : Style {
     const imgName = feature.get('image_name').split('.')[0]
     const img = images.get(imgName)
     return getRessourceStyle(img, 0.2)
-}
-
-export function ressourceHoverStyleFunction (feature : FeatureLike) : Style {
-    const imgName = feature.get('image_name').split('.')[0]
-    const img = images.get(imgName)
-    return getRessourceStyle(img, 0.25)
-}
-
-export function ressourceSelectedStyleFunction (feature : FeatureLike) : Style {
-    const imgName = feature.get('image_name').split('.')[0]
-    const img = images.get(`${imgName}_selected`)
-    return getRessourceStyle(img, 0.25)
 }

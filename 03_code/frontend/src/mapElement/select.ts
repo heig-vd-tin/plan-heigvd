@@ -1,14 +1,13 @@
 import {Select} from "ol/interaction";
 import {
-    labelHoverStyleFunction,
-    ressourceHoverStyleFunction,
-    ressourceSelectedStyleFunction,
-    selectedRoomStyleFunction
+    hoverStyleFunction,
+    selectedStyleFunction
 } from "./style";
 import {pointerMove} from "ol/events/condition";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import {SelectEvent} from "ol/interaction/Select";
+import {Info} from "../interface/interface";
 
 export function getSelect(
     roomLayer : VectorLayer<VectorSource>,
@@ -16,41 +15,31 @@ export function getSelect(
 ) {
     // Declaration of the Select layer
     const selectRoom = new Select({
-        style : selectedRoomStyleFunction,
-        layers : [roomLayer]
+        style : selectedStyleFunction,
+        layers : [roomLayer, resourceLayer]
     })
     const selectRoomHover = new Select({
         condition: pointerMove,
-        style: labelHoverStyleFunction,
-        layers : [roomLayer]
+        style: hoverStyleFunction,
+        layers : [roomLayer, resourceLayer]
     });
-    const selectResource = new Select({
-        style : ressourceSelectedStyleFunction,
-        layers : [resourceLayer]
-    })
-    const selectResourceHover = new Select({
-        condition: pointerMove,
-        style : ressourceHoverStyleFunction,
-        layers : [resourceLayer]
-    })
 
     return {
-        selectRoom: selectRoom,
-        selectRoomHover: selectRoomHover,
-        selectResource : selectResource,
-        selectResourceHover : selectResourceHover
+        select: selectRoom,
+        selectHover: selectRoomHover,
     }
 }
 
 
-export function setInteraction(e : SelectEvent) : {name : string, type : string, surface : number | null, capacity : number | null}[] | null {
+export function getInteractionData(e : SelectEvent) : Info[] | null {
     const features = e.target.getFeatures()
-    const data = []
+    const data : Info[] = []
     if (features.getLength() > 0) {
         for (let i = 0; i < features.getLength(); i++) {
             const properties = features.item(i).getProperties()
-            if (properties.name != undefined) {
+            if (properties.image_name === undefined) {
                 data.push({
+                    flag: 'room',
                     name: properties.name,
                     type: properties.type,
                     surface: properties.surface,
@@ -58,8 +47,8 @@ export function setInteraction(e : SelectEvent) : {name : string, type : string,
                 })
             }
             else {
-                console.log(properties.name)
                 data.push({
+                    flag: 'resource',
                     name: properties.name,
                     type: properties.type,
                     surface: null,

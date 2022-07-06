@@ -1,16 +1,9 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {currentFloorStore} from "./currentFloor";
+import {BuildingInfo} from "../interface/interface";
 
-export interface BuildingInfo {
-    floors : string[],
-    groundFloor : string,
-    center : number[]
-    rotation : number,
-    zoom : number,
-    minZoom : number,
-    maxZoom : number,
-}
+
 
 export const currentBuildingStore = defineStore('currentBuilding', () => {
 
@@ -21,8 +14,10 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
     const info = ref<BuildingInfo | undefined>()
 
     function change(value : string) {
-        selected.value = value
-        info.value = buildingsInfo.get(value)
+        if (list.value.indexOf(value) !== -1 ){
+            selected.value = value
+            info.value = buildingsInfo.get(value)
+        }
     }
 
     function addBuildingInfo(
@@ -55,6 +50,7 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
         list,
         selected,
         info,
+        buildingsInfo,
         change,
         addBuildingInfo,
         initStore

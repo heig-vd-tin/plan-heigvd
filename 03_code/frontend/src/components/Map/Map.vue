@@ -1,10 +1,18 @@
 <template>
   <div ref="maproot" class="map"></div>
+  <div class="zoomPanel">
+    <Tool tool-name="Zoom" :is-last="true">
+      <ZoomChange
+        @zoom-up="zoomChange(1)"
+        @zoom-down="zoomChange(-1)"
+      />
+    </Tool>
+  </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted, ref, watch} from "vue";
-import {View, Map, Feature} from "ol";
+import {View, Map} from "ol";
 import 'ol/ol.css'
 import {
   backgroundStyle1,
@@ -14,27 +22,41 @@ import {
   lineStyle,
   polygonStyle,
   ressourceStyleFunction,
-} from "../mapElement/style";
+} from "../../mapElement/style";
 import {
   createEmptyVectorLayer,
-  getOpenStreetMapLayer,
-  setFeaturesToLayer
-} from "../mapElement/Layer";
-import {floorsFeatures, getDisplayedResource} from "../mapElement/Feature";
-import {currentFloorStore} from "../stores/currentFloor";
-import {filtersStore} from "../stores/Filters";
-import {currentBuildingStore} from "../stores/currentBuilding";
-import {getSelect, setInteraction} from "../mapElement/select";
+  getOpenStreetMapLayer, setBackgroundFeaturesToBackgroundLayer,
+  setFeaturesToLayer, setFloorFeaturesToFloorLayer, setResourcesLayer
+} from "../../mapElement/Layer";
+import {currentFloorStore} from "../../stores/currentFloor";
+import {filtersStore} from "../../stores/Filters";
+import {currentBuildingStore} from "../../stores/currentBuilding";
+import {getSelect, getInteractionData} from "../../mapElement/select";
+import Tool from "../ToolPanel/Tool.vue";
+import ZoomChange from "./ZoomChange.vue";
+import {featureStore} from "../../stores/feature";
 
 // define the props component
 const props = defineProps<{
-  backgroundFeatures? : Feature[],
+  loadingFinished : boolean,
   selectedRoom? : string
 }>()
 
 const emit = defineEmits(['roomSelected', 'roomUnselected'])
 
-const currentBuilding = currentBuildingStore()
+// zoom
+function zoomChange(n : number){
+  const currentZoom = view.getZoom()
+  if (currentZoom !== undefined) {
+    view.setZoom(currentZoom + n)
+  }
+}
+
+function adjustZoom() {
+  if (innerWidth < 1024) {
+    zoomChange(-1)
+  }
+}
 
 // the view
 let view = new View()
@@ -71,17 +93,13 @@ onMounted(() => {
     view: view
   })
 
-  // change map when map move
+  // change map when Zoom change
   map.value.on('moveend', () => {
     const zoom = view.getZoom()
     if (zoom != undefined) {
       if (zoom >= 20) {
         labelsLayer.setStyle(labelStyleFunction)
         backgroundLayer.setStyle(backgroundStyle2)
-      }
-      else if (zoom <= 16 ){
-        console.log('empty')
-        resourceLayer.setStyle(emptyStyle)
       }
       else {
         labelsLayer.setStyle(polygonStyle)
@@ -93,66 +111,65 @@ onMounted(() => {
 
   // add the selection interraction to the map
   const selects = getSelect(labelsLayer, resourceLayer)
-  map.value.addInteraction(selects.selectRoom)
-  map.value.addInteraction(selects.selectResource)
-  map.value.addInteraction(selects.selectRoomHover)
-  map.value.addInteraction(selects.selectResourceHover)
+  map.value.addInteraction(selects.select)
+  map.value.addInteraction(selects.selectHover)
 
-  function emitInteractionResult(data : {name : string, type : string, surface : number | null, capacity : number | null}[] | null) {
+  // event on selection selection
+  selects.select.on('select', (e) => {
+    const data = getInteractionData(e)
     if (data !== null) {
       emit('roomSelected', data)
-    } else {
+    }
+    else {
       emit('roomUnselected')
     }
-  }
-
-  // event on room selection
-  selects.selectRoom.on('select', (e) => {
-    const data = setInteraction(e)
-    emitInteractionResult(data)
-  })
-
-  // event on resource selection
-  selects.selectResource.on('select', (e) => {
-    const data = setInteraction(e)
-    emitInteractionResult(data)
   })
 })
 
-watch(() => props.backgroundFeatures, (newFeatures) => {
-  setFeaturesToLayer(backgroundLayer, newFeatures)
-})
-
+// stores
+const currentBuilding = currentBuildingStore()
 const currentFloor = currentFloorStore()
-
-watch(() => currentFloor.floor, (newFloor : string) => {
-  const features = floorsFeatures.get(newFloor)
-  if (features != undefined) {
-    setFeaturesToLayer(lineLayer, features.lines)
-    setFeaturesToLayer(polygonLayer, features.polygons)
-    setFeaturesToLayer(labelsLayer, features.labels)
-  }
-  setResourcesLayer(filter.checked, newFloor)
-})
-
 const filter = filtersStore()
 
-watch(() => filter.checked, (newFilters : string[]) => {
-  setResourcesLayer(newFilters, currentFloor.floor)
+watch(() => props.loadingFinished, () => {
+  setBackgroundFeaturesToBackgroundLayer(backgroundLayer, currentBuilding.selected)
+  setFloorFeaturesToFloorLayer(
+      lineLayer,
+      polygonLayer,
+      labelsLayer,
+      resourceLayer,
+      filter.checked,
+      currentBuilding.selected,
+      currentFloor.currentFloorName
+  )
 })
 
-function setResourcesLayer(filters : string[], floor : string) {
-  const resourcesFeatures = getDisplayedResource(filters, floor)
-  setFeaturesToLayer(resourceLayer, resourcesFeatures)
-}
+watch(() => currentFloor.currentFloorName, () => {
+  setFloorFeaturesToFloorLayer(
+      lineLayer,
+      polygonLayer,
+      labelsLayer,
+      resourceLayer,
+      filter.checked,
+      currentBuilding.selected,
+      currentFloor.currentFloorName
+  )
+})
 
-watch(() => currentBuilding.selected, (newBuilding : string) => {
+watch(() => filter.checked, (newFilters : string[]) => {
+  setResourcesLayer(resourceLayer,newFilters, currentBuilding.selected, currentFloor.currentFloorName)
+})
+
+watch(() => currentBuilding.selected, () => {
+  setBackgroundFeaturesToBackgroundLayer(backgroundLayer, currentBuilding.selected)
+
   if (currentBuilding.info != undefined) {
     view.setCenter(currentBuilding.info.center)
     view.setZoom(currentBuilding.info.zoom)
     view.setRotation(currentBuilding.info.rotation)
     view.setMaxZoom(currentBuilding.info.maxZoom)
     view.setMinZoom(currentBuilding.info.minZoom)
+    adjustZoom()
   }
 })
 
@@ -173,5 +190,14 @@ watch(() => props.selectedRoom, async (newRoom) => {
   margin-top: 50px;
   height: 100%;
   width: 100%;
+}
+
+.zoomPanel {
+  position: absolute;
+  background-color: var(--secondary-background-color);
+  z-index: 2;
+  width: 60px;
+  right: 20px;
+  bottom: 20px;
 }
 </style>
