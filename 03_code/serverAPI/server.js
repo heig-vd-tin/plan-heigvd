@@ -6,47 +6,47 @@ const request = require("./database")
 
 app.use(cors())
 
-app.get('/:floor/lines', async (req, res) => {
+app.get('/building', async (req, res) => {
+    const data = await request.getBuildings();
+    res.json(data.rows)
+})
 
-    const data = await request.getFloorGis(req.params.floor, 'line');
+app.get('/:building/floors', async (req, res) => {
+    const data = await request.getBuildingFloors(req.params.building);
+    res.json(data.rows)
+})
+
+app.get('/:building/polygons', async (req, res) => {
+    const data = await request.getAllPolygons(req.params.building);
     res.json(data.rows[0].json_build_object)
 })
 
-
-app.get('/:floor/polygons', async (req, res) => {
-    const data = await request.getFloorGis(req.params.floor, 'polygon');
+app.get('/:building/resource', async (req, res) => {
+    const data = await request.getRessourcesOfBuidling(req.params.building);
     res.json(data.rows[0].json_build_object)
 })
 
+app.get('/:building/:floor/features', async (req, res) => {
+    const lines = await request.getFloorGis(req.params.building, req.params.floor, 'line');
+    const polygons = await request.getFloorGis(req.params.building, req.params.floor, 'polygon');
+    const labels = await request.getFloorLabels(req.params.building, req.params.floor);
+    const resources = await request.getRessourcesOfFloor(req.params.building, req.params.floor);
 
-app.get('/:floor/labels', async (req, res) => {
-    const data = await request.getFloorLabels(req.params.floor);
-    res.json(data.rows[0].json_build_object)
+    res.json({
+        lines : lines.rows[0].json_build_object,
+        polygons : polygons.rows[0].json_build_object,
+        labels : labels.rows[0].json_build_object,
+        resources : resources.rows[0].json_build_object,
+    })
 })
 
-app.get('/polygons', async (req, res) => {
-    const data = await request.getAllPolygons();
-    console.log(data)
-    res.json(data.rows[0].json_build_object)
-})
-
-app.get('/rooms/name', async (req, res) => {
-    const data = await request.getAllRoomName();
+app.get('/:building/:room/resource', async (req, res) => {
+    const data = await request.getResourceOfRoom(req.params.building, req.params.room);
     res.json(data.rows)
 })
 
 app.get('/rooms/:name', async (req, res) => {
     const data = await request.getRoomGis(req.params.name);
-    res.json(data.rows[0].json_build_object)
-})
-
-app.get('/resource', async (req, res) => {
-    const data = await request.getRessources('Cheseaux');
-    res.json(data.rows[0].json_build_object)
-})
-
-app.get('/:floor/resource', async (req, res) => {
-    const data = await request.getRessources(req.params.floor);
     res.json(data.rows[0].json_build_object)
 })
 

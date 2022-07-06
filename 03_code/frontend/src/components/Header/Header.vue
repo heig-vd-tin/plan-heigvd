@@ -2,11 +2,11 @@
   <header class="header">
     <div class="left-header">
       <div>
-        <a v-show="!menuBtnState" href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'bars']"/></a>
-        <a v-show="menuBtnState"  href="#" @click="changeBtnState" class="menu-btn"><font-awesome-icon size="lg" :icon="['fas', 'xmark']"/></a>
+        <a v-show="!menuBtnState" href="#" @click="changeBtnState" class="menu-btn" id="bar-btn"><font-awesome-icon size="lg" :icon="['fas', 'bars']"/></a>
+        <a v-show="menuBtnState"  href="#" @click="changeBtnState" class="menu-btn" id="cross-btn"><font-awesome-icon size="lg" :icon="['fas', 'xmark']"/></a>
       </div>
       <div class="separator"></div>
-      <img src="../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
+      <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
       <h1 class="title-text">Plans</h1>
     </div>
   </header>

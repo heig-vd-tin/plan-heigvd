@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import {floorsFeatures, getResourcesList} from "../mapElement/Feature";
 
 export const filtersStore = defineStore('filters', () => {
 
@@ -9,16 +8,16 @@ export const filtersStore = defineStore('filters', () => {
 
     function push(value : string) {
         checked.value = [...checked.value, value]
-        console.log(checked.value)
+        checked.value.sort()
     }
 
     function remove(value : string) {
         checked.value = checked.value.filter(v => v !== value )
-        console.log(checked.value)
     }
 
-    function initStore() {
-        list.value = getResourcesList()
+    function initStore(l : string[]) {
+        list.value = l
+        list.value.sort()
         checked.value = list.value
     }
 

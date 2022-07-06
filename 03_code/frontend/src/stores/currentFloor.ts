@@ -3,16 +3,15 @@ import {ref} from "vue";
 
 
 export const currentFloorStore = defineStore('currentFloor', () => {
-    let building = 'Cheseaux'
-    let floors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'J', 'K']
+    let building = ''
+    let floors = ref<string[]>([])
     const id = ref(0)
-    const floor = ref(' ')
-    const currentFloorName = ref(' ')
-    const previousFloorName = ref(' ')
-    const nextFloorName = ref(' ')
+    const currentFloorName = ref('')
+    const previousFloorName = ref('')
+    const nextFloorName = ref('')
 
     function up() {
-        if (id.value < floors.length - 1) {
+        if (id.value < floors.value.length - 1) {
             id.value++
             setFloors()
         }
@@ -26,44 +25,39 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     }
 
     function setFloors() {
-        floor.value = floors[id.value]
-        currentFloorName.value = floor.value
-        if (id.value === floors.length - 1) {
+        currentFloorName.value = floors.value[id.value]
+
+        if (id.value === floors.value.length - 1) {
             nextFloorName.value = ' '
         }
         else {
-            nextFloorName.value = floors[id.value + 1]
-            if (building === 'Cheseaux') {
-                nextFloorName.value = `${nextFloorName.value} | ${id.value - 3}`
-            }
+            nextFloorName.value = floors.value[id.value + 1]
         }
+
         if (id.value === 0) {
             previousFloorName.value = ' '
         }
         else {
-            previousFloorName.value = floors[id.value - 1]
-            if (building === 'Cheseaux') {
-                previousFloorName.value = `${previousFloorName.value} | ${id.value - 5}`
-            }
-        }
-        if (building === 'Cheseaux') {
-            currentFloorName.value = `${currentFloorName.value} | ${id.value - 4}`
+            previousFloorName.value = floors.value[id.value - 1]
         }
     }
 
     function initStore(b : string, f : string[], groundFloor : string) {
-        building = b
-        floors = f
-        id.value = floors.indexOf(groundFloor)
-        setFloors()
+        if (b !== ''  && groundFloor !== '' && f.indexOf(groundFloor) !== -1) {
+            building = b
+            floors.value = f
+            id.value = floors.value.indexOf(groundFloor)
+            setFloors()
+        }
     }
 
     return {
         id,
-        floor,
+        floors,
         previousFloorName,
         currentFloorName,
         nextFloorName,
+        building,
         down,
         up,
         initStore

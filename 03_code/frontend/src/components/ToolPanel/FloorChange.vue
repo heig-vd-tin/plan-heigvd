@@ -3,9 +3,9 @@
     <ToolButton class="arrow-up" @click="floorUp">
       <font-awesome-icon :icon="['fas', 'angle-up']" />
     </ToolButton>
-    <ToolButton @click="floorUp" >{{floorItems[2]}}</ToolButton>
-    <ToolButton :selected="true">{{floorItems[1]}}</ToolButton>
-    <ToolButton @click="floorDown">{{floorItems[0]}}</ToolButton>
+    <ToolButton @click="floorUp" >{{currentFloor.nextFloorName}}</ToolButton>
+    <ToolButton :selected="true">{{currentFloor.currentFloorName}}</ToolButton>
+    <ToolButton @click="floorDown">{{currentFloor.previousFloorName}}</ToolButton>
     <ToolButton @click="floorDown" class="arrow-down">
       <font-awesome-icon :icon="['fas', 'angle-down']" />
     </ToolButton>
@@ -14,24 +14,11 @@
 
 <script setup lang="ts">
 
-import {ref, watch} from "vue";
-import {buildingsInfo} from "../data/data";
-import ToolButton from "./ToolButton.vue";
-import {currentFloorStore} from "../stores/currentFloor";
+import {ref} from "vue";
+import ToolButton from "../Utility/Button.vue";
+import {currentFloorStore} from "../../stores/currentFloor";
 
-const props = defineProps<{
-  floors : string[]
-  groundFloor : string
-}>()
-
-const floors = props.floors
-let currentFloor = currentFloorStore()
-
-const floorItems = ref<string[]>(['','',''])
-
-watch(() => currentFloor.floor, () => {
-  floorItems.value = getFloorState()
-})
+const currentFloor = currentFloorStore()
 
 function floorUp() {
   currentFloor.up()
@@ -41,13 +28,6 @@ function floorDown() {
   currentFloor.down()
 }
 
-function getFloorState() : string[]{
-  return [
-    currentFloor.previousFloorName,
-    currentFloor.currentFloorName,
-    currentFloor.nextFloorName
-  ]
-}
 </script>
 
 <style scoped>
