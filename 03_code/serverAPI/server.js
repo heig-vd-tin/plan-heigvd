@@ -6,27 +6,27 @@ const request = require("./database")
 
 app.use(cors())
 
-app.get('/building', async (req, res) => {
+app.get('/api/building', async (req, res) => {
     const data = await request.getBuildings();
     res.json(data.rows)
 })
 
-app.get('/:building/floors', async (req, res) => {
+app.get('/api/:building/floors', async (req, res) => {
     const data = await request.getBuildingFloors(req.params.building);
     res.json(data.rows)
 })
 
-app.get('/:building/polygons', async (req, res) => {
+app.get('/api/:building/polygons', async (req, res) => {
     const data = await request.getAllPolygons(req.params.building);
     res.json(data.rows[0].json_build_object)
 })
 
-app.get('/:building/resource', async (req, res) => {
+app.get('/api/:building/resource', async (req, res) => {
     const data = await request.getRessourcesOfBuidling(req.params.building);
     res.json(data.rows[0].json_build_object)
 })
 
-app.get('/:building/:floor/features', async (req, res) => {
+app.get('/api/:building/:floor/features', async (req, res) => {
     const lines = await request.getFloorGis(req.params.building, req.params.floor, 'line');
     const polygons = await request.getFloorGis(req.params.building, req.params.floor, 'polygon');
     const labels = await request.getFloorLabels(req.params.building, req.params.floor);
@@ -40,12 +40,12 @@ app.get('/:building/:floor/features', async (req, res) => {
     })
 })
 
-app.get('/:building/:room/resource', async (req, res) => {
+app.get('/api/:building/:room/resource', async (req, res) => {
     const data = await request.getResourceOfRoom(req.params.building, req.params.room);
     res.json(data.rows)
 })
 
-app.get('/rooms/:name', async (req, res) => {
+app.get('/api/rooms/:name', async (req, res) => {
     const data = await request.getRoomGis(req.params.name);
     res.json(data.rows[0].json_build_object)
 })

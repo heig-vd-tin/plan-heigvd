@@ -6,6 +6,8 @@ annexe
 prototype
 dockerCommand.txt
 tech.txt
+04_deploy/letsencrypt
+deploy.zip
 
 
 # Logs

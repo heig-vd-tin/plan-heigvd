@@ -1,5 +1,25 @@
-version: '3.9'
+version: '3.8'
 services:
+  reverse-proxy:
+    image: "traefik:v2.8"
+    command:
+      #- "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web-secure.address=:443"
+      - "--certificatesresolvers.resolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.resolver.acme.email=kylian.bourcoud@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"  
+
   database :
     container_name: plan-heig-database
     image: postgis/postgis
@@ -13,10 +33,11 @@ services:
       - ./sql/01_init.sql:/docker-entrypoint-initdb.d/01_init.sql
       - ./sql/02_create.sql:/docker-entrypoint-initdb.d/02_create.sql
       - ./sql/03_insert.sql:/docker-entrypoint-initdb.d/03_insert.sql
+
   server-api:
     container_name: plan-heig-server-api
-    build: ../03_code/serverAPI
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
+    # build: ../03_code/serverAPI
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
     environment: 
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=database
@@ -24,13 +45,25 @@ services:
       - 3001:3001
     depends_on:
       - database
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server-api.rule=Host(`${HOST}`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.server-api.entrypoints=web, web-secure"
+      - "traefik.http.routers.server-api.tls.certresolver=resolver"
+
   server:
     container_name: plan-heig-server
-    build: ../03_code/frontend
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    # build: ../03_code/frontend
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server
     environment:
      - VITE_API_URL=http://localhost:3001
     ports:
-      - 80:80    
+      - 3000:80
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server.rule=Host(`${HOST}`)"
+      - "traefik.http.routers.server.entrypoints=web, web-secure"
+      - "traefik.http.routers.server.tls.certresolver=myresolver"
+
 volumes:
   database:
