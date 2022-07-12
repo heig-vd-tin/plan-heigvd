@@ -1,6 +1,9 @@
 <template>
   <div ref="maproot" class="map"></div>
-  <div class="zoomPanel">
+  <div
+      class="zoomPanel"
+      :style="isInfoPanelVisible ? {'right' : '300px'} : {'right' : '0px'}"
+  >
     <Tool tool-name="Zoom" :is-last="true">
       <ZoomChange
         @zoom-up="zoomChange(1)"
@@ -15,8 +18,9 @@ import {onMounted, ref, watch} from "vue";
 import {View, Map} from "ol";
 import 'ol/ol.css'
 import {
-  backgroundStyle1,
-  backgroundStyle2,
+  backgroundStyleFar,
+  backgroundStyleMiddle,
+  backgroundStyleNear,
   emptyStyle,
   labelStyleFunction,
   lineStyle,
@@ -26,7 +30,7 @@ import {
 import {
   createEmptyVectorLayer,
   getOpenStreetMapLayer, setBackgroundFeaturesToBackgroundLayer,
-  setFeaturesToLayer, setFloorFeaturesToFloorLayer, setResourcesLayer
+  setFloorFeaturesToFloorLayer, setResourcesLayer
 } from "../../mapElement/Layer";
 import {currentFloorStore} from "../../stores/currentFloor";
 import {filtersStore} from "../../stores/Filters";
@@ -35,11 +39,13 @@ import {getSelect, getInteractionData} from "../../mapElement/select";
 import Tool from "../ToolPanel/Tool.vue";
 import ZoomChange from "./ZoomChange.vue";
 import {featureStore} from "../../stores/feature";
+import {Info} from "../../interface/interface";
+import {roomSelectedStore} from "../../stores/roomSelected";
 
 // define the props component
 const props = defineProps<{
   loadingFinished : boolean,
-  selectedRoom? : string
+  isInfoPanelVisible : boolean
 }>()
 
 const emit = defineEmits(['roomSelected', 'roomUnselected'])
@@ -71,9 +77,10 @@ const map = ref<Map | undefined>(undefined)
 let lineLayer = createEmptyVectorLayer(lineStyle)
 let polygonLayer = createEmptyVectorLayer(polygonStyle)
 let labelsLayer = createEmptyVectorLayer(polygonStyle)
-// let roomLayer = createEmptyVectorLayer()
-let backgroundLayer = createEmptyVectorLayer(backgroundStyle1)
+let backgroundLayer = createEmptyVectorLayer(backgroundStyleMiddle)
 let resourceLayer = createEmptyVectorLayer(emptyStyle)
+
+const selects = getSelect(labelsLayer, resourceLayer)
 
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
@@ -85,7 +92,6 @@ onMounted(() => {
       osmLayer,
       backgroundLayer,
       polygonLayer,
-      // roomLayer,
       labelsLayer,
       lineLayer,
       resourceLayer
@@ -93,24 +99,34 @@ onMounted(() => {
     view: view
   })
 
+
   // change map when Zoom change
   map.value.on('moveend', () => {
     const zoom = view.getZoom()
     if (zoom != undefined) {
       if (zoom >= 20) {
         labelsLayer.setStyle(labelStyleFunction)
-        backgroundLayer.setStyle(backgroundStyle2)
+        backgroundLayer.setStyle(backgroundStyleNear)
       }
-      else {
+      else if (zoom < 18) {
+        lineLayer.setStyle(emptyStyle)
+        polygonLayer.setStyle(emptyStyle)
+        labelsLayer.setStyle(emptyStyle)
+        backgroundLayer.setStyle(backgroundStyleFar)
+        resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(emptyStyle))
+      }
+      else  {
+        lineLayer.setStyle(lineStyle)
+        polygonLayer.setStyle(polygonStyle)
         labelsLayer.setStyle(polygonStyle)
-        backgroundLayer.setStyle(backgroundStyle1)
-        resourceLayer.setStyle(ressourceStyleFunction)
+        backgroundLayer.setStyle(backgroundStyleMiddle)
+        resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
       }
     }
   })
 
   // add the selection interraction to the map
-  const selects = getSelect(labelsLayer, resourceLayer)
+
   map.value.addInteraction(selects.select)
   map.value.addInteraction(selects.selectHover)
 
@@ -130,6 +146,7 @@ onMounted(() => {
 const currentBuilding = currentBuildingStore()
 const currentFloor = currentFloorStore()
 const filter = filtersStore()
+const roomSelected = roomSelectedStore()
 
 watch(() => props.loadingFinished, () => {
   setBackgroundFeaturesToBackgroundLayer(backgroundLayer, currentBuilding.selected)
@@ -173,16 +190,30 @@ watch(() => currentBuilding.selected, () => {
   }
 })
 
-/*
-watch(() => props.selectedRoom, async (newRoom) => {
-  if (newRoom != undefined) {
-    const features = await getRoomGis(newRoom)
-    const source = setFeatureToLayer(roomLayer, features)
-    if (source != undefined) {
-      view.fit(source.getExtent())
+
+watch(() => roomSelected.selected, (newRoom) => {
+  if (newRoom !== undefined) {
+    const feature = featureStore().getRoomFeature(newRoom)
+    if (feature !== undefined) {
+      selects.select.getFeatures().clear()
+      selects.select.getFeatures().push(feature)
+      const extend = feature.getGeometry()?.getExtent()
+      if (extend !== undefined) {
+        view.fit(extend)
+      }
+
+      const info : Info[] = [{
+        flag : 'room',
+        id : newRoom.room_id,
+        name : newRoom.room_name,
+        type : newRoom.room_type,
+        surface : newRoom.room_surface,
+        capacity : newRoom.room_capacity
+      }]
+      emit('roomSelected', info)
     }
   }
-})*/
+})
 </script>
 
 <style scoped>
@@ -196,8 +227,8 @@ watch(() => props.selectedRoom, async (newRoom) => {
   position: absolute;
   background-color: var(--secondary-background-color);
   z-index: 2;
-  width: 60px;
-  right: 20px;
-  bottom: 20px;
+  bottom :0 ;
+  transition: right 0.3s ease-out;
+  border: 1px solid var(--border-color);
 }
 </style>

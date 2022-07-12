@@ -1,40 +1,41 @@
 <template>
   <div class="filter-section">
-    <CollapseHeader
+    <Collapse
       :title="title"
-      @change="changeVisibility"
-      id="collapse-header"
-    />
-    <div v-show="visibility" v-for="filter in filters" class="section-list">
-      <label :for="filter" class="container">
-        {{getFormat(filter)}}
-        <input @change="change" type="checkbox" :id="filter" :name="filter" checked >
-        <span class="checkmark"></span>
-      </label>
-    </div>
+    >
+      <div>
+        <div v-if="type === 'checkbox'" v-for="filter in filters" class="section-list">
+          <label :for="filter" class="container">
+            {{getFormat(filter)}}
+            <input  @change="change" type="checkbox" :id="filter" :name="filter" checked >
+            <span class="checkmark"></span>
+          </label>
+        </div>
+        <div v-else v-for="(filter, index) in filters" key="index" class="section-list">
+          <label :for="filter" class="container">
+            {{getFormat(filter)}}
+            <input @change="change" type="radio" :id="filter" name="radio" :checked="index === 0">
+            <span class="checkmark"></span>
+          </label>
+        </div>
+      </div>
+    </Collapse>
   </div>
 </template>
 
 <script  setup lang="ts">
-import ToolButton from "../Utility/Button.vue";
-import {ref} from "vue";
-import CollapseHeader from "../Utility/CollapseHeader.vue";
+import Collapse from "../Utility/Collapse.vue";
 
 const props = defineProps<{
   title : string
   filters : string[]
+  type : string
 }>()
 
 const emit = defineEmits(['change'])
 
 function change(e : Event) {
   emit('change', e)
-}
-
-const visibility = ref(false)
-
-function changeVisibility(e : boolean){
-  visibility.value = e
 }
 
 function getFormat(name : string) : string{
@@ -54,7 +55,7 @@ function getFormat(name : string) : string{
 .filter-section {
   margin-bottom: 10px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid var(--primary-color);
 }
 
 .filter-section-header {
@@ -68,6 +69,17 @@ function getFormat(name : string) : string{
 
 .section-title {
   margin: 10px 0;
+}
+
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
 .container {

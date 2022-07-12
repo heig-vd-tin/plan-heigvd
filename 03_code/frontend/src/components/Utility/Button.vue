@@ -22,7 +22,7 @@ function click(e : Event) {
 
 <style scoped>
 .block {
-  padding: 10px 0;
+  padding: 10px 5px;
   height: 35px;
   width: 100%;
   text-align: center;
@@ -34,7 +34,15 @@ function click(e : Event) {
   background-color: var(--primary-background-color);
   display: block;
   text-decoration: none;
+  color: var(--font-color);
+}
 
+.btn:hover {
+  background-color: var(--border-color);
+}
+
+.btn:visited {
+  color: var(--font-color);
 }
 
 .selected {
@@ -42,7 +50,5 @@ function click(e : Event) {
   color: white;
 }
 
-.btn:hover {
-  background-color: var(--border-color);
-}
+
 </style>

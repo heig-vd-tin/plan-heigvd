@@ -3,9 +3,15 @@
     <FilterMenuSection
         title="Ressources"
         :filters="filters.list"
-        @change="change"
+        type="checkbox"
+        @change="resourceChanged"
     />
-    <FilterMenuSection title="Affichage" :filters="[]"/>
+    <FilterMenuSection
+        title="Affichage"
+        :filters="['défaut', 'Par type de salle']"
+        type="radio"
+        @change="displayChanged"
+    />
   </div>
 </template>
 
@@ -16,13 +22,17 @@ import FilterMenuSection from "./FilterPanelSection.vue";
 
 const filters = filtersStore()
 
-function change(e : Event) {
+function resourceChanged(e : Event) {
   const element = e.target as HTMLInputElement
   if (element.checked) {
     filters.push(element.name)
   } else {
     filters.remove(element.name)
   }
+}
+
+function displayChanged(e :Event) {
+  console.log(e.target)
 }
 
 </script>

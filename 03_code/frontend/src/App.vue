@@ -1,26 +1,53 @@
 <template>
-  <!--
   <div class="main-container">
-    <div  v-show="loading">Loading</div>
-    <div v-show="!loading" class="main-container-2">-->
+    <transition name="loading">
+      <div v-show="loadingIsVisible" class="loading">
+        <div class="loading-bar">
+          <div>
+            <img src="./assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
+            <h1 class="loading-title">
+              Plan
+            </h1>
+          </div>
+          <p class="loading-text" v-show="loading">
+            Chargement...
+          </p>
+          <a v-show="!loading" href="#" @click="enterApp" class="loading-btn">
+            Entrer
+          </a>
+        </div>
+      </div>
+    </transition>
+
+    <div class="container">
       <Header @btnClick="changeMenuState"/>
-      <ToolBar/>
-      <FilterMenu
-          v-show="filterMenuVisibility"
-      />
-      <InfoPanel
-          v-show="infoPanelVisibility"
-          :selected-room="roomInfo"
-          @close="undisplayRoomInfo"
-      />
+      <transition name="toolbar">
+        <ToolBar
+            :isFilterPanelVisible="filterMenuVisibility"
+        />
+      </transition>
+      <transition name="filter-panel">
+        <FilterMenu
+            v-show="filterMenuVisibility"
+        />
+      </transition>
+      <transition name="info-panel">
+        <InfoPanel
+            v-show="infoPanelVisibility"
+            :selected-room="roomInfo"
+            @close="undisplayRoomInfo"
+        />
+      </transition>
+
 
       <Map
           :loading-finished="!loading"
+          :is-info-panel-visible="infoPanelVisibility"
           @room-selected="displayRoomInfo"
           @room-unselected="undisplayRoomInfo"
       ></Map>
- <!--   </div>
-  </div>-->
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -31,29 +58,18 @@ import InfoPanel from "./components/InfoPanel/InfoPanel.vue";
 
 import {onMounted, ref} from "vue";
 
-import {Feature} from "ol";
 import ToolBar from "./components/ToolPanel/ToolBar.vue";
-import {currentFloorStore} from "./stores/currentFloor";
-import {filtersStore} from "./stores/Filters";
-import {currentBuildingStore} from "./stores/currentBuilding";
-import Tool from "./components/ToolPanel/Tool.vue";
-import ZoomChange from "./components/Map/ZoomChange.vue";
 import {Info} from "./interface/interface";
 import {loadAndDisplayBaseData, loadOtherData} from "./lifecycle/lifecycle";
 
-/*
-//room
-const currentRoom = ref<string | undefined>(undefined)
-
-function setCurrentRoom(selectedRoom : string) {
-  currentRoom.value = selectedRoom
-}
-*/
-
 
 const loading = ref(true)
+const loadingIsVisible = ref(true)
 
-const bgFeatures = ref<Feature[] | undefined>()
+function enterApp() {
+  loadingIsVisible.value = false
+}
+
 
 // info panel
 const infoPanelVisibility = ref(false)
@@ -84,12 +100,11 @@ onMounted(async () => {
 </script>
 
 <style>
-
 :root {
   --primary-color: #E1251B;
-  --primary-background-color: #f4f4f4;
-  --secondary-background-color: #e9e9e9;
-  --border-color : #c6c6c6;
+  --primary-background-color: #f4ffff;
+  --secondary-background-color: #e9eeee;
+  --border-color : #c6cccc;
   --font-color:#2c3e50;
 
 }
@@ -99,7 +114,7 @@ onMounted(async () => {
   margin: 0;
 }
 
-html, .main-container, .main-container-2{
+html, .main-container, .container {
   height: 100%;
 }
 
@@ -115,6 +130,58 @@ body {
   height: 100%;
 }
 
+.loading {
+  position: absolute;
+  background-image: url("https://www.yverdon-energies.ch/wp-content/uploads/2019/05/heig-vd-cheseaux.jpg");
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 30;
+  background-color: var(--primary-background-color);
+  background-size: cover;
+  background-position: right;
+}
+
+.loading-bar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  width: 20%;
+  background-color: var(--primary-background-color);
+  padding: 70px;
+}
+
+.logo {
+  display: block;
+  width: 100%;
+}
+
+.loading-title {
+  font-size: 60px;
+  margin-top: 10px;
+  color: var(--font-color);
+}
+
+.loading-text {
+  height: 50px;
+  font-size: 20px;
+}
+
+.loading-btn {
+  display: block;
+  border-radius: 3px;
+  padding: 15px 52px;
+  border: 1px solid var(--border-color);
+  color: var(--font-color);
+  text-decoration: none;
+  height: 50px;
+}
+
+.loading-btn:hover {
+  background-color: var(--border-color);
+}
+
 h2 {
   font-size: 20px;
   margin-bottom: 0;
@@ -124,5 +191,34 @@ h2 {
   visibility: hidden;
 }
 
+.filter-panel-enter-active,
+.filter-panel-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.filter-panel-enter-from,
+.filter-panel-leave-to {
+  transform: translateX(-250px);
+}
+
+.info-panel-enter-active,
+.info-panel-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.info-panel-enter-from,
+.info-panel-leave-to {
+  transform: translateX(300px);
+}
+
+.loading-enter-active,
+.loading-leave-active {
+  transition: opacity 0.3s ease-out;
+}
+
+.loading-enter-from,
+.loading-leave-to {
+  opacity: 0;
+}
 
 </style>

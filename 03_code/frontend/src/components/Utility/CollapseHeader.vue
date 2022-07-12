@@ -1,12 +1,16 @@
 <template>
   <div class="collapse-header">
     <h2 class="collapse-title">{{ title }}</h2>
-    <Button v-show="visibility" class="collapse-btn" @click="changeVisibility" id="openedIcon">
-      <font-awesome-icon :icon="['fas', 'angle-down']" />
-    </Button>
-    <Button v-show="!visibility" class="collapse-btn" @click="changeVisibility" id="closedIcon">
-      <font-awesome-icon :icon="['fas', 'angle-right']" />
-    </Button>
+    <transition name="open">
+      <Button v-show="visibility" class="collapse-btn" @click="changeVisibility" id="openedIcon">
+        <font-awesome-icon :icon="['fas', 'angle-down']" />
+      </Button>
+    </transition>
+    <transition name="close">
+      <Button v-show="!visibility" class="collapse-btn" @click="changeVisibility" id="closedIcon">
+        <font-awesome-icon :icon="['fas', 'angle-right']" />
+      </Button>
+    </transition>
   </div>
 </template>
 
@@ -44,6 +48,31 @@ function changeVisibility() {
 
 .collapse-btn {
   width: 30px;
+}
+
+.open-enter-active {
+  transition: transform 0.2s ease-out;
+}
+
+
+.open-enter-from {
+  transform: rotate(-90deg);
+}
+.open-leave-from {
+  opacity: 0;
+}
+
+
+.close-enter-active {
+  transition: transform 0.2s ease-out
+}
+
+.close-enter-from {
+  transform: rotate(90deg);
+}
+
+.close-leave-from {
+  opacity: 0;
 }
 
 </style>

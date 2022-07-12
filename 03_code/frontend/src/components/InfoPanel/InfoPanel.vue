@@ -19,10 +19,7 @@
 
 <script setup lang="ts">
 import {ref, watch} from "vue";
-import ToolButton from "../Utility/Button.vue";
-import {getPersonsOfRoom, getResourceOfRoom} from "../../api/api";
-import {currentBuildingStore} from "../../stores/currentBuilding";
-import CollapseHeader from "../Utility/CollapseHeader.vue";
+import {getPeople, getResourceOfRoom} from "../../api/api";
 import PersonsList from "./PersonsList.vue";
 import ResourceList from "./ResourceList.vue";
 import {Info} from "../../interface/interface";
@@ -40,10 +37,12 @@ watch(() => props.selectedRoom, async (newRooms) => {
   resources.value = []
   for (const room of newRooms) {
     if (room.flag === 'room') {
-      const p = await getPersonsOfRoom(room.name)
-      people.value.push(p)
-      const r = await getResourceOfRoom(currentBuildingStore().selected, room.name)
-      resources.value.push(r)
+      const p = await getPeople(room.name)
+      people.value.push(p.map(p => p.name))
+      const r = await getResourceOfRoom(room.id)
+      if (r !== null) {
+        resources.value.push(r)
+      }
     }
     else {
       people.value.push([])
@@ -68,13 +67,8 @@ watch(() => props.selectedRoom, async (newRooms) => {
     overflow: auto;
   }
 
-  .info-header {
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: 20px;
-  }
-
   .info-item {
-    border-bottom: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--primary-color);
     margin: 20px;
     padding-bottom: 20px;
   }

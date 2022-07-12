@@ -23,6 +23,7 @@ const prop = defineProps<{
   }
 
   .tool-name {
+    padding: 0 5px;
     text-align: center;
     font-size: 12px;
     margin-bottom: 5px;

@@ -1,6 +1,5 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
-import {currentFloorStore} from "./currentFloor";
 import {BuildingInfo} from "../interface/interface";
 
 
@@ -22,7 +21,8 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
 
     function addBuildingInfo(
         name : string,
-        floors : string[],
+        id : number,
+        floors : {id : number, name : string}[],
         groundFloor : string,
         x : number,
         y : number,
@@ -31,6 +31,7 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
         maxZoom : number
     ) {
         buildingsInfo.set(name, {
+            id : id,
             floors : floors,
             groundFloor : groundFloor,
             center : [x, y],

@@ -2,6 +2,7 @@ import {Feature} from "ol";
 
 export interface Info {
     flag : string,
+    id : number
     name : string,
     type : string,
     surface : number | null,
@@ -9,7 +10,11 @@ export interface Info {
 }
 
 export interface BuildingInfo {
-    floors : string[],
+    id : number,
+    floors : {
+        id : number,
+        name : string
+    }[],
     groundFloor : string,
     center : number[]
     rotation : number,
@@ -24,3 +29,19 @@ export interface FloorFeatures {
     labels : Feature[]
     resources : Feature[] | null
 }
+
+export interface Suggestion {
+    rooms : string[],
+    people : string[]
+}
+
+export interface RoomSuggestion {
+    room_id : number,
+    room_name :string,
+    room_type : string,
+    room_surface : number | null,
+    room_capacity : number | null,
+    floor_name : string,
+    building_name : string
+}
+

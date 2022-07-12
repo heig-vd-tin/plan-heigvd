@@ -1,6 +1,10 @@
 <template>
-  <Button @click="zoomUp" class="first" id="zoomUp">+</Button>
-  <Button @click="zoomDown" id="zoomDown">-</Button>
+  <Button @click="zoomUp" class="first" id="zoomUp">
+    <font-awesome-icon :icon="['fas', 'plus']" />
+  </Button>
+  <Button @click="zoomDown" id="zoomDown">
+    <font-awesome-icon :icon="['fas', 'minus']" />
+  </Button>
 </template>
 
 <script setup lang="ts">

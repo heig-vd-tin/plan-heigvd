@@ -9,12 +9,16 @@
       <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
       <h1 class="title-text">Plans</h1>
     </div>
+    <div class="right-header">
+      <Research/>
+    </div>
   </header>
 </template>
 
 <script setup lang="ts">
 
 import {ref} from "vue";
+import Research from "./Research.vue";
 
 const emit = defineEmits(['btnClick'])
 
@@ -35,11 +39,12 @@ function changeBtnState () {
   .header {
     position: fixed;
     top: 0;
-    z-index: 1;
+    z-index: 20;
 
     display: flex;
     flex-direction: row;
     vertical-align: center;
+    justify-content: space-between;
 
     width: 100%;
     height: 50px;
@@ -59,15 +64,16 @@ function changeBtnState () {
     display: block;
     padding: 14px 20px;
     height: 100%;
-    width: 69px;
+    width: 70px;
   }
 
   .menu-btn:hover {
     background-color: var(--border-color);
-
+    transition: background-color 0.5s ease;
   }
 
   .logo {
+    width: auto;
     display: block;
     height: 100%;
     padding: 10px;

@@ -3,10 +3,10 @@ import {FeatureLike} from "ol/Feature";
 import {images} from "../data/image";
 
 // colors
-const white     = 'rgba(245, 245, 245 , 1)'
-const lightGrey = 'rgba(235, 235, 235 , 1)'
-const grey      = 'rgba(200, 200, 200 , 1)'
-const darkGrey  = 'rgba(100, 100, 100, 1)'
+const white     = 'rgba(245, 252, 252 , 1)'
+const lightGrey = 'rgba(225, 232, 232 , 1)'
+const grey      = 'rgba(200, 207, 207 , 1)'
+const darkGrey  = 'rgba(100, 107, 107, 1)'
 const black     = '#000'
 const red       = 'rgba(220, 0, 0, 1)'
 
@@ -35,7 +35,18 @@ export const polygonStyle = new Style({
         color: white,
     })
 })
-export const backgroundStyle1 = new Style({
+
+export const backgroundStyleFar = new Style({
+    stroke: new Stroke({
+        color: black,
+        width: 1,
+    }),
+    fill: new Fill({
+        color: darkGrey,
+    })
+})
+
+export const backgroundStyleMiddle = new Style({
     stroke: new Stroke({
         color: grey,
         width: 1,
@@ -45,9 +56,9 @@ export const backgroundStyle1 = new Style({
     })
 })
 
-export const backgroundStyle2 = new Style({
+export const backgroundStyleNear = new Style({
     fill: new Fill({
-        color: grey,
+        color: darkGrey,
     })
 })
 
@@ -73,7 +84,7 @@ export function selectedStyleFunction (feature : FeatureLike) {
 // label style
 const labelStyle = new Style({
     fill: new Fill({
-        color: white,
+        color: lightGrey,
     }),
     text: textLabel,
 })
