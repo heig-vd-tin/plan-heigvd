@@ -5,9 +5,11 @@
         placeholder="Search"
         class="research-input"
         @input ="researchResource"
+        @focusin="focusIn"
+        @focusout="focusOut"
         id="research-input"
     >
-    <div v-show="suggestionBoxVisibility" class="suggestion-box">
+    <div v-show="nbCharacter >= 2 && suggestionBoxVisibility" class="suggestion-box">
       <SuggestionSection
           title="Salles"
           :list="suggestionsFiltered.rooms"
@@ -47,9 +49,21 @@ let peopleSuggestions : {id : string, name :string}[]
 let suggestions : Suggestion = {rooms : [], people : []}
 const suggestionsFiltered = ref<Suggestion>({rooms : [], people : []})
 
+const nbCharacter = ref(0)
 
 const roomList : RoomSuggestion[] = []
 let isCached = false
+
+function focusIn() {
+  suggestionBoxVisibility.value = true
+}
+
+function focusOut() {
+  // let the user click on suggestion before focus out
+  setTimeout(() => {
+    suggestionBoxVisibility.value = false
+  }, 300)
+}
 
 async function researchResource(e : Event) {
   const input = (e.target as HTMLInputElement).value
@@ -59,7 +73,15 @@ async function researchResource(e : Event) {
       const rs =  await getRoomSuggestions(input)
       if (rs !== null) {
         roomSuggestions = rs
-        suggestions.rooms = roomSuggestions.map(v => v.room_name)
+        suggestions.rooms = roomSuggestions.map(v => {
+          console.log(v.room_type)
+          if (v.room_type !== null) {
+            return `${v.room_name} | ${v.room_type}`
+          }
+          else {
+            return v.room_name
+          }
+        })
         suggestionsFiltered.value.rooms = suggestions.rooms
       }
       isCached = true
@@ -67,7 +89,7 @@ async function researchResource(e : Event) {
     else {
       suggestionsFiltered.value.rooms = suggestions.rooms.filter(v => v.toLowerCase().includes(input.toLowerCase()))
     }
-    suggestionBoxVisibility.value = true
+
     peopleSuggestions = await getPeople(input)
     suggestions.people = peopleSuggestions.filter(v => {
       return v.name.toLowerCase().includes(input.toLowerCase())
@@ -77,17 +99,19 @@ async function researchResource(e : Event) {
   else {
     reinitializeSuggestion()
   }
+  nbCharacter.value = input.length
 }
 
 function reinitializeSuggestion() {
   suggestions.rooms = []
   suggestionsFiltered.value.rooms = []
+  suggestionsFiltered.value.people = []
   isCached = false
-  suggestionBoxVisibility.value = false
 }
 
 function roomSelected(room : string) {
-  const roomSelected = roomSuggestions.filter(v => v.room_name === room)[0]
+  const formattedRoom = room.split(' | ')[0]
+  const roomSelected = roomSuggestions.filter(v => v.room_name === formattedRoom)[0]
   selected(roomSelected)
 }
 
@@ -95,8 +119,11 @@ async function personSelected(person : string) {
   const personSelected = peopleSuggestions.filter(v => v.name === person)[0]
   const roomName = await getPersonLocation(personSelected.id)
   const room = await getRoomByName(roomName)
-  if (room.length !== null) {
+  if (room !== null) {
     selected(room[0])
+  }
+  else {
+    alert("Le bâtiment ou travaille le collaborateur n'a pas encore été implémenté")
   }
 }
 
@@ -120,6 +147,7 @@ function selected(room : RoomSuggestion) {
   const input = document.getElementById('research-input')
   if (input !== null) {
     (input as HTMLInputElement).value = ''
+    nbCharacter.value = 0
   }
 }
 

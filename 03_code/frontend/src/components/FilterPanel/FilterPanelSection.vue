@@ -7,15 +7,18 @@
         <div v-if="type === 'checkbox'" v-for="filter in filters" class="section-list">
           <label :for="filter" class="container">
             {{getFormat(filter)}}
-            <input  @change="change" type="checkbox" :id="filter" :name="filter" checked >
+            <input  @change="change" type="checkbox" :id="filter" :name="filter" checked class="input-checkbox">
             <span class="checkmark"></span>
           </label>
+        </div>
+        <div v-if="type === 'checkbox'" class="deselect-btn">
+          <a  href="#" @click="deselectAll">Décochez toutes les resources</a>
         </div>
         <div v-else v-for="(filter, index) in filters" key="index" class="section-list">
           <label :for="filter" class="container">
             {{getFormat(filter)}}
             <input @change="change" type="radio" :id="filter" name="radio" :checked="index === 0">
-            <span class="checkmark"></span>
+            <span class="checkmark radio"></span>
           </label>
         </div>
       </div>
@@ -35,7 +38,7 @@ const props = defineProps<{
 const emit = defineEmits(['change'])
 
 function change(e : Event) {
-  emit('change', e)
+  emit('change', e.target as HTMLInputElement)
 }
 
 function getFormat(name : string) : string{
@@ -49,6 +52,14 @@ function getFormat(name : string) : string{
   }
   return n2
 }
+
+function deselectAll() {
+  const checkboxes = document.getElementsByClassName('input-checkbox')
+  for (const c of checkboxes) {
+    c.checked = false
+    emit('change', c)
+  }
+}
 </script>
 
 <style scoped>
@@ -56,6 +67,14 @@ function getFormat(name : string) : string{
   margin-bottom: 10px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--primary-color);
+}
+
+.deselect-btn {
+  margin: 20px 0;
+}
+
+.deselect-btn a {
+  color: var(--primary-color);
 }
 
 .filter-section-header {
@@ -141,4 +160,32 @@ function getFormat(name : string) : string{
   -ms-transform: rotate(45deg);
   transform: rotate(45deg);
 }
+
+.radio {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 18px;
+  width: 18px;
+  background-color: #eee;
+  border-radius: 50%;
+}
+
+.container:hover input ~ .radio {
+  background-color: #ccc;
+}
+
+.container input:checked ~ .radio {
+  background-color: var(--primary-color);
+}
+
+.container .radio:after {
+  top: 6px;
+  left: 6px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: white;
+}
+
 </style>

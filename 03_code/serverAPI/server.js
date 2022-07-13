@@ -9,6 +9,7 @@ app.use(cors())
 
 async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     const rawData = await fn(param);
+    console.log(rawData)
     const data = rawData.rows
     if (data.length !== 0) {
         res.status(200)

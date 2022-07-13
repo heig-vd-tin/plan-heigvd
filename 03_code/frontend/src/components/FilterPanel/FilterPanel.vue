@@ -8,7 +8,7 @@
     />
     <FilterMenuSection
         title="Affichage"
-        :filters="['défaut', 'Par type de salle']"
+        :filters="['Défaut', 'Par type de salle']"
         type="radio"
         @change="displayChanged"
     />
@@ -19,11 +19,11 @@
 
 import {filtersStore} from "../../stores/Filters";
 import FilterMenuSection from "./FilterPanelSection.vue";
+import {displayStore} from "../../stores/display";
 
 const filters = filtersStore()
 
-function resourceChanged(e : Event) {
-  const element = e.target as HTMLInputElement
+function resourceChanged(element : HTMLInputElement) {
   if (element.checked) {
     filters.push(element.name)
   } else {
@@ -31,8 +31,21 @@ function resourceChanged(e : Event) {
   }
 }
 
-function displayChanged(e :Event) {
-  console.log(e.target)
+const display = displayStore()
+
+function displayChanged(e :HTMLInputElement) {
+  const text = (e.target as HTMLInputElement).id
+  console.log(text)
+  switch (text) {
+    case 'Défaut' : {
+      display.currentMode = display.mode.default
+      break
+    }
+    case 'Par type de salle' : {
+      display.currentMode = display.mode.byType
+      break
+    }
+  }
 }
 
 </script>

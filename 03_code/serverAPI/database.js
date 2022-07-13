@@ -90,18 +90,18 @@ async function getRoomsByResearch(search) {
         ON room.idx_floor = floor.id
     INNER Join building
         ON floor.idx_building = building.id
-    WHERE LOWER(room.name) LIKE '%${search}%'` ;
+    WHERE LOWER(room.name) LIKE '%${search}%'  OR LOWER(room.type) LIKE '%${search}%';`
     return pool.query(text);
 }
 
 async function getRoomsByName(room) {
-    const text =  `SELECT room.name AS room_name, room.type as room_type, room.surface as room_surface, room.capacity as room_capacity, floor.name as floor_name, building.name as building_name
+    const text =  `SELECT room.id as room_id, room.name AS room_name, room.type as room_type, room.surface as room_surface, room.capacity as room_capacity, floor.name as floor_name, building.name as building_name
     FROM room
     INNER JOIN floor
         ON room.idx_floor = floor.id
     INNER Join building
         ON floor.idx_building = building.id
-    WHERE LOWER(room.name) = '${room}' OR LOWER(room.type) = '${room}'`;
+    WHERE LOWER(room.name) = '${room}' OR LOWER(room.type) = '${room}';`
     return pool.query(text);
 }
 

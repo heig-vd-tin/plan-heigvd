@@ -22,10 +22,15 @@ import {
   backgroundStyleMiddle,
   backgroundStyleNear,
   emptyStyle,
-  labelStyleFunction,
+  labelStyleFarFunction,
+  labelStyleMiddleFunction,
+  labelStyleNearFunction,
   lineStyle,
   polygonStyle,
   ressourceStyleFunction,
+  roomByTypeFarStyleFunction,
+  roomByTypeMiddleStyleFunction,
+  roomByTypeNearStyleFunction,
 } from "../../mapElement/style";
 import {
   createEmptyVectorLayer,
@@ -39,8 +44,11 @@ import {getSelect, getInteractionData} from "../../mapElement/select";
 import Tool from "../ToolPanel/Tool.vue";
 import ZoomChange from "./ZoomChange.vue";
 import {featureStore} from "../../stores/feature";
-import {Info} from "../../interface/interface";
+import {BuildingInfo, Info, Layers} from "../../interface/interface";
 import {roomSelectedStore} from "../../stores/roomSelected";
+import {displayStore} from "../../stores/display";
+import {StyleLike} from "ol/style/Style";
+import {createMap, setLabelLayerStyleByZoom, setView} from "../../mapElement/map";
 
 // define the props component
 const props = defineProps<{
@@ -74,71 +82,37 @@ const maproot = ref<HTMLElement | undefined>(undefined)
 const map = ref<Map | undefined>(undefined)
 
 // Declaration of the map layers
-let lineLayer = createEmptyVectorLayer(lineStyle)
-let polygonLayer = createEmptyVectorLayer(polygonStyle)
-let labelsLayer = createEmptyVectorLayer(polygonStyle)
-let backgroundLayer = createEmptyVectorLayer(backgroundStyleMiddle)
-let resourceLayer = createEmptyVectorLayer(emptyStyle)
+const layers : Layers = {
+  osmLayer : getOpenStreetMapLayer(),
+  backgroundLayer : createEmptyVectorLayer(backgroundStyleMiddle),
+  floorLayer : {
+    lineLayer : createEmptyVectorLayer(lineStyle),
+    polygonLayer : createEmptyVectorLayer(polygonStyle),
+    labelsLayer : createEmptyVectorLayer(roomByTypeFarStyleFunction),
+    resourceLayer : createEmptyVectorLayer(emptyStyle)
+  }
+}
 
-const selects = getSelect(labelsLayer, resourceLayer)
+const selects = getSelect(
+    layers.floorLayer.labelsLayer,
+    layers.floorLayer.resourceLayer
+)
 
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
 
   //mount the map
-  map.value = new Map({
-    target : maproot.value,
-    layers: [
-      osmLayer,
-      backgroundLayer,
-      polygonLayer,
-      labelsLayer,
-      lineLayer,
-      resourceLayer
-    ],
-    view: view
-  })
-
-
-  // change map when Zoom change
-  map.value.on('moveend', () => {
-    const zoom = view.getZoom()
-    if (zoom != undefined) {
-      if (zoom >= 20) {
-        labelsLayer.setStyle(labelStyleFunction)
-        backgroundLayer.setStyle(backgroundStyleNear)
-      }
-      else if (zoom < 18) {
-        lineLayer.setStyle(emptyStyle)
-        polygonLayer.setStyle(emptyStyle)
-        labelsLayer.setStyle(emptyStyle)
-        backgroundLayer.setStyle(backgroundStyleFar)
-        resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(emptyStyle))
-      }
-      else  {
-        lineLayer.setStyle(lineStyle)
-        polygonLayer.setStyle(polygonStyle)
-        labelsLayer.setStyle(polygonStyle)
-        backgroundLayer.setStyle(backgroundStyleMiddle)
-        resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
-      }
-    }
-  })
+  map.value = createMap(maproot.value, view, layers)
 
   // add the selection interraction to the map
-
   map.value.addInteraction(selects.select)
   map.value.addInteraction(selects.selectHover)
 
   // event on selection selection
   selects.select.on('select', (e) => {
     const data = getInteractionData(e)
-    if (data !== null) {
-      emit('roomSelected', data)
-    }
-    else {
-      emit('roomUnselected')
-    }
+    if (data !== null) emit('roomSelected', data)
+    else emit('roomUnselected')
   })
 })
 
@@ -147,14 +121,13 @@ const currentBuilding = currentBuildingStore()
 const currentFloor = currentFloorStore()
 const filter = filtersStore()
 const roomSelected = roomSelectedStore()
+const display = displayStore()
+
 
 watch(() => props.loadingFinished, () => {
-  setBackgroundFeaturesToBackgroundLayer(backgroundLayer, currentBuilding.selected)
+  setBackgroundFeaturesToBackgroundLayer(layers.backgroundLayer, currentBuilding.selected)
   setFloorFeaturesToFloorLayer(
-      lineLayer,
-      polygonLayer,
-      labelsLayer,
-      resourceLayer,
+      layers.floorLayer,
       filter.checked,
       currentBuilding.selected,
       currentFloor.currentFloorName
@@ -163,10 +136,7 @@ watch(() => props.loadingFinished, () => {
 
 watch(() => currentFloor.currentFloorName, () => {
   setFloorFeaturesToFloorLayer(
-      lineLayer,
-      polygonLayer,
-      labelsLayer,
-      resourceLayer,
+      layers.floorLayer,
       filter.checked,
       currentBuilding.selected,
       currentFloor.currentFloorName
@@ -174,22 +144,17 @@ watch(() => currentFloor.currentFloorName, () => {
 })
 
 watch(() => filter.checked, (newFilters : string[]) => {
-  setResourcesLayer(resourceLayer,newFilters, currentBuilding.selected, currentFloor.currentFloorName)
+  setResourcesLayer(layers.floorLayer.resourceLayer, newFilters, currentBuilding.selected, currentFloor.currentFloorName)
 })
 
 watch(() => currentBuilding.selected, () => {
-  setBackgroundFeaturesToBackgroundLayer(backgroundLayer, currentBuilding.selected)
-
-  if (currentBuilding.info != undefined) {
-    view.setCenter(currentBuilding.info.center)
-    view.setZoom(currentBuilding.info.zoom)
-    view.setRotation(currentBuilding.info.rotation)
-    view.setMaxZoom(currentBuilding.info.maxZoom)
-    view.setMinZoom(currentBuilding.info.minZoom)
-    adjustZoom()
-  }
+  setBackgroundFeaturesToBackgroundLayer(
+      layers.backgroundLayer,
+      currentBuilding.selected
+  )
+  setView(view, currentBuilding.info as BuildingInfo)
+  adjustZoom()
 })
-
 
 watch(() => roomSelected.selected, (newRoom) => {
   if (newRoom !== undefined) {
@@ -214,6 +179,11 @@ watch(() => roomSelected.selected, (newRoom) => {
     }
   }
 })
+
+watch(() => display.currentMode, () => {
+  setLabelLayerStyleByZoom(layers.floorLayer.labelsLayer, view.getZoom())
+})
+
 </script>
 
 <style scoped>

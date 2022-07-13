@@ -54,6 +54,7 @@ function createRoomTable() {
     return `CREATE TABLE IF NOT EXISTS room (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
+    second_name VARCHAR(255),
     type VARCHAR(255),
     surface FLOAT,
     capacity INT,
