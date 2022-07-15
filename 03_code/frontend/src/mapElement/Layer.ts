@@ -5,6 +5,8 @@ import {StyleLike} from "ol/style/Style";
 import TileLayer from "ol/layer/Tile";
 import {OSM} from "ol/source";
 import {featureStore} from "../stores/feature";
+import {FloorLayers} from "../interface/interface";
+import {ressourceStyleFunction} from "./style";
 
 export function getOpenStreetMapLayer() {
     return new TileLayer({
@@ -23,21 +25,18 @@ export function setBackgroundFeaturesToBackgroundLayer(layer : VectorLayer<Vecto
 }
 
 export function setFloorFeaturesToFloorLayer(
-    lineLayer : VectorLayer<VectorSource>,
-    polygonLayer : VectorLayer<VectorSource>,
-    labelsLayer : VectorLayer<VectorSource>,
-    resourceLayer : VectorLayer<VectorSource>,
+    floorLayers : FloorLayers,
     filters : string[],
     building : string,
     floor : string
 ) {
     const floorFeatures = featureStore().getFloorFeatures(building, floor)
     if (floorFeatures != undefined) {
-        setFeaturesToLayer(lineLayer, floorFeatures.lines)
-        setFeaturesToLayer(polygonLayer, floorFeatures.polygons)
-        setFeaturesToLayer(labelsLayer, floorFeatures.labels)
+        setFeaturesToLayer(floorLayers.lineLayer, floorFeatures.lines)
+        setFeaturesToLayer(floorLayers.polygonLayer, floorFeatures.polygons)
+        setFeaturesToLayer(floorLayers.labelsLayer, floorFeatures.labels)
     }
-    setResourcesLayer(resourceLayer, filters, building, floor)
+    setResourcesLayer(floorLayers.resourceLayer, filters, building, floor)
 }
 
 export function setFeaturesToLayer (layer : VectorLayer<VectorSource>, features : Feature[] | undefined) : VectorSource | undefined {

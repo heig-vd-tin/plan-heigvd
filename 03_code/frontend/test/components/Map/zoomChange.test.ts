@@ -11,13 +11,13 @@ test('isComponentVisible', () => {
 })
 
 test('isZoomUpEventEmit', () => {
-    wrapper.find('#zoomUp').trigger("click")
+    wrapper.findAllComponents(Button)[0].vm.$emit("click")
     nextTick()
     expect(wrapper.emitted()).toHaveProperty('zoomUp')
 })
 
 test('isZoomUpEventEmit', () => {
-    wrapper.find('#zoomDown').trigger("click")
+    wrapper.findAllComponents(Button)[1].vm.$emit("click")
     nextTick()
-    expect(wrapper.emitted()).toHaveProperty('zoomUp')
+    expect(wrapper.emitted()).toHaveProperty('zoomDown')
 })

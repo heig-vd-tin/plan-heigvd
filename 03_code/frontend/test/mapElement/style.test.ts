@@ -13,10 +13,11 @@ const feature1 = randomFeature[0]
 const feature2 = randomFeature2[0]
 const feature3 = randomFeature3[0]
 
+/* TODO change
 test('testLabelStyleFunction', () => {
     const style = labelStyleFunction(feature1)
     expect(style.getText().getText() === 'test')
-})
+})*/
 
 test('selectedStyleFunction', () => {
     const style1 = selectedStyleFunction(feature1)

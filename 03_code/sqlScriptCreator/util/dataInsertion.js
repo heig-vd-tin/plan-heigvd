@@ -143,6 +143,7 @@ function insertRoom(roomName, floorName, gis, data) {
     let d
     if (roomName === 'WC' || roomName === 'Ascenseur' || roomName === 'vidoir') {
         d = {
+            secondName : 'NULL',
             type : `'${roomName}'`,
             surface : 'NULL',
             capacity : 'NULL'
@@ -151,7 +152,8 @@ function insertRoom(roomName, floorName, gis, data) {
     else {
         d = data.get(roomName)
     }
-    return `insert into room (name, type, surface, capacity, idx_floor, geometry) select '${roomName}', ${d.type}, ${d.surface}, ${d.capacity}, id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
+    console.log(`${roomName} -> ${d}`)
+    return `insert into room (name, second_name, type, surface, capacity, idx_floor, geometry) select '${roomName}',${d.secondName} , ${d.type}, ${d.surface}, ${d.capacity}, id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
 }
 
 module.exports = {insertDataIntoTables}

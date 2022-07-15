@@ -27,9 +27,10 @@ function readRoomData(inputPath, buiding) {
         return {
             key : data[0],
             value : {
-                type : formatData(data[2], formatStringForSql),
+                secondName : formatData(data[2], formatStringForSql),
+                type : formatData(data[3], formatStringForSql),
                 surface : formatData(data[1], parseFloat),
-                capacity : formatData(data[3], parseInt)
+                capacity : formatData(data[4], parseInt)
             }
         }
     })

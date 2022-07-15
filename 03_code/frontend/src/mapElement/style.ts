@@ -1,12 +1,14 @@
 import {Text, Fill, Stroke, Style, Icon} from "ol/style";
 import {FeatureLike} from "ol/Feature";
 import {images} from "../data/image";
+import {Color} from "ol/color";
+import {ColorLike} from "ol/colorlike";
 
 // colors
-const white     = 'rgba(245, 245, 245 , 1)'
-const lightGrey = 'rgba(235, 235, 235 , 1)'
-const grey      = 'rgba(200, 200, 200 , 1)'
-const darkGrey  = 'rgba(100, 100, 100, 1)'
+const white     = 'rgba(245, 252, 252 , 1)'
+const lightGrey = 'rgba(225, 232, 232 , 1)'
+const grey      = 'rgba(180, 187, 187 , 1)'
+const darkGrey  = 'rgba(100, 107, 107, 1)'
 const black     = '#000'
 const red       = 'rgba(220, 0, 0, 1)'
 
@@ -35,19 +37,30 @@ export const polygonStyle = new Style({
         color: white,
     })
 })
-export const backgroundStyle1 = new Style({
+
+export const backgroundStyleFar = new Style({
     stroke: new Stroke({
-        color: grey,
+        color: black,
         width: 1,
     }),
     fill: new Fill({
-        color: lightGrey,
+        color: darkGrey,
     })
 })
 
-export const backgroundStyle2 = new Style({
+export const backgroundStyleMiddle = new Style({
+    stroke: new Stroke({
+        color: darkGrey,
+        width: 1,
+    }),
     fill: new Fill({
         color: grey,
+    })
+})
+
+export const backgroundStyleNear = new Style({
+    fill: new Fill({
+        color: darkGrey,
     })
 })
 
@@ -60,7 +73,7 @@ const selectedRoomStyle = new Style({
 
 export function selectedStyleFunction (feature : FeatureLike) {
     if(feature.get('image_name') === undefined) {
-        selectedRoomStyle.getText().setText(`${feature.get('name')}`)
+        getFullName(feature, selectedRoomStyle)
         return selectedRoomStyle
     }
     else {
@@ -73,14 +86,44 @@ export function selectedStyleFunction (feature : FeatureLike) {
 // label style
 const labelStyle = new Style({
     fill: new Fill({
-        color: white,
+        color: lightGrey,
     }),
     text: textLabel,
 })
-export function labelStyleFunction(feature : FeatureLike) {
+
+function getNoName(style : Style) {
+    style.getText().setText(``)
+    return style
+}
+
+function getHalfName(feature : FeatureLike, style : Style) {
     const name =  feature.get('name')
-    labelStyle.getText().setText(`${name}`)
-    return labelStyle
+    style.getText().setText(`${name}`)
+    return style
+}
+
+function getFullName(feature : FeatureLike, style : Style) {
+    const name =  feature.get('name')
+    const secondName = feature.get('second_name')
+    if (secondName !== null) {
+        style.getText().setText(`${name}\n${secondName}`)
+    }
+    else {
+        labelStyle.getText().setText(`${name}`)
+    }
+    return style
+}
+
+export function labelStyleNearFunction(feature : FeatureLike) {
+    return getFullName(feature, labelStyle)
+}
+
+export function labelStyleMiddleFunction(feature : FeatureLike) {
+    return getHalfName(feature, labelStyle)
+}
+
+export function labelStyleFarFunction(feature : FeatureLike) {
+    return getNoName(labelStyle)
 }
 
 const labelHoverStyle = new Style({
@@ -91,8 +134,7 @@ const labelHoverStyle = new Style({
 })
 export function hoverStyleFunction(feature : FeatureLike) {
     if(feature.get('image_name') === undefined) {
-        labelHoverStyle.getText().setText(`${feature.get('name')}`)
-        return labelHoverStyle
+        return getFullName(feature, labelHoverStyle)
     }
     else {
         const imgName = feature.get('image_name').split('.')[0]
@@ -119,4 +161,50 @@ export function ressourceStyleFunction (feature : FeatureLike) : Style {
     const imgName = feature.get('image_name').split('.')[0]
     const img = images.get(imgName)
     return getRessourceStyle(img, 0.2)
+}
+
+function getRoomByTypeStyle(color : ColorLike) {
+    return new Style({
+        fill: new Fill({
+            color: color,
+        }),
+        text: textLabel,
+    })
+}
+
+function getColorType(feature : FeatureLike) {
+    switch (feature.get('type')) {
+        case 'Auditoire' : return 'rgb(241,192,192)'
+        case 'Laboratoire' : return 'rgb(198,198,238)'
+        case 'Atelier' : return 'rgb(200,236,236)'
+        case 'Service technique' : return 'rgba(200,200,200,1)'
+        case 'Salle de cours' : return 'rgb(250,195,190)'
+        case 'Bureau' : return 'rgb(193,231,205)'
+        case 'Cafétéria' : return 'rgb(239,224,201)'
+        case 'Salle de réunion' : return'rgb(230,253,215)'
+        case 'Aula' : return 'rgb(255,163,163)'
+        case 'Réception' : return 'rgb(230,255,228)'
+        case 'Bibliothèque' : return 'rgb(215,248,255)'
+        case 'Salle de conférence' : return 'rgb(235,255,213)'
+        case 'Espace étudiants' : return 'rgb(241,206,219)'
+        default  : return 'rgb(180,180,180)'
+    }
+}
+
+export function roomByTypeNearStyleFunction (feature : FeatureLike) {
+    const color = getColorType(feature) as ColorLike
+    const style = getRoomByTypeStyle(color as ColorLike)
+    return getFullName(feature, style)
+}
+
+export function roomByTypeMiddleStyleFunction (feature : FeatureLike) {
+    const color = getColorType(feature) as ColorLike
+    const style = getRoomByTypeStyle(color as ColorLike)
+    return getHalfName(feature, style)
+}
+
+export function roomByTypeFarStyleFunction (feature : FeatureLike) {
+    const color = getColorType(feature) as ColorLike
+    const style = getRoomByTypeStyle(color as ColorLike)
+    return getNoName(style)
 }

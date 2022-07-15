@@ -1,21 +1,20 @@
 <template>
   <div class="floor-change">
-    <ToolButton class="arrow-up" @click="floorUp">
+    <Button class="arrow-up" @click="floorUp">
       <font-awesome-icon :icon="['fas', 'angle-up']" />
-    </ToolButton>
-    <ToolButton @click="floorUp" >{{currentFloor.nextFloorName}}</ToolButton>
-    <ToolButton :selected="true">{{currentFloor.currentFloorName}}</ToolButton>
-    <ToolButton @click="floorDown">{{currentFloor.previousFloorName}}</ToolButton>
-    <ToolButton @click="floorDown" class="arrow-down">
+    </Button>
+    <Button @click="floorUp" >{{currentFloor.nextFloorName}}</Button>
+    <Button :selected="true">{{currentFloor.currentFloorName}}</Button>
+    <Button @click="floorDown">{{currentFloor.previousFloorName}}</Button>
+    <Button @click="floorDown" class="arrow-down">
       <font-awesome-icon :icon="['fas', 'angle-down']" />
-    </ToolButton>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import {ref} from "vue";
-import ToolButton from "../Utility/Button.vue";
+import Button from "../Utility/Button.vue";
 import {currentFloorStore} from "../../stores/currentFloor";
 
 const currentFloor = currentFloorStore()
@@ -31,42 +30,19 @@ function floorDown() {
 </script>
 
 <style scoped>
+
+
+
   .floor-change {
     z-index: 1;
     display: flex;
     flex-direction: column;
-    background-color: rgb(240,240,240);
+    background-color: var(--secondary-background-color);
+    height: 100%;
   }
 
-  .floor-change-item {
-    padding: 10px 0;
-    height: 35px;
-    width: 100%;
-    text-align: center;
-    white-space: pre;
-    background-color: white;
-  }
-
-  .floor-change-selected-item {
-    background-color: #E1251B;
-    color: white;
-  }
-
-  .arrow-btn {
-    background-color: white;
-    display: block;
-    text-decoration: none;
-  }
-
-  .arrow-btn:hover {
-    background-color: lightgrey;
-  }
-
-  .small-text {
-    width: 100%;
-    text-align: center;
-    font-size: 12px;
-
+  Button {
+    height: 20%;
   }
 
   .arrow-up {
@@ -75,10 +51,6 @@ function floorDown() {
 
   .arrow-down {
     border-top: 1px solid lightgrey;
-  }
-
-  .step-number{
-    font-size: 10px;
   }
 
 </style>

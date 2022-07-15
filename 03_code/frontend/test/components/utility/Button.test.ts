@@ -18,7 +18,7 @@ const wrapper = mount(Button,{
 test('isButtonVisible', () => {
     expect(wrapper.isVisible())
     expect(wrapper.find('a').exists()).toBe(true)
-    expect(wrapper.find('div').exists()).toBe(false)
+    expect(wrapper.find('.selected').exists()).toBe(false)
 })
 
 test('emittedClick ', () => {
@@ -30,7 +30,7 @@ test('isSelectedButtonVisible', async () => {
     await wrapper.setProps({selected : true})
     expect(wrapper.isVisible())
     expect(wrapper.find('a').exists()).toBe(false)
-    expect(wrapper.find('div').exists()).toBe(true)
+    expect(wrapper.find('.selected').exists()).toBe(true)
 })
 
 

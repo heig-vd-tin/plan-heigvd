@@ -1,11 +1,17 @@
 <template>
   <div class="collapse-header">
-    <h2 class="collapse-title">{{ title }}</h2>
-    <Button v-show="visibility" class="collapse-btn" @click="changeVisibility" id="openedIcon">
-      <font-awesome-icon :icon="['fas', 'angle-down']" />
-    </Button>
-    <Button v-show="!visibility" class="collapse-btn" @click="changeVisibility" id="closedIcon">
-      <font-awesome-icon :icon="['fas', 'angle-right']" />
+    <Button @click="changeVisibility">
+      <div class="collapse-header-container">
+        <h2 class="collapse-title">{{ title }}</h2>
+        <div class="collapse-icon">
+          <transition name="open">
+              <font-awesome-icon v-show="visibility" :icon="['fas', 'angle-down']" id="openedIcon"/>
+          </transition>
+          <transition name="close">
+              <font-awesome-icon v-show="!visibility" :icon="['fas', 'angle-right']" id="closedIcon"/>
+          </transition>
+        </div>
+      </div>
     </Button>
   </div>
 </template>
@@ -31,7 +37,6 @@ function changeVisibility() {
 </script>
 
 <style scoped>
-
 .collapse-header {
   display: flex;
   justify-content: space-between;
@@ -42,8 +47,36 @@ function changeVisibility() {
   margin: 10px 0;
 }
 
-.collapse-btn {
-  width: 30px;
+.collapse-header-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.open-enter-active {
+  transition: transform 0.2s ease-out;
+}
+
+
+.open-enter-from {
+  transform: rotate(-90deg);
+}
+.open-leave-from {
+  opacity: 0;
+}
+
+
+.close-enter-active {
+  transition: transform 0.2s ease-out
+}
+
+.close-enter-from {
+  transform: rotate(90deg);
+}
+
+.close-leave-from {
+  opacity: 0;
 }
 
 </style>

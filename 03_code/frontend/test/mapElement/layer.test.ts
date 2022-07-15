@@ -11,6 +11,7 @@ import VectorSource from "ol/source/Vector";
 import {ff, randomFeature} from "../data/testData";
 import {createPinia, setActivePinia} from "pinia";
 import {featureStore} from "../../src/stores/feature";
+import {FloorLayers} from "../../src/interface/interface";
 
 setActivePinia(createPinia())
 
@@ -30,15 +31,18 @@ const store = featureStore()
 
 test('etFloorFeaturesToFloorLayer', () => {
     store.addFloorFeature('test', 'E', ff)
-    const layer = createEmptyVectorLayer(emptyStyle)
-    const layer2 = createEmptyVectorLayer(emptyStyle)
-    const layer3 = createEmptyVectorLayer(emptyStyle)
-    const layer4 = createEmptyVectorLayer(emptyStyle)
-    setFloorFeaturesToFloorLayer(layer, layer, layer, layer, [],'test', 'E')
-    expect(layer.getSource()?.getFeatures() === randomFeature)
-    expect(layer2.getSource()?.getFeatures() === randomFeature)
-    expect(layer3.getSource()?.getFeatures() === randomFeature)
-    expect(layer4.getSource()?.getFeatures() === randomFeature)
+    const layers : FloorLayers= {
+        labelsLayer : createEmptyVectorLayer(emptyStyle),
+        lineLayer : createEmptyVectorLayer(emptyStyle),
+        polygonLayer : createEmptyVectorLayer(emptyStyle),
+        resourceLayer :  createEmptyVectorLayer(emptyStyle)
+    }
+
+    setFloorFeaturesToFloorLayer(layers, [],'test', 'E')
+    expect(layers.lineLayer.getSource()?.getFeatures() === randomFeature)
+    expect(layers.resourceLayer.getSource()?.getFeatures() === randomFeature)
+    expect(layers.polygonLayer.getSource()?.getFeatures() === randomFeature)
+    expect(layers.labelsLayer.getSource()?.getFeatures() === randomFeature)
 })
 
 test('setBackgroundFeaturesToBackgroundLayer', () => {

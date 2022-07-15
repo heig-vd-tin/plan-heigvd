@@ -40,6 +40,7 @@ export function getInteractionData(e : SelectEvent) : Info[] | null {
             if (properties.image_name === undefined) {
                 data.push({
                     flag: 'room',
+                    id : properties.id,
                     name: properties.name,
                     type: properties.type,
                     surface: properties.surface,
@@ -49,6 +50,7 @@ export function getInteractionData(e : SelectEvent) : Info[] | null {
             else {
                 data.push({
                     flag: 'resource',
+                    id : properties.id,
                     name: properties.name,
                     type: properties.type,
                     surface: null,

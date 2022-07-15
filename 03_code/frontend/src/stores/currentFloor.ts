@@ -24,6 +24,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
         }
     }
 
+
     function setFloors() {
         currentFloorName.value = floors.value[id.value]
 

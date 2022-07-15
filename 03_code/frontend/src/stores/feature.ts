@@ -1,12 +1,13 @@
 import {defineStore} from "pinia";
 import {Feature} from "ol";
 import {ressourceStyleFunction} from "../mapElement/style";
-import {FloorFeatures} from "../interface/interface";
+import {FloorFeatures, RoomSuggestion} from "../interface/interface";
 
 export const featureStore = defineStore('features', () => {
     const floorFeatures = new Map<string, FloorFeatures>()
     const backgroundFeatures = new Map<string, Feature[]>()
     const buildingResourceFeatures = new Map<string, Feature[]>()
+    let roomSelectedFeature : Feature | undefined
 
     function addFloorFeature(building : string, floor : string, features : FloorFeatures) {
         const key = building + floor
@@ -46,9 +47,6 @@ export const featureStore = defineStore('features', () => {
         features = features.filter(feature => {
             return filters.some(e => e === feature.getProperties().type)
         })
-        features.forEach( feature => {
-            feature.setStyle(ressourceStyleFunction)
-        })
         return features
     }
 
@@ -65,16 +63,26 @@ export const featureStore = defineStore('features', () => {
         return  Array.from(set)
     }
 
+    function getRoomFeature(roomSuggestion : RoomSuggestion) {
+        const floorFeature = getFloorFeatures(roomSuggestion.building_name, roomSuggestion.floor_name)
+        if (floorFeature !== undefined) {
+            return roomSelectedFeature = floorFeature.labels
+                .filter(v => v.getProperties().name === roomSuggestion.room_name)[0]
+        }
+    }
+
     return {
         floorFeatures,
         backgroundFeatures,
         buildingResourceFeatures,
+        roomSelectedFeature,
         addFloorFeature,
         addBackgroundFeature,
         addBuildingResourceFeature,
         getFloorFeatures,
         getBackgroundFeatures,
         getDisplayedResource,
-        getResourcesTypeList
+        getResourcesTypeList,
+        getRoomFeature
     }
 })

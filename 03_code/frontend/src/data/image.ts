@@ -33,6 +33,7 @@ import wcHandicapeSelected from '../assets/wc_handicapé_selected.png'
 import wcInclusif from '../assets/wc_inclusif.png'
 import wcInclusifSelected from '../assets/wc_inclusif_selected.png'
 import priseElectrique from '../assets/prise_électrique.png'
+import chevallier from '../assets/chevallier.png'
 
 
 export const images = new Map<string, string>()
@@ -60,13 +61,15 @@ images.set('réception_selected', receptionSelected)
 images.set('restaurant', restaurant)
 images.set('restaurant_selected', restaurantSelected)
 images.set('train', train)
-images.set('train_selected', train)
+images.set('train_selected', trainSelected)
 images.set('wc_femme', wcFemme)
 images.set('wc_femme_selected', wcFemmeSelected)
 images.set('wc_homme', wcHomme)
-images.set('wc_femme_selected', wcHommeSelected)
+images.set('wc_homme_selected', wcHommeSelected)
 images.set('wc_handicapé', wcHandicape)
 images.set('wc_handicapé_selected', wcHandicapeSelected)
 images.set('wc_inclusif', wcInclusif)
 images.set('wc_inclusif_selected', wcInclusifSelected)
 images.set('prise_électrique', priseElectrique)
+images.set('chevallier', chevallier)
+images.set('chevallier_selected', chevallier)

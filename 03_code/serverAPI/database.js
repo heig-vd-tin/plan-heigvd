@@ -11,16 +11,11 @@ const credentials = {
 const pool = new Pool(credentials);
 
 async function getBuildings() {
-    const text = `SELECT * FROM building`
+    const text = `SELECT * FROM building;`
     return pool.query(text);
 }
 
-async function getBuildingFloors(building) {
-    const text = `SELECT floor.name FROM floor INNER JOIN building ON floor.idx_building = building.id WHERE building.name = '${building}'`
-    return pool.query(text);
-}
-
-async function getFloorGis(building, floor, type) {
+async function getFeaturesOfBuildingByBuildingId(buildingId) {
     const text = `SELECT json_build_object(
     'type', 'FeatureCollection',
     'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
@@ -28,88 +23,97 @@ async function getFloorGis(building, floor, type) {
     FROM floor_geometry
     INNER JOIN floor
         ON floor.id = floor_geometry.idx_floor
-    INNER JOIN building
-        ON building.id = floor.idx_building
-    WHERE floor.name = '${floor}' 
-        AND floor_geometry.type = '${type}'
-        AND building.name = '${building}';`
+    WHERE floor_geometry.type = 'polygon' AND floor.idx_building = ${buildingId};`
+    console.log(text)
     return pool.query(text);
 }
 
-async function getAllPolygons(building) {
+async function getFloorsOfBuildingByBuildingId(buildingId) {
+    const text = `SELECT floor.id, floor.name
+        FROM floor  
+        WHERE floor.idx_building = ${buildingId}`
+    return pool.query(text);
+}
+
+async function getResourceOfBuildingByBuildingId(buildingId) {
+    const text =  `SELECT json_build_object(
+        'type', 'FeatureCollection',
+        'features', json_agg(ST_AsGeoJSON(resource.*)::json)
+    )
+    FROM resource
+    WHERE idx_floor IS NULL AND idx_building = ${buildingId};` ;
+    return pool.query(text);
+}
+
+async function getFeaturesOfFloorByFloorIdAndType(floorId, type) {
     const text = `SELECT json_build_object(
     'type', 'FeatureCollection',
     'features', json_agg(ST_AsGeoJSON(floor_geometry.*)::json)
     ) 
     FROM floor_geometry
-    INNER JOIN floor
-        ON floor.id = floor_geometry.idx_floor
-    INNER JOIN building
-        ON building.id = floor.idx_building
-    WHERE floor_geometry.type = 'polygon' AND building.name = '${building}';`
+    WHERE idx_floor = ${floorId}
+        AND floor_geometry.type = '${type}';`
     return pool.query(text);
 }
 
-async function getFloorLabels(building, floor) {
+async function getLabelsOfFloorByFloorId(floorId) {
     const text = `SELECT json_build_object(
         'type', 'FeatureCollection',
         'features', json_agg(ST_AsGeoJSON(room.*)::json)
     )
+    FROM room 
+    WHERE room.idx_floor = ${floorId};`
+    return pool.query(text);
+}
+
+async function getResourceOfFloorByFloorId(floorId) {
+    const text =  `SELECT json_build_object(
+        'type', 'FeatureCollection',
+        'features', json_agg(ST_AsGeoJSON(resource.*)::json)
+    )
+    FROM resource
+    WHERE idx_floor = ${floorId};`
+    return pool.query(text);
+}
+
+async function getResourceOfRoomByRoomId(roomId) {
+    const text =  `SELECT resource.name, resource.type
+    FROM resource
+    WHERE idx_room = ${roomId};`
+    return pool.query(text);
+}
+
+async function getRoomsByResearch(search) {
+    const text =  `SELECT room.id AS room_id, room.name AS room_name, room.type as room_type, room.surface as room_surface, room.capacity as room_capacity, floor.name as floor_name, building.name as building_name
     FROM room
     INNER JOIN floor
         ON room.idx_floor = floor.id
-    INNER JOIN building
-        ON floor.idx_building = building.id 
-    WHERE floor.name = '${floor}' AND building.name = '${building}';`
+    INNER Join building
+        ON floor.idx_building = building.id
+    WHERE LOWER(room.name) LIKE '%${search}%'  OR LOWER(room.type) LIKE '%${search}%';`
     return pool.query(text);
 }
 
-async function getRoomGis(roomName) {
-    const text = `SELECT json_build_object(
-        'type', 'FeatureCollection',
-        'features', json_agg(ST_AsGeoJSON(room.*)::json)
-    )
-    FROM room WHERE room.name = '${roomName}'` ;
+async function getRoomsByName(room) {
+    const text =  `SELECT room.id as room_id, room.name AS room_name, room.type as room_type, room.surface as room_surface, room.capacity as room_capacity, floor.name as floor_name, building.name as building_name
+    FROM room
+    INNER JOIN floor
+        ON room.idx_floor = floor.id
+    INNER Join building
+        ON floor.idx_building = building.id
+    WHERE LOWER(room.name) = '${room}' OR LOWER(room.type) = '${room}';`
     return pool.query(text);
 }
 
-async function getRessourcesOfFloor(buildingName, floorName) {
-    const text =  `SELECT json_build_object(
-        'type', 'FeatureCollection',
-        'features', json_agg(ST_AsGeoJSON(resource.*)::json)
-    )
-    FROM resource
-    INNER JOIN floor 
-        ON resource.idx_floor = floor.id
-    INNER JOIN building
-        ON building.id = resource.idx_building
-    WHERE floor.name = '${floorName}';` ;
-    return pool.query(text);
+module.exports = {
+    getFeaturesOfFloorByFloorIdAndType,
+    getLabelsOfFloorByFloorId,
+    getFeaturesOfBuildingByBuildingId,
+    getResourceOfFloorByFloorId,
+    getResourceOfRoomByRoomId,
+    getResourceOfBuildingByBuildingId,
+    getBuildings,
+    getFloorsOfBuildingByBuildingId,
+    getRoomsByResearch,
+    getRoomsByName
 }
-
-async function getRessourcesOfBuidling(buildingName) {
-    const text =  `SELECT json_build_object(
-        'type', 'FeatureCollection',
-        'features', json_agg(ST_AsGeoJSON(resource.*)::json)
-    )
-    FROM resource
-    INNER JOIN building
-        ON building.id = resource.idx_building
-    WHERE idx_floor IS NULL AND building.name = '${buildingName}';` ;
-    console.log(text)
-    return pool.query(text);
-}
-
-async function getResourceOfRoom(buildingName, roomName) {
-    const text =  `SELECT resource.name, resource.type
-    FROM resource
-    INNER JOIN building
-        ON building.id = resource.idx_building
-    INNER JOIN room
-        ON room.id = resource.idx_room
-    WHERE room.name = '${roomName}' AND building.name = '${buildingName}';` ;
-    console.log(text)
-    return pool.query(text);
-}
-
-module.exports = { getRoomGis, getFloorGis, getFloorLabels, getAllPolygons, getRessourcesOfFloor, getResourceOfRoom, getRessourcesOfBuidling, getBuildings, getBuildingFloors}

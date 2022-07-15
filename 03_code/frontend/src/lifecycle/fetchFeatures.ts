@@ -1,4 +1,4 @@
-import {getAllPolygonsOfBuilding, getFeaturesOfFloor, getResourceOfBuilding} from "../api/api";
+import {getFeaturesOfBuilding, getFeaturesOfFloor, getResourceOfBuilding} from "../api/api";
 import {GeoJSON} from "ol/format";
 import {featureStore} from "../stores/feature";
 import {Feature} from "ol";
@@ -6,21 +6,20 @@ import {FloorFeatures} from "../interface/interface";
 
 const geojsonTool = new GeoJSON()
 
-export async function fetchBaseFeatures(building : string, groundFloor : string) {
-    await fetchFloorFeatures(building, groundFloor)
-    await fetchBackgroundFeatures(building)
-    await fetchBuildingResources(building)
+export async function fetchBaseFeatures(groundFloor : string, groundFloorId : number, buildingName : string, buildingId : number) {
+    await fetchFloorFeatures(buildingName, groundFloor, groundFloorId)
+    await fetchBackgroundFeatures(buildingName, buildingId)
+    await fetchBuildingResources(buildingName, buildingId)
 }
 
-export async function fetchOtherFeatures(buildings : string[], floors : string[], initialBuilding : string, initialGroundFloor : string) {
+export async function fetchOtherFeatures(buildings : string[], floors : {id : number, name : string }[], initialBuilding : string, initialGroundFloor : string) {
     for(const building of buildings) {
         for (const floor of floors) {
-            if (building !== initialBuilding || floor !== initialGroundFloor) {
-                await fetchFloorFeatures(building, floor)
+            if (building !== initialBuilding || floor.name !== initialGroundFloor) {
+                await fetchFloorFeatures(building, floor.name, floor.id)
             }
         }
     }
-
 }
 
 function formatFeatures(f : any) : Feature[] | null {
@@ -32,8 +31,8 @@ function formatFeatures(f : any) : Feature[] | null {
     }
 }
 
-async function fetchFloorFeatures(building : string, floor : string) {
-    const floorFeatures = await getFeaturesOfFloor(building, floor)
+async function fetchFloorFeatures(buildingName : string, floorName : string, floorId : number) {
+    const floorFeatures = await getFeaturesOfFloor(floorId)
 
     const polygons  = formatFeatures(floorFeatures.polygons)
     const lines     = formatFeatures(floorFeatures.lines)
@@ -47,18 +46,18 @@ async function fetchFloorFeatures(building : string, floor : string) {
             labels : labels,
             resources : resources
         }
-        featureStore().addFloorFeature(building, floor, floorFeatures)
+        featureStore().addFloorFeature(buildingName, floorName, floorFeatures)
     }
 }
 
-async function fetchBackgroundFeatures(building : string) {
-    const rawBackground = await getAllPolygonsOfBuilding(building)
+async function fetchBackgroundFeatures(buildingName : string, buildingId : number) {
+    const rawBackground = await getFeaturesOfBuilding(buildingId)
     const backgroundFeatures = geojsonTool.readFeatures(rawBackground)
-    featureStore().addBackgroundFeature(building, backgroundFeatures)
+    featureStore().addBackgroundFeature(buildingName, backgroundFeatures)
 }
 
-async function fetchBuildingResources(building : string) {
-    const globalResource = await getResourceOfBuilding(building )
+async function fetchBuildingResources(buildingName : string, buildingId : number) {
+    const globalResource = await getResourceOfBuilding(buildingId )
     const globalResourcesFeatures = geojsonTool.readFeatures(globalResource)
-    featureStore().addBuildingResourceFeature(building, globalResourcesFeatures)
+    featureStore().addBuildingResourceFeature(buildingName, globalResourcesFeatures)
 }

@@ -1,8 +1,7 @@
-import {getBuildings, getBuildingsFloors} from "../api/api";
+import {getBuildings, getFloorsOfBuildings} from "../api/api";
 import {currentBuildingStore} from "../stores/currentBuilding";
 import {filtersStore} from "../stores/Filters";
 import {currentFloorStore} from "../stores/currentFloor";
-import {GeoJSON} from "ol/format";
 import {fetchBaseFeatures, fetchOtherFeatures} from "./fetchFeatures";
 import {featureStore} from "../stores/feature";
 
@@ -11,9 +10,15 @@ export async function loadAndDisplayBaseData() {
     const buildingStore = currentBuildingStore()
     initFloorStore()
     if (buildingStore.info !== undefined) {
+        const groundFloor = buildingStore.info.groundFloor
+        const groundFloorId = buildingStore.info.floors
+            .filter(f => f.name === groundFloor)[0].id
+
         await fetchBaseFeatures(
+            groundFloor,
+            groundFloorId,
             buildingStore.selected,
-            buildingStore.info.groundFloor
+            buildingStore.info.id
         )
     }
     filtersStore().initStore(featureStore().getResourcesTypeList())
@@ -36,10 +41,11 @@ async function initBuildingStore() {
     const buildings = await getBuildings()
     const buildingStore = currentBuildingStore()
     for (const b of buildings) {
-        const floors : {name : string}[] = await getBuildingsFloors(b.name)
+        const floors : {id : number, name : string}[] = await getFloorsOfBuildings(b.id)
         buildingStore.addBuildingInfo(
             b.name,
-            floors.map(v => v.name),
+            b.id,
+            floors,
             b.ground_floor,
             b.x,
             b.y,
@@ -56,7 +62,7 @@ function initFloorStore() {
     if (buildingStore.info !== undefined) {
         currentFloorStore().initStore(
             buildingStore.selected,
-            buildingStore.info.floors,
+            buildingStore.info.floors.map(f => f.name),
             buildingStore.info.groundFloor
         )
     }
