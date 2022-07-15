@@ -5,10 +5,10 @@
         <h2 class="collapse-title">{{ title }}</h2>
         <div class="collapse-icon">
           <transition name="open">
-              <font-awesome-icon v-show="visibility" :icon="['fas', 'angle-down']" />
+              <font-awesome-icon v-show="visibility" :icon="['fas', 'angle-down']" id="openedIcon"/>
           </transition>
           <transition name="close">
-              <font-awesome-icon v-show="!visibility" :icon="['fas', 'angle-right']" />
+              <font-awesome-icon v-show="!visibility" :icon="['fas', 'angle-right']" id="closedIcon"/>
           </transition>
         </div>
       </div>
