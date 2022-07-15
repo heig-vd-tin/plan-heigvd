@@ -2,7 +2,7 @@
   <div class="suggestion-section" v-show="list.length !== 0">
     <div class="title-section">{{title}}</div>
     <div v-for="item in list" class="item">
-      <Button @click="itemSelected">{{item}}</Button>
+      <Button @click="itemSelected" class="suggestion-section-btn">{{item}}</Button>
     </div>
   </div>
 </template>
@@ -40,6 +40,7 @@ function itemSelected(e : Event) {
 
 .item {
   border-bottom: 1px solid var(--border-color);
+  padding: 0.5rem;
 }
 
 </style>

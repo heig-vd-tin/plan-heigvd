@@ -1,10 +1,12 @@
 <template>
+  <div class="btn-container">
     <div v-if="selected" class="block selected">
       <slot></slot>
     </div>
-    <a v-else href="#" @click="click" class="block btn">
+    <a v-else href="#" @click="click" class="block btn ">
       <slot></slot>
     </a>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -21,18 +23,26 @@ function click(e : Event) {
 </script>
 
 <style scoped>
-.block {
-  padding: 10px 5px;
-  height: 35px;
+
+.btn-container {
+  height: 100%;
   width: 100%;
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 0.3rem;
   text-align: center;
   white-space: pre;
-  font-size: 12px;
+  font-size: 0.7em;
 }
 
 .btn {
   background-color: var(--primary-background-color);
-  display: block;
   text-decoration: none;
   color: var(--font-color);
 }

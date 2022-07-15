@@ -34,7 +34,7 @@ function resourceChanged(element : HTMLInputElement) {
 const display = displayStore()
 
 function displayChanged(e :HTMLInputElement) {
-  const text = (e.target as HTMLInputElement).id
+  const text = e.id
   console.log(text)
   switch (text) {
     case 'Défaut' : {
@@ -55,12 +55,12 @@ function displayChanged(e :HTMLInputElement) {
     position: fixed;
     left: 0;
     z-index: 1;
-    top: 50px;
+    top: 3em;
     background-color: var(--primary-background-color);
-    width: 250px;
-    height: calc(100vh - 50px);
+    width: clamp(300px, 20%, 600px);
+    height: calc(100% - 50px);
     border-right: 1px solid var(--border-color);
-    padding: 20px;
+    padding: 1.5rem;
     overflow: auto;
   }
 

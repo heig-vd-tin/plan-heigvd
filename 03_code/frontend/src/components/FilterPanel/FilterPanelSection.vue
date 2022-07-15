@@ -11,8 +11,9 @@
             <span class="checkmark"></span>
           </label>
         </div>
-        <div v-if="type === 'checkbox'" class="deselect-btn">
-          <a  href="#" @click="deselectAll">Décochez toutes les resources</a>
+        <div v-if="type === 'checkbox'" class="action-btn">
+          <a  v-show="!isAllCheckboxesUnchecked" href="#" @click="deselectAll">Décochez tout</a>
+          <a v-show="isAllCheckboxesUnchecked" href="#" @click="selectAll">Cochez tout</a>
         </div>
         <div v-else v-for="(filter, index) in filters" key="index" class="section-list">
           <label :for="filter" class="container">
@@ -28,6 +29,7 @@
 
 <script  setup lang="ts">
 import Collapse from "../Utility/Collapse.vue";
+import {ref} from "vue";
 
 const props = defineProps<{
   title : string
@@ -39,6 +41,7 @@ const emit = defineEmits(['change'])
 
 function change(e : Event) {
   emit('change', e.target as HTMLInputElement)
+  isAllCheckboxesUnchecked.value = checkIfAllCheckboxesIsUncheked();
 }
 
 function getFormat(name : string) : string{
@@ -53,41 +56,56 @@ function getFormat(name : string) : string{
   return n2
 }
 
-function deselectAll() {
+const isAllCheckboxesUnchecked = ref(false)
+
+function checkIfAllCheckboxesIsUncheked()  {
   const checkboxes = document.getElementsByClassName('input-checkbox')
-  for (const c of checkboxes) {
-    c.checked = false
+  for (const c of Array.from(checkboxes)) {
+     if ((c as HTMLInputElement).checked) {
+       return false
+     }
+  }
+  return true
+}
+
+function selectAll() {
+  const checkboxes = document.getElementsByClassName('input-checkbox')
+  for (const c of Array.from(checkboxes)) {
+    (c as HTMLInputElement).checked = true
     emit('change', c)
   }
+  isAllCheckboxesUnchecked.value = false
 }
+
+function deselectAll() {
+  const checkboxes = document.getElementsByClassName('input-checkbox')
+  for (const c of Array.from(checkboxes)) {
+    (c as HTMLInputElement).checked = false
+    emit('change', c)
+  }
+  isAllCheckboxesUnchecked.value = true
+}
+
 </script>
 
 <style scoped>
 .filter-section {
-  margin-bottom: 10px;
-  padding-bottom: 10px;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
   border-bottom: 1px solid var(--primary-color);
 }
 
-.deselect-btn {
-  margin: 20px 0;
+.action-btn {
+  margin: 1rem 0;
 }
 
-.deselect-btn a {
+.action-btn a {
   color: var(--primary-color);
+  text-decoration: none;
 }
 
-.filter-section-header {
-  display: flex;
-  justify-content: space-between;
-}
-
-.filter-section-btn {
-  width: 30px;
-}
-
-.section-title {
-  margin: 10px 0;
+.action-btn a:hover {
+  text-decoration: underline;
 }
 
 .list-enter-active,
@@ -104,10 +122,10 @@ function deselectAll() {
 .container {
   display: block;
   position: relative;
-  padding-left: 25px;
-  margin-bottom: 10px;
+  padding-left: 2rem;
+  margin-bottom: 0.5rem;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1em;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -126,8 +144,8 @@ function deselectAll() {
   position: absolute;
   top: 0;
   left: 0;
-  height: 16px;
-  width: 16px;
+  height: 1em;
+  width: 1em;
   background-color: #eee;
 }
 
@@ -150,10 +168,10 @@ function deselectAll() {
 }
 
 .container .checkmark:after {
-  left: 5px;
-  top: 1px;
-  width: 4px;
-  height: 10px;
+  left: 0.3em;
+  top: 0.1em;
+  width: 0.3em;
+  height: 0.6em;
   border: solid white;
   border-width: 0 3px 3px 0;
   -webkit-transform: rotate(45deg);
@@ -165,8 +183,8 @@ function deselectAll() {
   position: absolute;
   top: 0;
   left: 0;
-  height: 18px;
-  width: 18px;
+  height: 1.1em;
+  width: 1.1em;
   background-color: #eee;
   border-radius: 50%;
 }
@@ -180,10 +198,10 @@ function deselectAll() {
 }
 
 .container .radio:after {
-  top: 6px;
-  left: 6px;
-  width: 4px;
-  height: 4px;
+  top: 0.35em;
+  left: 0.35em;
+  width: 0.3em;
+  height: 0.3em;
   border-radius: 50%;
   background: white;
 }

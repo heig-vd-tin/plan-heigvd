@@ -58,24 +58,10 @@ const props = defineProps<{
 
 const emit = defineEmits(['roomSelected', 'roomUnselected'])
 
-// zoom
-function zoomChange(n : number){
-  const currentZoom = view.getZoom()
-  if (currentZoom !== undefined) {
-    view.setZoom(currentZoom + n)
-  }
-}
-
-function adjustZoom() {
-  if (innerWidth < 1024) {
-    zoomChange(-1)
-  }
-}
-
-// the view
+// the view of the map (handle zoom, crs projection, center)
 let view = new View()
 
-// the element which the map is attached
+// the dom element where the map is attached
 const maproot = ref<HTMLElement | undefined>(undefined)
 
 // the reactive map
@@ -93,6 +79,7 @@ const layers : Layers = {
   }
 }
 
+// openlayers Select to add interraction with layer
 const selects = getSelect(
     layers.floorLayer.labelsLayer,
     layers.floorLayer.resourceLayer
@@ -101,20 +88,35 @@ const selects = getSelect(
 onMounted(() => {
   const osmLayer = getOpenStreetMapLayer()
 
-  //mount the map
+  //create the map
   map.value = createMap(maproot.value, view, layers)
 
-  // add the selection interraction to the map
+  // add the openlayers Select interraction to the map
   map.value.addInteraction(selects.select)
   map.value.addInteraction(selects.selectHover)
 
-  // event on selection selection
+  // event on openlayers select selection
   selects.select.on('select', (e) => {
     const data = getInteractionData(e)
     if (data !== null) emit('roomSelected', data)
     else emit('roomUnselected')
   })
 })
+
+// zoom
+function zoomChange(n : number){
+  const currentZoom = view.getZoom()
+  if (currentZoom !== undefined) {
+    view.setZoom(currentZoom + n)
+  }
+}
+
+// adjust the zoom for small screen
+function adjustZoom() {
+  if (innerWidth < 1024) {
+    zoomChange(-1)
+  }
+}
 
 // stores
 const currentBuilding = currentBuildingStore()
@@ -123,7 +125,7 @@ const filter = filtersStore()
 const roomSelected = roomSelectedStore()
 const display = displayStore()
 
-
+// Detect when the base feature was fetch from the database and display it on the map
 watch(() => props.loadingFinished, () => {
   setBackgroundFeaturesToBackgroundLayer(layers.backgroundLayer, currentBuilding.selected)
   setFloorFeaturesToFloorLayer(
@@ -132,8 +134,10 @@ watch(() => props.loadingFinished, () => {
       currentBuilding.selected,
       currentFloor.currentFloorName
   )
+  layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
 })
 
+// Detect when the user change the floor and display it to the map
 watch(() => currentFloor.currentFloorName, () => {
   setFloorFeaturesToFloorLayer(
       layers.floorLayer,
@@ -141,12 +145,23 @@ watch(() => currentFloor.currentFloorName, () => {
       currentBuilding.selected,
       currentFloor.currentFloorName
   )
+
+  // display or not the resource layer after floor changed
+  const zoom = view.getZoom()
+  if (zoom !== undefined && zoom >=18) {
+    layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
+  }
+  else {
+    layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(emptyStyle))
+  }
 })
 
+// Detect when the user change one of the resources checkbox and display the correct icon
 watch(() => filter.checked, (newFilters : string[]) => {
   setResourcesLayer(layers.floorLayer.resourceLayer, newFilters, currentBuilding.selected, currentFloor.currentFloorName)
 })
 
+// Detect when the user change the building
 watch(() => currentBuilding.selected, () => {
   setBackgroundFeaturesToBackgroundLayer(
       layers.backgroundLayer,
@@ -156,8 +171,11 @@ watch(() => currentBuilding.selected, () => {
   adjustZoom()
 })
 
+// Detect when the user click on a suggestion in the research bar
+// add to the openlayers Select and send the data to the info panel
 watch(() => roomSelected.selected, (newRoom) => {
   if (newRoom !== undefined) {
+    // Add to the openlayers Select
     const feature = featureStore().getRoomFeature(newRoom)
     if (feature !== undefined) {
       selects.select.getFeatures().clear()
@@ -167,6 +185,7 @@ watch(() => roomSelected.selected, (newRoom) => {
         view.fit(extend)
       }
 
+      // send to the info Panel
       const info : Info[] = [{
         flag : 'room',
         id : newRoom.room_id,
@@ -180,6 +199,7 @@ watch(() => roomSelected.selected, (newRoom) => {
   }
 })
 
+// Detect when the user change the display mode
 watch(() => display.currentMode, () => {
   setLabelLayerStyleByZoom(layers.floorLayer.labelsLayer, view.getZoom())
 })
@@ -188,7 +208,7 @@ watch(() => display.currentMode, () => {
 
 <style scoped>
 .map {
-  margin-top: 50px;
+  margin-top: 3em;
   height: 100%;
   width: 100%;
 }
@@ -200,5 +220,6 @@ watch(() => display.currentMode, () => {
   bottom :0 ;
   transition: right 0.3s ease-out;
   border: 1px solid var(--border-color);
+  height: clamp(80px, 30%, 100px);
 }
 </style>

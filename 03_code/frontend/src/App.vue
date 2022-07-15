@@ -1,22 +1,11 @@
 <template>
   <div class="main-container">
     <transition name="loading">
-      <div v-show="loadingIsVisible" class="loading">
-        <div class="loading-bar">
-          <div>
-            <img src="./assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
-            <h1 class="loading-title">
-              Plan
-            </h1>
-          </div>
-          <p class="loading-text" v-show="loading">
-            Chargement...
-          </p>
-          <a v-show="!loading" href="#" @click="enterApp" class="loading-btn">
-            Entrer
-          </a>
-        </div>
-      </div>
+      <Loading
+          v-show="loadingIsVisible"
+          :is-loading-complete="!loading"
+          @app-entered="enterApp"
+      />
     </transition>
 
     <div class="container">
@@ -61,6 +50,7 @@ import {onMounted, ref} from "vue";
 import ToolBar from "./components/ToolPanel/ToolBar.vue";
 import {Info} from "./interface/interface";
 import {loadAndDisplayBaseData, loadOtherData} from "./lifecycle/lifecycle";
+import Loading from "./components/Loading/Loading.vue";
 
 
 const loading = ref(true)
@@ -69,7 +59,6 @@ const loadingIsVisible = ref(true)
 function enterApp() {
   loadingIsVisible.value = false
 }
-
 
 // info panel
 const infoPanelVisibility = ref(false)
@@ -119,7 +108,7 @@ html, .main-container, .container {
 }
 
 body {
-  height: calc(100% - 50px);
+  height: calc(100% - 3em);
 }
 
 #app {
@@ -130,61 +119,13 @@ body {
   height: 100%;
 }
 
-.loading {
-  position: absolute;
-  background-image: url("https://www.yverdon-energies.ch/wp-content/uploads/2019/05/heig-vd-cheseaux.jpg");
-  top: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 30;
-  background-color: var(--primary-background-color);
-  background-size: cover;
-  background-position: right;
-}
-
-.loading-bar {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  height: 100%;
-  width: 20%;
-  background-color: var(--primary-background-color);
-  padding: 70px;
-}
-
 .logo {
   display: block;
   width: 100%;
 }
 
-.loading-title {
-  font-size: 60px;
-  margin-top: 10px;
-  color: var(--font-color);
-}
-
-.loading-text {
-  height: 50px;
-  font-size: 20px;
-}
-
-.loading-btn {
-  display: block;
-  border-radius: 3px;
-  padding: 15px 52px;
-  border: 1px solid var(--border-color);
-  color: var(--font-color);
-  text-decoration: none;
-  height: 50px;
-}
-
-.loading-btn:hover {
-  background-color: var(--border-color);
-}
-
 h2 {
-  font-size: 20px;
-  margin-bottom: 0;
+  font-size: 2em;
 }
 
 .ol-control {
@@ -209,6 +150,18 @@ h2 {
 .info-panel-enter-from,
 .info-panel-leave-to {
   transform: translateX(300px);
+}
+
+@media only screen and (max-width: 440px) {
+  .info-panel-enter-active,
+  .info-panel-leave-active {
+    transition: all 0.3s ease-out;
+  }
+
+  .info-panel-enter-from,
+  .info-panel-leave-to {
+    transform: translateY(300px);
+  }
 }
 
 .loading-enter-active,

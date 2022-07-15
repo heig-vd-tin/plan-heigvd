@@ -35,3 +35,4 @@ export const ff : FloorFeatures = {
     labels : randomFeature,
     resources : randomFeature
 }
+

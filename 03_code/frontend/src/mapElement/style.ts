@@ -7,7 +7,7 @@ import {ColorLike} from "ol/colorlike";
 // colors
 const white     = 'rgba(245, 252, 252 , 1)'
 const lightGrey = 'rgba(225, 232, 232 , 1)'
-const grey      = 'rgba(200, 207, 207 , 1)'
+const grey      = 'rgba(180, 187, 187 , 1)'
 const darkGrey  = 'rgba(100, 107, 107, 1)'
 const black     = '#000'
 const red       = 'rgba(220, 0, 0, 1)'
@@ -50,11 +50,11 @@ export const backgroundStyleFar = new Style({
 
 export const backgroundStyleMiddle = new Style({
     stroke: new Stroke({
-        color: grey,
+        color: darkGrey,
         width: 1,
     }),
     fill: new Fill({
-        color: lightGrey,
+        color: grey,
     })
 })
 

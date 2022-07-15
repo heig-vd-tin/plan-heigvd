@@ -6,6 +6,7 @@ import TileLayer from "ol/layer/Tile";
 import {OSM} from "ol/source";
 import {featureStore} from "../stores/feature";
 import {FloorLayers} from "../interface/interface";
+import {ressourceStyleFunction} from "./style";
 
 export function getOpenStreetMapLayer() {
     return new TileLayer({

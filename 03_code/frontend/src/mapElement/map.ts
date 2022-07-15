@@ -19,6 +19,13 @@ import VectorSource from "ol/source/Vector";
 import {displayStore} from "../stores/display";
 import {BuildingInfo, Layers} from "../interface/interface";
 
+const zooms = {
+    FAR : 17,
+    MIDDLE: 19,
+    NEAR : 21
+}
+
+
 export function createMap(target : HTMLElement | undefined, view : View, layers : Layers) {
     const map = new Map({
         target : target,
@@ -37,10 +44,10 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
     map.on('moveend', () => {
         const zoom = view.getZoom()
         if (zoom != undefined) {
-            if (zoom >= 21) {
+            if (zoom >= zooms.NEAR) {
                 layers.backgroundLayer.setStyle(backgroundStyleNear)
             }
-            else if (zoom < 18) {
+            else if (zoom < zooms.FAR) {
                 layers.floorLayer.lineLayer.setStyle(emptyStyle)
                 layers.floorLayer.polygonLayer.setStyle(emptyStyle)
                 layers.backgroundLayer.setStyle(backgroundStyleFar)
@@ -64,16 +71,16 @@ export function setLabelLayerStyleByZoom(labelsLayer : VectorLayer<VectorSource>
     if (zoom !== undefined) {
         switch (display.currentMode) {
             case 'DEFAULT' : {
-                if (zoom >= 21) labelsLayer.setStyle(labelStyleNearFunction)
-                else if (zoom >= 19) labelsLayer.setStyle(labelStyleMiddleFunction)
-                else if (zoom >= 18) labelsLayer.setStyle(labelStyleFarFunction)
+                if (zoom >= zooms.NEAR) labelsLayer.setStyle(labelStyleNearFunction)
+                else if (zoom >= zooms.MIDDLE) labelsLayer.setStyle(labelStyleMiddleFunction)
+                else if (zoom >= zooms.FAR) labelsLayer.setStyle(labelStyleFarFunction)
                 else labelsLayer.setStyle(emptyStyle)
                 break
             }
             case 'BY_TYPE' : {
-                if (zoom >= 21) labelsLayer.setStyle(roomByTypeNearStyleFunction)
-                else if (zoom >= 19) labelsLayer.setStyle(roomByTypeMiddleStyleFunction)
-                else if (zoom >= 18) labelsLayer.setStyle(roomByTypeFarStyleFunction)
+                if (zoom >= zooms.NEAR) labelsLayer.setStyle(roomByTypeNearStyleFunction)
+                else if (zoom >= zooms.MIDDLE) labelsLayer.setStyle(roomByTypeMiddleStyleFunction)
+                else if (zoom >= zooms.FAR) labelsLayer.setStyle(roomByTypeFarStyleFunction)
                 else labelsLayer.setStyle(emptyStyle)
                 break
             }

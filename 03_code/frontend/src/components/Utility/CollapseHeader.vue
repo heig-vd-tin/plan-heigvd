@@ -1,16 +1,18 @@
 <template>
   <div class="collapse-header">
-    <h2 class="collapse-title">{{ title }}</h2>
-    <transition name="open">
-      <Button v-show="visibility" class="collapse-btn" @click="changeVisibility" id="openedIcon">
-        <font-awesome-icon :icon="['fas', 'angle-down']" />
-      </Button>
-    </transition>
-    <transition name="close">
-      <Button v-show="!visibility" class="collapse-btn" @click="changeVisibility" id="closedIcon">
-        <font-awesome-icon :icon="['fas', 'angle-right']" />
-      </Button>
-    </transition>
+    <Button @click="changeVisibility">
+      <div class="collapse-header-container">
+        <h2 class="collapse-title">{{ title }}</h2>
+        <div class="collapse-icon">
+          <transition name="open">
+              <font-awesome-icon v-show="visibility" :icon="['fas', 'angle-down']" />
+          </transition>
+          <transition name="close">
+              <font-awesome-icon v-show="!visibility" :icon="['fas', 'angle-right']" />
+          </transition>
+        </div>
+      </div>
+    </Button>
   </div>
 </template>
 
@@ -35,7 +37,6 @@ function changeVisibility() {
 </script>
 
 <style scoped>
-
 .collapse-header {
   display: flex;
   justify-content: space-between;
@@ -46,8 +47,11 @@ function changeVisibility() {
   margin: 10px 0;
 }
 
-.collapse-btn {
-  width: 30px;
+.collapse-header-container {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .open-enter-active {

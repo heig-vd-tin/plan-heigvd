@@ -1,6 +1,8 @@
 <template>
-  <div class="building-change" v-for="b in buildings.list">
+  <div class="building-change">
     <Button
+        v-for="b in buildings.list"
+        class="btn"
         :selected="b === buildings.selected"
         @click="changeSelected"
     >
@@ -54,5 +56,13 @@ function changeSelected(e : Event) {
 </script>
 
 <style scoped>
+.building-change {
+  height: 100%;
+}
+
+.btn {
+  height: 50%;
+}
+
 
 </style>

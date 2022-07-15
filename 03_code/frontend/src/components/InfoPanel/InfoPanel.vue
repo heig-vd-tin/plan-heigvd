@@ -76,4 +76,18 @@ watch(() => props.selectedRoom, async (newRooms) => {
   .item {
     margin-bottom: 5px;
   }
+
+  @media only screen and (max-width: 440px) {
+    .info-panel {
+      position: fixed;
+      z-index: 10;
+      bottom: 0;
+      height: 40%;
+      width: 100%;
+      padding-bottom: 40px;
+      background-color: var(--primary-background-color);
+      border-top: 1px solid var(--border-color);
+      overflow: auto;
+    }
+  }
 </style>

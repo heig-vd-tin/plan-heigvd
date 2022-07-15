@@ -1,20 +1,20 @@
 <template>
   <div class="floor-change">
-    <ToolButton class="arrow-up" @click="floorUp">
+    <Button class="arrow-up" @click="floorUp">
       <font-awesome-icon :icon="['fas', 'angle-up']" />
-    </ToolButton>
-    <ToolButton @click="floorUp" >{{currentFloor.nextFloorName}}</ToolButton>
-    <ToolButton :selected="true">{{currentFloor.currentFloorName}}</ToolButton>
-    <ToolButton @click="floorDown">{{currentFloor.previousFloorName}}</ToolButton>
-    <ToolButton @click="floorDown" class="arrow-down">
+    </Button>
+    <Button @click="floorUp" >{{currentFloor.nextFloorName}}</Button>
+    <Button :selected="true">{{currentFloor.currentFloorName}}</Button>
+    <Button @click="floorDown">{{currentFloor.previousFloorName}}</Button>
+    <Button @click="floorDown" class="arrow-down">
       <font-awesome-icon :icon="['fas', 'angle-down']" />
-    </ToolButton>
+    </Button>
   </div>
 </template>
 
 <script setup lang="ts">
 
-import ToolButton from "../Utility/Button.vue";
+import Button from "../Utility/Button.vue";
 import {currentFloorStore} from "../../stores/currentFloor";
 
 const currentFloor = currentFloorStore()
@@ -30,11 +30,19 @@ function floorDown() {
 </script>
 
 <style scoped>
+
+
+
   .floor-change {
     z-index: 1;
     display: flex;
     flex-direction: column;
-    background-color: rgb(240,240,240);
+    background-color: var(--secondary-background-color);
+    height: 100%;
+  }
+
+  Button {
+    height: 20%;
   }
 
   .arrow-up {

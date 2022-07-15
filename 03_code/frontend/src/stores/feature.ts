@@ -47,9 +47,6 @@ export const featureStore = defineStore('features', () => {
         features = features.filter(feature => {
             return filters.some(e => e === feature.getProperties().type)
         })
-        features.forEach( feature => {
-            feature.setStyle(ressourceStyleFunction)
-        })
         return features
     }
 

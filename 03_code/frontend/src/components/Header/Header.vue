@@ -1,16 +1,30 @@
 <template>
   <header class="header">
     <div class="left-header">
-      <div>
-        <a v-show="!menuBtnState" href="#" @click="changeBtnState" class="menu-btn" id="bar-btn"><font-awesome-icon size="lg" :icon="['fas', 'bars']"/></a>
-        <a v-show="menuBtnState"  href="#" @click="changeBtnState" class="menu-btn" id="cross-btn"><font-awesome-icon size="lg" :icon="['fas', 'xmark']"/></a>
+      <div v-show="!inResearchMode" class="left-header-normal">
+      <div class="left-header-btn">
+        <Button  v-show="!menuBtnState" @click="changeBtnState" id="bar-btn">
+          <font-awesome-icon size="lg" :icon="['fas', 'bars']"/>
+        </Button>
+        <Button  v-show="menuBtnState" @click="changeBtnState" id="cross-btn">
+          <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
+        </Button>
       </div>
-      <div class="separator"></div>
       <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
       <h1 class="title-text">Plans</h1>
     </div>
+    <Research @suggestion-selected="changeResearchMode" v-show="inResearchMode" id="left-research-bar"/>
+    </div>
     <div class="right-header">
-      <Research/>
+      <Research class="research-bar" id="right-research-bar"/>
+      <div class="right-header-btn">
+        <Button v-show="!inResearchMode" @click="changeResearchMode" id="research-btn">
+          <font-awesome-icon size="lg" :icon="['fas', 'magnifying-glass']"/>
+        </Button>
+        <Button v-show="inResearchMode" @click="changeResearchMode" id="research-btn">
+          <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
+        </Button>
+      </div>
     </div>
   </header>
 </template>
@@ -19,22 +33,29 @@
 
 import {ref} from "vue";
 import Research from "./Research.vue";
+import Button from "../Utility/Button.vue";
+
+console.log(innerWidth)
 
 const emit = defineEmits(['btnClick'])
 
 // menu button
-let menuBtnState = ref(false)
+const menuBtnState = ref(false)
 
 function changeBtnState () {
   menuBtnState.value = !menuBtnState.value
   emit('btnClick', menuBtnState.value)
 }
 
+const inResearchMode = ref(false)
+
+function changeResearchMode() {
+  inResearchMode.value = !inResearchMode.value
+}
+
 </script>
 
 <style scoped>
-
-
 
   .header {
     position: fixed;
@@ -47,49 +68,77 @@ function changeBtnState () {
     justify-content: space-between;
 
     width: 100%;
-    height: 50px;
+    height: 3em;
 
     background-color: var(--primary-background-color);
     border-bottom: 1px solid var(--border-color);
   }
 
   .left-header {
+    width: clamp(240px, 50%, 300px);
+  }
+
+  .left-header-normal {
+    width: 100%;
     display: flex;
     flex-direction: row;
+    justify-content: start;
     align-items: center;
-    text-align: center;
   }
 
-  .menu-btn {
-    display: block;
-    padding: 14px 20px;
-    height: 100%;
-    width: 70px;
-  }
-
-  .menu-btn:hover {
-    background-color: var(--border-color);
-    transition: background-color 0.5s ease;
-  }
-
-  .logo {
-    width: auto;
-    display: block;
-    height: 100%;
-    padding: 10px;
-    margin-left: 20px;
+  .left-header-btn {
+    height: calc(3em - 1px);
+    width: 20%;
+    border-right: 1px solid var(--border-color);
   }
 
   .title-text {
     margin: 0 0 0 0;
     font-weight: normal;
-    font-size: 30px;
+    font-size: 2em;
+    width: 50%;
   }
 
-  .separator {
-    border-right: 1px solid lightgrey;
-    height: 100%;
-    width: 1px;
+
+  .logo {
+    width: clamp(60px, 15%, 70px);
+    display: block;
+    height: 2em;
+    margin-left: 0.8rem
   }
 
+  .right-header {
+    display: flex;
+    justify-content: end;
+    width: clamp(20px, 50%, 300px);
+  }
+
+  #research-btn {
+    display: none;
+  }
+
+  @media only screen and (max-width: 440px) {
+
+    .left-header {
+      width: 80%;
+    }
+
+    .right-header {
+      width: 20%;
+    }
+
+    .right-header-btn {
+      width: 100%;
+    }
+
+
+    #right-research-bar {
+      display: none;
+    }
+
+    #research-btn {
+      display: block;
+      border-left: 1px solid var(--border-color);
+    }
+  }
 </style>

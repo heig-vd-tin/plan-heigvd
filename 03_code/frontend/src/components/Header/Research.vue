@@ -41,6 +41,8 @@ import {currentFloorStore} from "../../stores/currentFloor";
 import {roomSelectedStore} from "../../stores/roomSelected";
 import SuggestionSection from "./suggestionSection.vue";
 
+const emit = defineEmits(['suggestionSelected'])
+
 const suggestionBoxVisibility = ref(false)
 
 let roomSuggestions : RoomSuggestion[] = []
@@ -144,6 +146,9 @@ function selected(room : RoomSuggestion) {
   roomSelected.selected = room
 
   reinitializeSuggestion()
+
+  emit('suggestionSelected')
+
   const input = document.getElementById('research-input')
   if (input !== null) {
     (input as HTMLInputElement).value = ''
@@ -155,7 +160,7 @@ function selected(room : RoomSuggestion) {
 
 <style scoped>
   .research-bar {
-    width: 300px;
+    width: 100%;
     padding: 11px;
   }
 
