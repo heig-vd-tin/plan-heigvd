@@ -62,26 +62,33 @@ Les cartes qu'elle soit schématique ou précise ont été un outil très utile 
 Avec l'arrivée du web, l'usage des plateformes de cartes comme google maps ont peu à peu remplacer les cartes papier, amenant des fonctionnalités plus interactives.
 
 \begin{figure}[H]
-    \caption{Plans actuels de la HEIG-VD}
     \centering
     \includegraphics{actual_heig_plan.png}
+    \caption{Plans actuels de la HEIG-VD}
+    \label{fig:heigCurrentMap}
 \end{figure}
+La \gls{heig-vd} est une haute école dispensant des formations dans différents domaines de l'ingénieurie, ainsi que de la gestion d'entreprise.
+Elle se situe sur trois sites dispersé dans la ville d'Yverdon-Les-Bains
+: Cheseaux  situé en périphérie de la ville, St-Roch situé proche de la gare et le Y-Parc situé dans la zone industrielle.
 
-La HEIG-VD fournit un plan \cite{plan-heig} (voir image ci-dessus) ainsi que des informations sur les différents moyens d'accès afin d'aider ses utilisateurs à s'orienter vers ses trois sites.
-Cependant elle ne fournit, ni sur son site, ni dans le guide de l'étudiant, une interface permettant de s'orienter sur les sites eux-mêmes.
+Cette école fournit, sur son site web un plan \cite{plan-heig} (voir Figure \ref{heigCurrentMap}) indiquant l'emplacement des trois bâtiments pricipaux.
+On peut aussi y obtenir les informations sur les différents moyens d'accès à ces sites afin d'aider ses utilisateurs à s'orienter.
+Cependant elle ne fournit, ni sur son site, ni dans le guide de l'étudiant, une interface permettant de s'orienter vers une salle ou une ressource précise.
 
 \section{Description du problème}
-M.Chevallier souhaite mettre à disposition aux utilisateurs une interface interactive pour visualiser les salles et les plans de la HEIG-VD sur ses trois sites.
+M.Chevallier souhaite mettre à disposition aux utilisateurs une interface interactive pour visualiser les salles et les plans de la \gls{heig-vd} pour les trois bâtiments.
 
-\chapter{Analyse fonctionnelle du système}
+\chapter{Analyse}
+\section{Analyse fonctionnelle du système}
 L'analyse fonctionnelle est un processus qui permets de déterminer les fonctionnalités d'un système à partir d'une analyse des besoins utilisateurs.
 
-\section{Cas d'utilisation}
+\subsection{Cas d'utilisation}
 La première étape est de déterminer les cas d'utilisations du futur système.
-Ceux-ci ont été établi lors de la conception du schéma des cas d'utilisation ci-dessous.
-Celui-ci est en notation UML, un des standards utilisé dans la modélisation d'application logiciel, et a été réalisé à l'aide de l'application web diagrams.net \cite{diagrams}.
+Ceux-ci ont été établi lors de la conception du schéma des cas d'utilisation, figure \ref{useCaseDiagram.xml}.
+Celui-ci est en notation \gls{uml}, un des standards utilisé dans la modélisation d'application logiciel,
+et a été réalisé à l'aide de l'application web \gls{diagrams} \cite{diagrams}.
 
-\figi{useCaseDiagram.xml}{9cm}{Schéma des cas d'utilisations}
+\fig[width=9cm]{Schéma des cas d'utilisations}{useCaseDiagram.drawio.pdf}
 
 \newpage
 Ce schéma présente les cas d'utilisation suivant :
@@ -92,9 +99,9 @@ Ce schéma présente les cas d'utilisation suivant :
     \item Un utilisateur personnalise la carte et l'exporte pour d'autre usage.
 \end{itemize}
 
-\section{Analyse des besoins}
+\subsection{Analyse des besoins}
 La deuxième étape de l'analyse fonctionnelle est de déterminer les besoins des utilisateurs à partir des cas d'utilisation du système.
-Pour ce système les besoins ont été déterminé dans le tableau ci-dessous. Ils ont été numérotés de N1 à N8 pour pouvoir s'y référer plus facilement par la suite.
+Pour ce système les besoins ont été déterminé dans le tableau \ref{besoins}. Ils ont été numérotés de N1 à N8 pour pouvoir s'y référer plus facilement par la suite.
 \begin{table}[H]
     \begin{center}
         \caption{Liste des Besoins \label{besoins}}
@@ -114,7 +121,7 @@ Pour ce système les besoins ont été déterminé dans le tableau ci-dessous. I
 
 \newpage
 
-\section{fonctionnalités du système}
+\subsection{fonctionnalités du système}
 La troisième étape est de déterminer les fonctionnalités du système à partir des besoins des utilisateurs.
 Ils ont été listés dans le tableau ci-dessous.
 De plus les besoins auxquelles ils répondent, ont été précisé dans la troisième colonne du tableau.
@@ -141,12 +148,12 @@ De plus les besoins auxquelles ils répondent, ont été précisé dans la trois
     \end{center}
 \end{table}
 
-\chapter{Critique de l'existant}
+\section{Etat de l'art des systèmes d'informations géographiques}
 Avant de commencer un projet, il est important de connaître ce qui a déjà été fait dans le domaine et les ressources à notre disposition.
 Dans ce chapitre, je vais, analyser différents systèmes d'interface de plans interactifs,
 les technologies utilisé pour aider la construction d'un logiciel Web GIS et les ressources que j'ai à disposition.
 
-\section{Systèmes existants d'interface interactive}
+\subsection{Systèmes existants d'interface interactive}
 
 \subsection{Plan EPFL}
 \begin{figure}[H]
@@ -289,7 +296,7 @@ Une application webGIS \cite{architecture-webgis} est composée, côté serveur,
 La distribution se fait à l'aide des protocoles WMS/WMTS/WFS.
 Finalement un serveur web envoie la page et les données géographique au client.
 
-\section{Technologies}
+\section{Technologies }
 
 \subsection{Openlayers}
 Openlayer \cite{openlayers} est une librairie JavaScript open source qui facilite la construction d'appllication webGIS.
@@ -336,8 +343,11 @@ Il faudra les géoréférencé à l'aide d'un logiciel GIS dans une projection c
 \subsection{Serveur LDAP}
 Le serveur LDAP de la HEIG-VD peut fournir des informations sur certaines ressources.
 
-\chapter{Solution envisagée}
-\section{Exigence}
+
+
+
+\chapter{Conception de la solution}
+\section{Exigences de la solution}
 Il a été établi que je mettrai en place une interface interactive de visualisations des plans comprenant uniquement le site de Cheseaux.
 Celui-ci devra afficher toute les salles du site avec leurs noms, un qualificatif (Secrétariat, salle de cours, etc.) et leur surface en mètres carrés.
 Un outil de changement d'étage permettra de parcourir les différents étages du site.
@@ -392,7 +402,7 @@ Finalement le pipeline construira deux images de container docker avant de les p
 La base de données sera construite à l'aide d'une image docker.
 Un script en node Js s'occupera ensuite de s'y connecter, de créer les tables et d'y insérer les données.
 
-\chapter{Planning}
+\section{Plannification de la mise en place de la solution}
 Ce chapitre présente la plannification du projet et les principales étapes.
 Le planning complet se trouve en annexe à la fin du document.
 
@@ -469,7 +479,7 @@ Je préfère l'effectuer à la fin de la première version, quand j'aurais une i
 Une tâche qui m'a pris plus de temps que prévu est la rédaction du rapport que vous êtes en train de lire :
 Initialement prévu à 10 heures de travail celui-ci me prendra entre 13 à 18 heures pour être complétés.
 
-\chapter{Design de l'application}
+\chapter{Design de la solution}
 Cette section décrit les designs que j'ai imaginé pour le site.
 N'étant pas graphiste, ceux-ci ne sont pas précis et seront susceptible de changer lors de l'implémentation.
 De plus, des outils comme le menu de filtrage ou la recherche risque de ne pas être implémenté.
@@ -545,7 +555,7 @@ Pour sortir du menu, l'utilisateur pourra cliquer en dehors de celui-ci, ou à n
 Lorsque l'utilisateur commencera à taper des caractères dans le formulaire de recherche celui ci proposera un menu de suggestions.
 Si l'utilisateur clique sut la touche entrée ou sur une des suggestions, l'affichage du plan se modifiera pour afficher la ressource demandé.
 
-\chapter{Traitement des plans}
+\chapter{Création des données géographiques}
 
 \section{Les plans}
 Pour ce projet on m'a fourni les plans de la HEIG-VD pour les sites de Cheseaux et de St-Roch.
@@ -604,7 +614,7 @@ Afin de tester le géoréférencement des différents fichiers obtenus lors de l
 j'ai créé un petit prototype intégrant une version de base de l'api "Openlayers".
 J'ai intégré dans celui-ci le fond de carte Open street map et rajouter différents calques intégrant les informations contenus dans les fichiers " geojson ".
 
-\chapter{Base de données}
+\section{Base de données}
 
 Dans ce chapitre, je vous présente la prise en main des technologies,
 la modélisation de la base de données et comment je compte mettre en production une base de données.
@@ -672,7 +682,7 @@ Je générerai les données concernant les personnes et les ajouterai.
 Pour le déploiement de la base de données, je mettrai en place un container docker directement sur la machine virtuelle.
 J'adapterai le script pour qu'il envoie les données sur ce container.
 
-\chapter{Serveur api}
+\chapter{Backend }
 Le serveur API s'occuper de récupérer les données depuis la base de données et de de les envoyer à l'application web.
 Les codes sources du serveur API sont disponibles sur le repository github : https://github.com/Klab93/TB-PlanHeig/tree/main/serverAPI
 
@@ -693,6 +703,10 @@ J'utiliserai le Framework web Nest Js, car celui-ci est plus complet.
 Les requêtes seront généralisées pour tous les étages,
 et d'autres requêtes seront ajoutés pour offrir plus de fonctionnalités.
 
+
+\chapter{Frontend}
+
+\section{Stratégie de récolte des données géographiques}
 
 \chapter{Conclusion}
 Le projet est en bonne voie et la première version de l'application sera normalement fini dans 2 semaines.

@@ -197,6 +197,9 @@ watch(() => roomSelected.selected, (newRoom) => {
       emit('roomSelected', info)
     }
   }
+  else {
+    selects.select.getFeatures().clear()
+  }
 })
 
 // Detect when the user change the display mode

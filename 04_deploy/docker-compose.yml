@@ -36,8 +36,8 @@ services:
 
   server-api:
     container_name: plan-heig-server-api
-    build: ../03_code/serverAPI
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
+    # build: ../03_code/serverAPI
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
     environment: 
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=database
@@ -53,8 +53,8 @@ services:
 
   server:
     container_name: plan-heig-server
-    build: ../03_code/frontend
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    # build: ../03_code/frontend
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server
     environment:
      - VITE_API_URL=http://localhost:3001
     ports:

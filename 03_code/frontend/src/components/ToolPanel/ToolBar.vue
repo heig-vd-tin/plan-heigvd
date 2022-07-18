@@ -7,6 +7,7 @@
   >
     <Tool tool-name="Site" class="item" id="building-change">
       <BuildingChange
+          @building-changed="$emit('buildingChanged')"
         :onHover="isHovered"
       />
     </Tool>
@@ -25,6 +26,8 @@ import {ref} from "vue";
 const props = defineProps<{
   isFilterPanelVisible : boolean
 }>()
+
+const emit = defineEmits(['buildingChanged'])
 
 const isHovered = ref(false)
 

@@ -35,8 +35,6 @@ import {ref} from "vue";
 import Research from "./Research.vue";
 import Button from "../Utility/Button.vue";
 
-console.log(innerWidth)
-
 const emit = defineEmits(['btnClick'])
 
 // menu button
@@ -51,6 +49,13 @@ const inResearchMode = ref(false)
 
 function changeResearchMode() {
   inResearchMode.value = !inResearchMode.value
+}
+
+// Correct a bug when the user click the search button in portrait mode and go in landscape mode after
+window.onresize = () => {
+  if (window.innerWidth > 440 && inResearchMode.value === true) {
+    inResearchMode.value = !inResearchMode.value
+  }
 }
 
 </script>
@@ -117,7 +122,15 @@ function changeResearchMode() {
     display: none;
   }
 
+  #left-research-bar {
+    display: none;
+  }
+
   @media only screen and (max-width: 440px) {
+
+    #left-research-bar {
+      display: block;
+    }
 
     .left-header {
       width: 80%;

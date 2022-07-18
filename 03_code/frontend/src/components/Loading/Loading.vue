@@ -1,7 +1,7 @@
 <template>
   <div class="loading">
     <div class="loading-bar">
-      <div>
+      <div class="laoding-title-container">
         <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
         <h1 class="loading-title">
           Plans
@@ -57,21 +57,28 @@ function enterApp() {
   padding: 5rem;
 }
 
+
+
+.laoding-title-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  width: 80%;
+  margin-bottom: 1rem;
+}
+
 .loading-title {
-  width: 100%;
   margin-top: 10px;
   font-size: 4em;
   color: var(--font-color);
 }
 
-.logo {
-  width: 100%;
-  margin-bottom: 1rem;
-}
-
 .loading-text {
-  height: 50px;
-  font-size: 20px;
+  font-size: 1em;
+  width: 40%;
 }
 
 .loading-btn {
@@ -98,17 +105,32 @@ a {
   background-color: var(--border-color);
 }
 
+
 @media  only screen and (max-width: 440px) {
 
   .loading-bar {
     width: 100%;
   }
+}
+
+
+
+
+@media only screen and (max-height: 440px) {
+  .laoding-title-container {
+    flex-direction: row;
+  }
+
+  .logo {
+    width: 45%;
+  }
 
   .loading-title {
+    width: 55%;
     font-size: 3em;
-    margin-top: 10px;
-    color: var(--font-color);
+    margin-left: 1rem;
   }
+
 
 }
 
