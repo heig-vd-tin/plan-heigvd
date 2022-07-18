@@ -67,11 +67,12 @@ Avec l'arrivée du web, l'usage des plateformes de cartes comme google maps ont 
     \caption{Plans actuels de la HEIG-VD}
     \label{fig:heigCurrentMap}
 \end{figure}
+
 La \gls{heig-vd} est une haute école dispensant des formations dans différents domaines de l'ingénieurie, ainsi que de la gestion d'entreprise.
 Elle se situe sur trois sites dispersé dans la ville d'Yverdon-Les-Bains
 : Cheseaux  situé en périphérie de la ville, St-Roch situé proche de la gare et le Y-Parc situé dans la zone industrielle.
 
-Cette école fournit, sur son site web un plan \cite{plan-heig} (voir Figure \ref{heigCurrentMap}) indiquant l'emplacement des trois bâtiments pricipaux.
+Cette école fournit, sur son site web un plan \cite{plan-heig} (voir Figure \ref{fig:heigCurrentMap}) indiquant l'emplacement des trois bâtiments pricipaux.
 On peut aussi y obtenir les informations sur les différents moyens d'accès à ces sites afin d'aider ses utilisateurs à s'orienter.
 Cependant elle ne fournit, ni sur son site, ni dans le guide de l'étudiant, une interface permettant de s'orienter vers une salle ou une ressource précise.
 
@@ -84,11 +85,11 @@ L'analyse fonctionnelle est un processus qui permets de déterminer les fonction
 
 \subsection{Cas d'utilisation}
 La première étape est de déterminer les cas d'utilisations du futur système.
-Ceux-ci ont été établi lors de la conception du schéma des cas d'utilisation, figure \ref{useCaseDiagram.xml}.
+Ceux-ci ont été établi lors de la conception du schéma des cas d'utilisation, figure \ref{useCaseDiagram.drawio}.
 Celui-ci est en notation \gls{uml}, un des standards utilisé dans la modélisation d'application logiciel,
 et a été réalisé à l'aide de l'application web \gls{diagrams} \cite{diagrams}.
 
-\fig[width=9cm]{Schéma des cas d'utilisations}{useCaseDiagram.drawio.pdf}
+\fig[width=8cm]{Schéma des cas d'utilisations}{useCaseDiagram.drawio.pdf}
 
 \newpage
 Ce schéma présente les cas d'utilisation suivant :
@@ -102,7 +103,7 @@ Ce schéma présente les cas d'utilisation suivant :
 \subsection{Analyse des besoins}
 La deuxième étape de l'analyse fonctionnelle est de déterminer les besoins des utilisateurs à partir des cas d'utilisation du système.
 Pour ce système les besoins ont été déterminé dans le tableau \ref{besoins}. Ils ont été numérotés de N1 à N8 pour pouvoir s'y référer plus facilement par la suite.
-\begin{table}[H]
+\begin{table}[h]
     \begin{center}
         \caption{Liste des Besoins \label{besoins}}
         \begin{tabular}{l|l}
@@ -123,13 +124,13 @@ Pour ce système les besoins ont été déterminé dans le tableau \ref{besoins}
 
 \subsection{fonctionnalités du système}
 La troisième étape est de déterminer les fonctionnalités du système à partir des besoins des utilisateurs.
-Ils ont été listés dans le tableau ci-dessous.
-De plus les besoins auxquelles ils répondent, ont été précisé dans la troisième colonne du tableau.
+Ils ont été listés dans le tableau \ref{fonctions}.
+De plus les besoins auxquelles ils répondent, ont été précisé dans la Besoin colonne du tableau.
 \begin{table}[H]
     \begin{center}
         \caption{Liste des Fonctionnalités \label{fonctions}}
         \begin{tabular}{l|l|l}
-                & fonctionnalités                                                      & besoin   \\ \hline
+                & Fonctionnalités                                                      & Besoin   \\ \hline
             F1  & Afficher un plan afin d'aider l'orientation                          & N1 N7    \\
             F2  & Utilisable facilement et de façon ergonomique                        & N1       \\
             F3  & Fournir une orientation rapidement                                   & N1       \\
@@ -148,57 +149,57 @@ De plus les besoins auxquelles ils répondent, ont été précisé dans la trois
     \end{center}
 \end{table}
 
-\section{Etat de l'art des systèmes d'informations géographiques}
-Avant de commencer un projet, il est important de connaître ce qui a déjà été fait dans le domaine et les ressources à notre disposition.
-Dans ce chapitre, je vais, analyser différents systèmes d'interface de plans interactifs,
-les technologies utilisé pour aider la construction d'un logiciel Web GIS et les ressources que j'ai à disposition.
+\section{Etat de l'art \Gls{websig}}
+Dans cette section, différents systèmes d'interface web de visualisation de données géographiques (\gls{websig}) vont être analysés, ainsi que les technologies
+associé à ce type d'application.
 
-\subsection{Systèmes existants d'interface interactive}
+\subsection{\Gls{websig} existants}
 
-\subsection{Plan EPFL}
-\begin{figure}[H]
-    \caption{Plans interactifs de l'EPFL}
+\subsubsection{Plan EPFL}
+\begin{figure}[h]
     \centering
-    \includegraphics{planEPFL.png}
+    \includegraphics[scale=0.7]{planEPFL.png}
+    \caption{Plans interactifs de l'EPFL}
 \end{figure}
 
 \textbf{Fonctionnalités}
 
-Les plans interactifs du campus de l'EPFL \cite{plan-epfl} affichent les bâtiments du campus en s'adaptant selon le zoom et l'étage sélectionné.
-Suivant le zoom on peut visualiser le contour du site, puis les le contour des bâtiments et enfin les salles des bâtiments.
+Les plans interactifs du campus de l'\gls{epfl} \cite{plan-epfl} affichent les bâtiments du campus en s'adaptant selon le zoom et l'étage sélectionné.
+Suivant le zoom on peut visualiser le contour du site, puis le contour des bâtiments et enfin les salles des bâtiments (voir \ref{fig:EPFLZoom})
 
-\begin{figure}[H]
-    \caption{Zoom sur les plans de l'EPFL }
+\begin{figure}[h]
     \centering
-    \includegraphics{planEPFLGrosPlan.png}
+    \includegraphics[scale=0.7]{planEPFLGrosPlan.png}
+    \caption{Zoom sur les plans de l'EPFL }
+    \label{fig:EPFLZoom}
 \end{figure}
 
 L'utilisateur a la possibilité de filtrer les points d'intérêts à afficher sur la carte à l'aide d'un menu sur la gauche du site.
 Il y a aussi la possibilité de rechercher différentes ressources en fonction de leur nom comme les bâtiments, les salles, les personnes, les restaurant, les magasins, ou encore les espaces culturels.
-D'autre outil sont fournis comme la recherche d'un plus court itinéraire entre deux ressources, un outil pour l'impression, changer l'affichage pour une vue aérienne.
+D'autres outils sont fournis comme la recherche d'un plus court itinéraire entre deux ressources, un outil pour l'impression, ou encore changer l'affichage pour une vue aérienne.
 Finalement un lien permet d'accéder au Géoportail de l'EPFL.
 
 \textbf{Technologies utilisées}
 
 La principale technologie utilisée pour le frontend est Ngeo (combine Angular js et openlayers, plus de détails dans la section technologie ).
 
-\subsection{Géoportail EPFL}
+\subsubsection{Géoportail EPFL}
 
-\begin{figure}[H]
-    \caption{Géoportail de L'EPFL}
+\begin{figure}[h]
     \centering
-    \includegraphics{géoportailEPFL.png}
+    \includegraphics[scale=0.7]{géoportailEPFL.png}
+    \caption{Géoportail de L'EPFL}
 \end{figure}
 
 Le Géoportail de l'EPFL \cite{geoportail-epfl} est très similaire au plan du campus, mais il offre la possibilité de dessiner des formes vectorielles sur la carte.
 Il permet aussi d'afficher des ressources plus précises comme les réseaux wifi ou les prises électrique.
 
-\subsection{MIT campus map}
+\subsubsection{MIT campus map}
 
-\begin{figure}[H]
-    \caption{carte du campus du MIT}
+\begin{figure}[h]
     \centering
-    \includegraphics{MitCampusMap.png}
+    \includegraphics[scale=0.7]{MitCampusMap.png}
+    \caption{carte du campus du MIT}
 \end{figure}
 
 \textbf{Fonctionnalités}
@@ -213,12 +214,12 @@ Il peut aussi appliquer quelques filtres pour afficher des repères comme les re
 
 L'affichage de la carte s'effectue à l'aide de l'api google maps. Ceci permet aussi un accès à google street view.
 
-\subsection{SITN - Géoportail du système d'informations du territoire neuchâtelois}
+\subsubsection{SITN - Géoportail du système d'informations du territoire neuchâtelois}
 
-\begin{figure}[H]
-    \caption{Plan du SITN}
+\begin{figure}[h]
     \centering
-    \includegraphics{planSITN.png}
+    \includegraphics[scale=0.7]{planSITN.png}
+    \caption{Plan du SITN}
 \end{figure}
 
 \textbf{Fonctionnalités}
@@ -235,12 +236,12 @@ L'outil offre aussi des outils de dessin vectoriel, d'impression, la possibilit�
 
 Le site utilise GeoMapfish pour l'affichage des cartes ainsi que l'api google maps pour google street view.
 
-\subsection{Standford Campus Map}
+\subsubsection{Standford Campus Map}
 
-\begin{figure}[H]
-    \caption{plan du campus de Standford}
+\begin{figure}[h]
     \centering
-    \includegraphics{standfordCampusMap.png}
+    \includegraphics[scale=0.7]{standfordCampusMap.png}
+    \caption{plan du campus de Standford}
 \end{figure}
 
 \textbf{Fonctionnalités}
@@ -256,12 +257,12 @@ A noter que le menu en bas à droite est un mélange de plusieurs fonctionnalit�
 
 L'application web utilise l'api google maps pour l'affichage de la carte.
 
-\subsection{Aéroport de Zürich}
+\subsubsection{Aéroport de Zürich}
 
-\begin{figure}[H]
-    \caption{Plan de l'aéroport de Zürich}
+\begin{figure}[h]
     \centering
-    \includegraphics{planZurichAirport.png}
+    \includegraphics[scale=0.7]{planZurichAirport.png}
+    \caption{Plan de l'aéroport de Zürich}
 \end{figure}
 
 \textbf{Fonctionnalités}
@@ -284,36 +285,36 @@ Cette distinction a été faite par l'EPFL, qui sépare sur deux sous-domaines d
 
 Les technologies utilisées sont aussi différentes : les sites les plus complets utilisent souvent geomapfish alors que les sites les plus simples utilisent plutôt l'api google maps.
 
-\section{Architecture WebGIS}
+\subsection{Architecture WebGIS}
 
-\begin{figure}[H]
-    \caption{Architecture classique d'une infrastructure WebGIS}
+\begin{figure}[h]
     \centering
-    \includegraphics[scale=0.3]{webGIS_archi.png}
+    \includegraphics[scale=0.1]{webGIS_archi.png}
+    \caption{Architecture classique d'une infrastructure WebGIS}s
 \end{figure}
 
 Une application webGIS \cite{architecture-webgis} est composée, côté serveur, d'une base de données stockant les données géographiques, et un serveur cartographique qui gère et distribue les données géographiques.
 La distribution se fait à l'aide des protocoles WMS/WMTS/WFS.
 Finalement un serveur web envoie la page et les données géographique au client.
 
-\section{Technologies }
+\subsection{Technologies }
 
-\subsection{Openlayers}
+\subsubsection{Openlayers}
 Openlayer \cite{openlayers} est une librairie JavaScript open source qui facilite la construction d'appllication webGIS.
 Elle permet de rajouter facilement des calques contenant des données géographiques en dessus d'un fond de carte.
 Elle peut lire plusieurs formats de données comme du geojson ou du KML.
 
-\subsection{Leaflet}
+\subsubsection{Leaflet}
 
 Leaflet \cite{leaflet} est une librairie open source concurrente à openlayers.
 Elle est plus simple d'utilisation et légère mais moins complète que openlayers.
 On peut rajouter des plugins à la librairie.
 
-\subsection{Google maps API}
+\subsubsection{Google maps API}
 L'API de google maps \cite{google-maps} n'est pas open source et peut être payant.
 Elle n'offre pas la possibilité de rajouter des calques au fond de carte, seulement des points d'intérêts.
 
-\subsection{GeoMapfish}
+\subsubsection{GeoMapfish}
 GeoMapFish est une technologie open source développé par camptocamp et permet de faciliter la construction de système d'information géographique pour le web (webGIS).
 Il est composé de Ngeo pour le frontend \cite{ngeo} et de c2cgeoportal \cite{c2cgeoportal} pour le backend.
 
@@ -322,7 +323,7 @@ Elle utilise aussi webpack comme module bundler.
 
 C2cGeoportal est la partie serveur construit à partir d'une image Docker. Il faut avoir une connaissance en Python pour l'utiliser.
 
-\subsection{Serveur cartographique}
+\subsubsection{Serveur cartographique}
 Qgis server \cite{qgis} est un serveur cartographique open source gérant les protocoles WMS WFS et WCS écrit en c++.
 
 ArcGIS server \cite{arcgis} est un composant de la suite ArcGIS entreprise. Ce logiciel est propriétaire et payant.
@@ -331,7 +332,7 @@ Geoserver \cite{geoserver} est un serveur cartographique open source écrit en j
 
 Mapserver \cite{mapserver} est le premier serveur cartographique. Il supporte les protocoles WMS WFS et WCS.
 
-\subsection{PostGreSQL et PostGis}
+\subsubsection{PostGreSQL et PostGis}
 PostGreSQL est une base de données relationnelle open source, elle permet de stocker des données géographiques avec l'extension PostGis  \cite{postgis}.
 Cette solution est utilisée par c2cgeoportal.
 
@@ -363,7 +364,7 @@ Si le temps le permet, un outil de filtrage des ressources à affichés et/ou un
 
 \section{Infrastructure}
 
-\figi{infra.xml}{9cm}{Architecture de l'infrastructure}
+\fig[width=12cm]{Architecture de l'infrastructure}{infra.drawio.pdf}
 
 Lorsqu'il va accéder à l'application, l'utilisateur va demander les différents fichiers HTML, CSS et Javascript à un petit serveur.
 Ce serveur aura été développé en JavaScript grâce à node JS.
@@ -379,7 +380,7 @@ Celle-ci est étendu par l'extension PostGis qui permet le stockage de données 
 
 \section{Pipeline CI/CD}
 
-\figi{pipeline.xml}{12cm}{Pipeline CI/CD}
+\fig[width=12cm]{Pipeline CI/CD}{pipeline.drawio.pdf}
 
 Le système sera composé à la base de trois applications node JS :
 Un frontend qui construira les pages HTML, CSS et JavaScript à l'aide du Framework Angular JS et de Webpack.
