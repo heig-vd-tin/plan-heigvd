@@ -20,6 +20,8 @@ const props = defineProps<{
   onHover : boolean
 }>()
 
+const emit = defineEmits(['buildingChanged'])
+
 function formatName(building : string) {
   if (props.onHover) {
     return building
@@ -50,6 +52,7 @@ function changeSelected(e : Event) {
         floors,
         buildings.info.groundFloor
     )
+    emit('buildingChanged')
   }
 }
 

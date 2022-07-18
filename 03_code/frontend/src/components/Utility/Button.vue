@@ -47,8 +47,10 @@ function click(e : Event) {
   color: var(--font-color);
 }
 
-.btn:hover {
-  background-color: var(--border-color);
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--border-color);
+  }
 }
 
 .btn:visited {

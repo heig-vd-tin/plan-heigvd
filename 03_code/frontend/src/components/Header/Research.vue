@@ -2,7 +2,7 @@
   <div class="research-bar">
     <input
         type="text"
-        placeholder="Search"
+        placeholder="Recherche"
         class="research-input"
         @input ="researchResource"
         @focusin="focusIn"
@@ -125,7 +125,7 @@ async function personSelected(person : string) {
     selected(room[0])
   }
   else {
-    alert("Le bâtiment ou travaille le collaborateur n'a pas encore été implémenté")
+    alert("Le bâtiment où travaille le collaborateur n'a pas encore été implémenté")
   }
 }
 
@@ -166,7 +166,8 @@ function selected(room : RoomSuggestion) {
 
   .research-input {
     width: 100%;
-    padding: 0.4rem 0.5rem;
+    font-size: 1em;
+    padding: 0.2rem 0.5rem;
     border-radius: 3px;
     background-color: var(--primary-background-color);
     border: 2px solid var(--border-color);
