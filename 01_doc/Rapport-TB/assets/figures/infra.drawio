@@ -1,21 +1,21 @@
 <mxfile host="65bd71144e">
     <diagram id="Rq3qitw-6XwpDFZkV5MT" name="Page-1">
-        <mxGraphModel dx="1317" dy="879" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="461" dy="424" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
-                <mxCell id="4" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+                <mxCell id="4" value="" style="whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
                     <mxGeometry x="390" y="70" width="600" height="600" as="geometry"/>
                 </mxCell>
-                <mxCell id="10" style="edgeStyle=none;html=1;entryX=0.869;entryY=0.992;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.86;exitY=-0.022;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="KsPwZzBYxA5jOOF4thBN-1" target="3">
+                <mxCell id="10" style="edgeStyle=none;html=1;entryX=0.869;entryY=0.992;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.86;exitY=-0.022;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-1" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="11" value="Envoie donnée&amp;nbsp;&lt;br&gt;demandée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="10">
+                <mxCell id="11" value="Envoi donnée&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="10" vertex="1" connectable="0">
                     <mxGeometry x="-0.0929" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="KsPwZzBYxA5jOOF4thBN-1" value="&lt;div&gt;&lt;b&gt;Serveur API&lt;/b&gt;&lt;/div&gt;&lt;div&gt;NodeJS&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Express.js&lt;/div&gt;&lt;div&gt;container docker&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="KsPwZzBYxA5jOOF4thBN-1" value="&lt;div&gt;&lt;b&gt;Serveur API&lt;/b&gt;&lt;/div&gt;&lt;div&gt;container&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="460" y="510" width="120" height="100" as="geometry"/>
                 </mxCell>
                 <mxCell id="KsPwZzBYxA5jOOF4thBN-8" value="Demande les données" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;endArrow=none;endFill=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-2" target="KsPwZzBYxA5jOOF4thBN-1" edge="1">
@@ -28,13 +28,13 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="KsPwZzBYxA5jOOF4thBN-2" value="&lt;div&gt;&lt;b&gt;DataBase&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Postgres + PostGIS&lt;br&gt;&lt;/div&gt;&lt;div&gt;Container Docker&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="KsPwZzBYxA5jOOF4thBN-2" value="&lt;div&gt;&lt;b&gt;DataBase&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Container&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="790" y="510" width="120" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="17" style="edgeStyle=none;html=1;entryX=0.013;entryY=0.119;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="KsPwZzBYxA5jOOF4thBN-3" target="KsPwZzBYxA5jOOF4thBN-4">
+                <mxCell id="17" style="edgeStyle=none;html=1;entryX=0.013;entryY=0.119;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-3" target="KsPwZzBYxA5jOOF4thBN-4" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="18" value="Demande l'app" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="17">
+                <mxCell id="18" value="Demande l'app" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="17" vertex="1" connectable="0">
                     <mxGeometry x="-0.1577" y="1" relative="1" as="geometry">
                         <mxPoint x="8" y="-1" as="offset"/>
                     </mxGeometry>
@@ -42,36 +42,36 @@
                 <mxCell id="KsPwZzBYxA5jOOF4thBN-3" value="&lt;div&gt;Utilisateur&lt;/div&gt;" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" parent="1" vertex="1">
                     <mxGeometry x="60" y="295" width="30" height="60" as="geometry"/>
                 </mxCell>
-                <mxCell id="12" style="edgeStyle=none;html=1;entryX=0.022;entryY=0.197;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" edge="1" parent="1" source="KsPwZzBYxA5jOOF4thBN-4" target="3">
+                <mxCell id="12" style="edgeStyle=none;html=1;entryX=0.022;entryY=0.197;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-4" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="Demande données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="12">
+                <mxCell id="13" value="Demande données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="12" vertex="1" connectable="0">
                     <mxGeometry x="-0.6644" relative="1" as="geometry">
                         <mxPoint x="46" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="16" style="edgeStyle=none;html=1;exitX=-0.009;exitY=0.822;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="KsPwZzBYxA5jOOF4thBN-4">
+                <mxCell id="16" style="edgeStyle=none;html=1;exitX=-0.009;exitY=0.822;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-4" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="100" y="350" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="19" value="Affiche l'app" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="16">
+                <mxCell id="19" value="Affiche l'app" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="16" vertex="1" connectable="0">
                     <mxGeometry x="-0.301" y="1" relative="1" as="geometry">
                         <mxPoint x="-10" y="-4" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="KsPwZzBYxA5jOOF4thBN-4" value="&lt;div&gt;&lt;b&gt;Application web&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;b&gt;( frontend )&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;HTML / CSS JavaScript&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="KsPwZzBYxA5jOOF4thBN-4" value="&lt;div&gt;&lt;b&gt;Application web&lt;/b&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="200" y="290" width="120" height="110" as="geometry"/>
                 </mxCell>
-                <mxCell id="5" value="Founit &lt;br&gt;HTML/CSS/JS" style="edgeStyle=none;html=1;entryX=0.92;entryY=0.006;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.924;exitY=0.969;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1" source="KsPwZzBYxA5jOOF4thBN-5" target="3">
+                <mxCell id="5" value="Envoi&lt;br&gt;HTML/CSS/JS" style="edgeStyle=none;html=1;entryX=0.92;entryY=0.006;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.924;exitY=0.969;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-5" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <Array as="points"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="KsPwZzBYxA5jOOF4thBN-5" value="&lt;div&gt;&lt;b&gt;Serveur&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;nginx&lt;/div&gt;&lt;div&gt;Container Docker&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="KsPwZzBYxA5jOOF4thBN-5" value="&lt;div&gt;&lt;b&gt;Serveur&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Container&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="460" y="110" width="120" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="6" style="edgeStyle=none;html=1;entryX=0.09;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.086;exitY=0.017;exitDx=0;exitDy=0;exitPerimeter=0;" edge="1" parent="1">
+                <mxCell id="6" style="edgeStyle=none;html=1;entryX=0.09;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.086;exitY=0.017;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="472.31999999999994" y="296.70000000000005" as="sourcePoint"/>
                         <mxPoint x="472.79999999999995" y="210" as="targetPoint"/>
@@ -80,32 +80,35 @@
                         </Array>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="7" value="Demande&amp;nbsp;&lt;br&gt;HTML/CSS/JS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="6">
+                <mxCell id="7" value="Demande&amp;nbsp;&lt;br&gt;HTML/CSS/JS" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="6" vertex="1" connectable="0">
                     <mxGeometry x="0.0719" relative="1" as="geometry">
                         <mxPoint x="1" y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="8" style="edgeStyle=none;html=1;exitX=0.12;exitY=0.992;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.124;entryY=0.019;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="3" target="KsPwZzBYxA5jOOF4thBN-1">
+                <mxCell id="8" style="edgeStyle=none;html=1;exitX=0.12;exitY=0.992;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.124;entryY=0.019;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="3" target="KsPwZzBYxA5jOOF4thBN-1" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="9" value="Demande donnée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="8">
+                <mxCell id="9" value="Demande donnée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="8" vertex="1" connectable="0">
                     <mxGeometry x="-0.2629" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="14" style="edgeStyle=none;html=1;" edge="1" parent="1">
+                <mxCell id="14" style="edgeStyle=none;html=1;" parent="1" edge="1">
                     <mxGeometry relative="1" as="geometry">
                         <mxPoint x="460" y="375" as="sourcePoint"/>
                         <mxPoint x="320" y="375" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="15" value="Envoie les données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="14">
+                <mxCell id="15" value="Envoie les données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="14" vertex="1" connectable="0">
                     <mxGeometry x="0.5593" y="-2" relative="1" as="geometry">
                         <mxPoint x="47" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="3" value="&lt;div&gt;&lt;b&gt;Reverse Proxy&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Traefik&lt;/div&gt;&lt;div&gt;Container Docker&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                <mxCell id="3" value="&lt;div&gt;&lt;b&gt;Reverse Proxy&lt;/b&gt;&lt;/div&gt;&lt;div&gt;Container&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="460" y="295" width="120" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="20" value="&lt;font style=&quot;font-size: 16px&quot;&gt;&lt;b&gt;Machine virtuelle&lt;/b&gt;&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="760" y="120" width="200" height="30" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>
