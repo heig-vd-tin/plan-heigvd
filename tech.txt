@@ -1,4 +1,0 @@
-survey stack overflow
-google trends
-indeed trends
-selenium
