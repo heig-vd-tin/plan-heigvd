@@ -1,3 +1,5 @@
+// handle the operation concerning the openlayers map
+
 import {
     backgroundStyleFar,
     backgroundStyleMiddle,
@@ -19,6 +21,7 @@ import VectorSource from "ol/source/Vector";
 import {displayStore} from "../stores/display";
 import {BuildingInfo, Layers} from "../interface/interface";
 
+//
 const zooms = {
     FAR : 17,
     MIDDLE: 19,
@@ -26,6 +29,7 @@ const zooms = {
 }
 
 
+// create the map
 export function createMap(target : HTMLElement | undefined, view : View, layers : Layers) {
     const map = new Map({
         target : target,
@@ -40,7 +44,7 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
         view: view
     })
 
-    // change map when Zoom change
+    // change map when Zoom changed
     map.on('moveend', () => {
         const zoom = view.getZoom()
         if (zoom != undefined) {
@@ -65,7 +69,7 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
     return map
 }
 
-
+// set the correct style depending on the zoom and display
 export function setLabelLayerStyleByZoom(labelsLayer : VectorLayer<VectorSource>, zoom : number | undefined) {
     const display = displayStore()
     if (zoom !== undefined) {
@@ -88,6 +92,7 @@ export function setLabelLayerStyleByZoom(labelsLayer : VectorLayer<VectorSource>
     }
 }
 
+// set the view of the map with the data of the building
 export function setView(view : View, buildingInfo : BuildingInfo) {
     if (buildingInfo != undefined) {
         view.setCenter(buildingInfo.center)

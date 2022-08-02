@@ -1,3 +1,5 @@
+// header component
+
 <template>
   <header class="header">
     <div class="left-header">
@@ -45,6 +47,7 @@ function changeBtnState () {
   emit('btnClick', menuBtnState.value)
 }
 
+// Change the aspect of the header on mobile
 const inResearchMode = ref(false)
 
 function changeResearchMode() {

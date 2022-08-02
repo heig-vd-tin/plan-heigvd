@@ -1,3 +1,5 @@
+// Collapse header commponent used by collapse component
+
 <template>
   <div class="collapse-header">
     <Button @click="changeVisibility">

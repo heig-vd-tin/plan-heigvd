@@ -1,3 +1,5 @@
+// Component that display the map. Contain the zoom change tool
+
 <template>
   <div ref="maproot" class="map"></div>
   <div

@@ -1,3 +1,5 @@
+// declare the typescript interface used in the program
+
 import {Feature} from "ol";
 import BaseLayer from "ol/layer/Base";
 import VectorLayer from "ol/layer/Vector";

@@ -1,5 +1,6 @@
 const fs = require('fs')
 
+// write a sql file
 function write(outputPath, filename, content) {
     fs.writeFile(`${outputPath}/${filename}.sql`, content, 'utf8', err => {
         if (err) {
@@ -8,6 +9,7 @@ function write(outputPath, filename, content) {
     })
 }
 
+// read a csv file
 function parseCsv(path) {
     const file = fs.readFileSync(path).toString()
     const lines = file.split('\r\n')

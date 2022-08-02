@@ -1,3 +1,5 @@
+// Store the current room selected
+
 import {defineStore} from "pinia";
 import {RoomSuggestion} from "../interface/interface";
 

@@ -1,5 +1,6 @@
 const {parseCsv} = require("./utils");
 
+// read the data and store it in a map
 function readData(data, f) {
     const map = new Map()
     data.forEach( d => {
@@ -9,6 +10,7 @@ function readData(data, f) {
     return map
 }
 
+// prepare the data for the SQL query
 function formatData (data, f) {
     let d = 'Null'
     if (data !== '') {
@@ -17,10 +19,12 @@ function formatData (data, f) {
     return d
 }
 
+// prepare the data for a string
 function formatStringForSql(data) {
     return `'${data}'`
 }
 
+// read the roomInfo.csv and return a map with the data
 function readRoomData(inputPath, buiding) {
     const roomData = parseCsv(`${inputPath}/${buiding}/roomInfo.csv`)
     return readData(roomData, (data) => {

@@ -1,3 +1,5 @@
+// suggestion list for the search bar
+
 <template>
   <div class="suggestion-section" v-show="list.length !== 0">
     <div class="title-section">{{title}}</div>
@@ -20,7 +22,6 @@ const emit = defineEmits(['itemSelected'])
 
 function itemSelected(e : Event) {
   const item =  (e.target as HTMLInputElement).innerText
-  console.log (item)
   emit('itemSelected', item)
 }
 

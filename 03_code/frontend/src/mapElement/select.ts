@@ -1,3 +1,5 @@
+// handle the operation concerning the openlayers select
+
 import {Select} from "ol/interaction";
 import {
     hoverStyleFunction,
@@ -9,6 +11,7 @@ import VectorSource from "ol/source/Vector";
 import {SelectEvent} from "ol/interaction/Select";
 import {Info} from "../interface/interface";
 
+// Create the select to add interaction to the map
 export function getSelect(
     roomLayer : VectorLayer<VectorSource>,
     resourceLayer : VectorLayer<VectorSource>
@@ -30,7 +33,7 @@ export function getSelect(
     }
 }
 
-
+// function that handle a openlayers SelectEvent and return the data of the selected resources or rooms
 export function getInteractionData(e : SelectEvent) : Info[] | null {
     const features = e.target.getFeatures()
     const data : Info[] = []

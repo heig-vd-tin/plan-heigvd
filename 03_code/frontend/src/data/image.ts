@@ -1,4 +1,5 @@
 // this file is here, to have the good url in production after the vite build
+// import all the images in the assets file
 
 import bus from '../assets/bus.png'
 import busSelected from '../assets/bus_selected.png'

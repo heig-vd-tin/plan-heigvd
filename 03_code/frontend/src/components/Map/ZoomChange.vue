@@ -1,3 +1,5 @@
+// Zoom change tool component
+
 <template>
   <div class="zoom-change">
     <Button @click="zoomUp" class="first zoom-button" id="zoomUp" >
@@ -13,6 +15,8 @@
 import Button from "../Utility/Button.vue";
 
 const emit = defineEmits(['zoomUp', 'zoomDown'])
+
+// emit when the button are clicked
 
 function zoomUp() {
   emit('zoomUp')

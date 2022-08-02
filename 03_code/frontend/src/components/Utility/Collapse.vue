@@ -1,3 +1,5 @@
+// Collapse menu component used through the program
+
 <template>
   <CollapseHeader
       :title="title"

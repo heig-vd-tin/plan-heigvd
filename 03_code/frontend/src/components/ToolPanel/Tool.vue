@@ -1,3 +1,5 @@
+// Component to set the style of each tool component in the toolbar
+
 <template>
   <div class="tool" :class="{last: isLast }">
     <p class="tool-name">{{ toolName }}</p>

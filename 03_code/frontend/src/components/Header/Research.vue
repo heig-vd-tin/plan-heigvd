@@ -1,3 +1,5 @@
+// Search bar of the header
+
 <template>
   <div class="research-bar">
     <input
@@ -48,6 +50,7 @@ const suggestionBoxVisibility = ref(false)
 let roomSuggestions : RoomSuggestion[] = []
 let peopleSuggestions : {id : string, name :string}[]
 
+// used to cached the suggesions
 let suggestions : Suggestion = {rooms : [], people : []}
 const suggestionsFiltered = ref<Suggestion>({rooms : [], people : []})
 
@@ -56,10 +59,12 @@ const nbCharacter = ref(0)
 const roomList : RoomSuggestion[] = []
 let isCached = false
 
+// Change the visibility of suggestions when seach bar is focus in
 function focusIn() {
   suggestionBoxVisibility.value = true
 }
 
+// Change the visibility of suggestions when seach bar is focus out
 function focusOut() {
   // let the user click on suggestion before focus out
   setTimeout(() => {
@@ -67,6 +72,7 @@ function focusOut() {
   }, 300)
 }
 
+// Main function that contain the strategy of fetching the suggestions
 async function researchResource(e : Event) {
   const input = (e.target as HTMLInputElement).value
   if (input.length >= 2) {
@@ -76,7 +82,6 @@ async function researchResource(e : Event) {
       if (rs !== null) {
         roomSuggestions = rs
         suggestions.rooms = roomSuggestions.map(v => {
-          console.log(v.room_type)
           if (v.room_type !== null) {
             return `${v.room_name} | ${v.room_type}`
           }
@@ -84,6 +89,7 @@ async function researchResource(e : Event) {
             return v.room_name
           }
         })
+        // cached the suggestion
         suggestionsFiltered.value.rooms = suggestions.rooms
       }
       isCached = true
@@ -104,6 +110,7 @@ async function researchResource(e : Event) {
   nbCharacter.value = input.length
 }
 
+// reinitialize the suggestions list
 function reinitializeSuggestion() {
   suggestions.rooms = []
   suggestionsFiltered.value.rooms = []
@@ -111,6 +118,8 @@ function reinitializeSuggestion() {
   isCached = false
 }
 
+
+//
 function roomSelected(room : string) {
   const formattedRoom = room.split(' | ')[0]
   const roomSelected = roomSuggestions.filter(v => v.room_name === formattedRoom)[0]
@@ -129,6 +138,7 @@ async function personSelected(person : string) {
   }
 }
 
+//
 function selected(room : RoomSuggestion) {
   const building = currentBuildingStore()
   const floor = currentFloorStore()
