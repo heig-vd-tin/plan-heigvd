@@ -62,7 +62,7 @@ It contains the following columns :
 ## Run
 
 To run the programm use the command 
-`node index.js [inputPaht] [outputPath] [dbName]`
+`npm run start [inputPath] [outputPath] [dbName]`
 
 `inputPath` is the path to the arborescence
 `outputPath` is the path where the sql scripts will be created
