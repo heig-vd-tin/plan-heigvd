@@ -6,7 +6,6 @@ const request = require("./database")
 
 app.use(cors())
 
-
 async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     const rawData = await fn(param);
     console.log(rawData)
@@ -43,7 +42,7 @@ app.get('/api/buildings/:buildingId/features', async (req, res) => {
     await handleFeaturesRequest(
         req.params.buildingId,
         res,
-        'Building Building is inexistent or has no attached features',
+        'Building is inexistent or has no attached features',
         request.getFeaturesOfBuildingByBuildingId
     )
 })
@@ -87,7 +86,7 @@ app.get('/api/floors/:floorId/features', async (req, res) => {
         })
     }
     else {
-        res.status(200)
+        res.status(400)
         res.json({error : 'floor inexistent or has no feature attached'})
     }
 
