@@ -12,11 +12,22 @@ It contains four directories :
 
 
 ## Installation
-To install the project :
+
+To install the project on your local machine :
 
 1. Clone the project in your local files
-2. Follow the installation instruction of frontend [here]()
-3. Follow the installation instruction of serverAPI [here]()
+2. Install PostgreSQL with the extension Postgis
+3. Create the postgres user and choose a password
+4. Go, with a terminal, to 04_deploy/sql folder
+5. Run the command below to create the database (Note the third command take a moment to complete)
+```
+psql -U postgres -a -f 01_init.sql --quiet
+psql -U postgres -a -f 02_create.sql --quiet
+psql -U postgres -a -f 03_insert.sql --quiet
+``` 
+6. Follow the installation instruction of frontend [here]()
+7. Follow the installation instruction of serverAPI [here]()
+8. The application is available on `localhost:3000`
 
 To deploy the project :
 
