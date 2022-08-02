@@ -1,13 +1,18 @@
+// create the insertion script
+
+
 const fs = require('fs')
 const {parseCsv} = require("./utils");
 const {readRoomData} = require("./dataReading");
 
+// main insert function, call the other after
 function insertDataIntoTables(inputPath, dbName) {
     let insert = `\\connect ${dbName}\n`
     insert += visitBuildingFiles(inputPath)
     return insert
 }
 
+// visit files and apply a function on it
 function visitFiles(path, f) {
     try {
         const files = fs.readdirSync(`${path}`)
@@ -22,6 +27,7 @@ function visitFiles(path, f) {
     }
 }
 
+// visit the building files and apply a function on it
 function visitBuildingFiles(inputPath) {
     return visitFiles(`${inputPath}`, (building) => {
         let insert = ''
@@ -40,6 +46,7 @@ function visitBuildingFiles(inputPath) {
     })
 }
 
+// visit the floor files and apply a function on it
 function visitFloorFiles(inputPath, building, roomData) {
 
     return visitFiles(`${inputPath}/${building}`, (floor) => {
@@ -53,12 +60,14 @@ function visitFloorFiles(inputPath, building, roomData) {
     })
 }
 
+// create the script for the building
 function insertDataIntoBuildingTable(inputPath, building) {
     const json = JSON.parse(fs.readFileSync(`${inputPath}/${building}/buildingData.json`))
     return `INSERT INTO building ( name, x, y, ground_floor, rotation, zoom, min_zoom, max_zoom) 
 VALUES ('${building}', ${json.center[0]}, ${json.center[1]}, '${json.groundFloor}', ${json.rotation}, ${json.zoom}, ${json.minZoom}, ${json.maxZoom});\n`
 }
 
+// read a geojson file in a folder and apply a function
 function readGeojsonFile(path, file, f) {
     if (file.endsWith('geojson')) {
         const json = JSON.parse(fs.readFileSync(`${path}/${file}`));
@@ -68,7 +77,7 @@ function readGeojsonFile(path, file, f) {
     else return ''
 }
 
-
+// create the insert script for the resources table
 function insertResourceDataIntoResourceTable(path) {
     return visitFiles(path, file  => readGeojsonFile(path, file,(name, json) => {
         let content = ''
@@ -109,6 +118,7 @@ WHERE building.name = '${properties.building}';\n`
     }))
 }
 
+// create the insert script for the floor geometry table
 function insertDataIntoFloorGeometryTable (inputPath, buildingName, floorName) {
     const path = `${inputPath}/${buildingName}/${floorName}`
     return visitFiles(path, file => readGeojsonFile(path, file,(name, json) => {
@@ -124,6 +134,7 @@ function insertDataIntoFloorGeometryTable (inputPath, buildingName, floorName) {
     }))
 }
 
+// visit all the geojson file and call the inserRoo function
 function insertDataIntoRoomTable (inputPath, buildingName, floorName, data) {
     const path = `${inputPath}/${buildingName}/${floorName}/rooms`
     return visitFiles(path, file =>  {
@@ -138,7 +149,7 @@ function insertDataIntoRoomTable (inputPath, buildingName, floorName, data) {
 }
 
 
-
+// create the insert script for the room table
 function insertRoom(roomName, floorName, gis, data) {
     let d
     if (roomName === 'WC' || roomName === 'Ascenseur' || roomName === 'vidoir') {

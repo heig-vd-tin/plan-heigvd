@@ -1,3 +1,5 @@
+// The tool bar that contain the building change tool and the floor change tool
+
 <template>
   <div
       class="toolbar"
@@ -28,6 +30,8 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['buildingChanged'])
+
+// Change the aspect of the building change tool when toolbar is hovered
 
 const isHovered = ref(false)
 

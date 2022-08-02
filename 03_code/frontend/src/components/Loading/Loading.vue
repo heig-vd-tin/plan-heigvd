@@ -1,3 +1,5 @@
+// Loading page component
+
 <template>
   <div class="loading">
     <div class="loading-bar">

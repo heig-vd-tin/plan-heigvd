@@ -1,3 +1,5 @@
+// component that contain the list of resources
+
 <template>
   <Collapse
     title="Ressources : "

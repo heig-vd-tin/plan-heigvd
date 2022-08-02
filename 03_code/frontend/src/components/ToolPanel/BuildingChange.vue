@@ -1,3 +1,5 @@
+// building change tool component
+
 <template>
   <div class="building-change">
     <Button
@@ -22,6 +24,7 @@ const props = defineProps<{
 
 const emit = defineEmits(['buildingChanged'])
 
+// format the name of each building
 function formatName(building : string) {
   if (props.onHover) {
     return building
@@ -40,6 +43,7 @@ function formatName(building : string) {
 
 const buildings = currentBuildingStore()
 
+// Change the value in the current building store
 function changeSelected(e : Event) {
   buildings.change((e.target as HTMLElement).innerText)
   if (buildings.info !== undefined) {

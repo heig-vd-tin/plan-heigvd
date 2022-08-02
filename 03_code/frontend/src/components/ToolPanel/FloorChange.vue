@@ -1,3 +1,5 @@
+// Floor change tool component
+
 <template>
   <div class="floor-change">
     <Button class="arrow-up" @click="floorUp">
@@ -19,10 +21,12 @@ import {currentFloorStore} from "../../stores/currentFloor";
 
 const currentFloor = currentFloorStore()
 
+// change the value on current floor store
 function floorUp() {
   currentFloor.up()
 }
 
+// change the value on current floor store
 function floorDown() {
   currentFloor.down()
 }

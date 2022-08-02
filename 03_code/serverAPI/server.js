@@ -1,3 +1,5 @@
+// Construct the express server and the routes
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -6,6 +8,7 @@ const request = require("./database")
 
 app.use(cors())
 
+// function to factorize classic request
 async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     const rawData = await fn(param);
     console.log(rawData)
@@ -20,6 +23,7 @@ async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     }
 }
 
+// function to factorize request with geographical data
 async function handleFeaturesRequest(param, res, errorMsg, fn) {
     const rawData = await fn(param);
     const data = rawData.rows[0].json_build_object
@@ -33,6 +37,7 @@ async function handleFeaturesRequest(param, res, errorMsg, fn) {
     }
 }
 
+/*----------------------------Routes-----------------------------------*/
 app.get('/api/buildings', async (req, res) => {
     const data = await request.getBuildings();
     res.json(data.rows)

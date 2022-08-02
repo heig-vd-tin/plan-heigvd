@@ -1,3 +1,5 @@
+// Info panel component
+
 <template>
   <div class="info-panel">
     <div v-for="(room, index) in selectedRoom" class="info-item" key="index">
@@ -31,7 +33,7 @@ const props = defineProps<{
 const people = ref<string[][]>([])
 const resources = ref<{ name : string, type : string }[][]>([])
 
-
+// detect when a room is selected by search
 watch(() => props.selectedRoom, async (newRooms) => {
   people.value = []
   resources.value = []

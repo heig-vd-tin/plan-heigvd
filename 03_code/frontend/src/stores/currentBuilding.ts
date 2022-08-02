@@ -1,3 +1,5 @@
+// store the data of the current building
+
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {BuildingInfo} from "../interface/interface";
@@ -12,6 +14,7 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
     const selected = ref('')
     const info = ref<BuildingInfo | undefined>()
 
+    // change the current building and his data
     function change(value : string) {
         if (list.value.indexOf(value) !== -1 ){
             selected.value = value
@@ -19,6 +22,7 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
         }
     }
 
+    // add building data to the store
     function addBuildingInfo(
         name : string,
         id : number,
@@ -42,6 +46,7 @@ export const currentBuildingStore = defineStore('currentBuilding', () => {
         })
     }
 
+    // init the store
     function initStore() {
         list.value = Array.from(buildingsInfo.keys())
         change(list.value[0])

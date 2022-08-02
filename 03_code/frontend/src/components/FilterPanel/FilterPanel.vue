@@ -1,3 +1,5 @@
+// Filter panel that contain the resource filter tool and the display change tool
+
 <template>
   <div class="filter-menu">
     <FilterMenuSection
@@ -23,6 +25,7 @@ import {displayStore} from "../../stores/display";
 
 const filters = filtersStore()
 
+// update the filters store
 function resourceChanged(element : HTMLInputElement) {
   if (element.checked) {
     filters.push(element.name)
@@ -33,9 +36,9 @@ function resourceChanged(element : HTMLInputElement) {
 
 const display = displayStore()
 
+// update the display store
 function displayChanged(e :HTMLInputElement) {
   const text = e.id
-  console.log(text)
   switch (text) {
     case 'Défaut' : {
       display.currentMode = display.mode.default

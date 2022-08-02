@@ -1,3 +1,5 @@
+// component of the button used through the application
+
 <template>
   <div class="btn-container">
     <div v-if="selected" class="block selected">
