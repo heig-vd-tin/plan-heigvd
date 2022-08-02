@@ -4,18 +4,18 @@
   <header class="header">
     <div class="left-header">
       <div v-show="!inResearchMode" class="left-header-normal">
-      <div class="left-header-btn">
-        <Button  v-show="!menuBtnState" @click="changeBtnState" id="bar-btn">
-          <font-awesome-icon size="lg" :icon="['fas', 'bars']"/>
-        </Button>
-        <Button  v-show="menuBtnState" @click="changeBtnState" id="cross-btn">
-          <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
-        </Button>
+        <div class="left-header-btn">
+          <Button  v-show="!menuBtnState" @click="changeBtnState" id="bar-btn">
+            <font-awesome-icon size="lg" :icon="['fas', 'bars']"/>
+          </Button>
+          <Button  v-show="menuBtnState" @click="changeBtnState" id="cross-btn">
+            <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
+          </Button>
+        </div>
+        <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
+        <h1 class="title-text">Plans</h1>
       </div>
-      <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
-      <h1 class="title-text">Plans</h1>
-    </div>
-    <Research @suggestion-selected="changeResearchMode" v-show="inResearchMode" id="left-research-bar"/>
+      <Research @suggestion-selected="changeResearchMode" v-show="inResearchMode" id="left-research-bar"/>
     </div>
     <div class="right-header">
       <Research class="research-bar" id="right-research-bar"/>

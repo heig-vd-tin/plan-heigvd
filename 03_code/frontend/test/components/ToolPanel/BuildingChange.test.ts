@@ -14,3 +14,8 @@ const wrapper = mount(BuildingChange,{
 test('changeBuilding', () => {
     expect(wrapper.isVisible())
 })
+
+test('formatName', () => {
+    expect(wrapper.vm.formatName('Cheseaux') === 'CH' )
+    expect(wrapper.vm.formatName('St-Roch') === 'SR' )
+})
