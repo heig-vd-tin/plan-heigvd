@@ -28,8 +28,8 @@ psql -U postgres -a -f 01_init.sql --quiet
 psql -U postgres -a -f 02_create.sql --quiet
 psql -U postgres -a -f 03_insert.sql --quiet
 ``` 
-6. Follow the installation instruction of frontend [here]()
-7. Follow the installation instruction of serverAPI [here]()
+6. Follow the installation instruction of frontend [here](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/frontend)
+7. Follow the installation instruction of serverAPI [here](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/serverAPI)
 8. The application is available on `localhost:3000`
 
 To deploy the project :
