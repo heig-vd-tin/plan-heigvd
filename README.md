@@ -7,7 +7,10 @@ It contains four directories :
 - 01_doc is the administrative document for the project. 
     - You can read the french report that explain the creation process [here]()
 - 02_plan isn't available on the public repository. It contains the geographical data used to create the application. 
-- 03_code contain the serverAPI, the frontend, and sqlScriptCreator, a program that convert an arborescence of files to SQL scripts.
+- 03_code contain the Server API, the frontend, and sqlScriptCreator, a program that convert an arborescence of files to SQL scripts.
+    - [Frontend](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/frontend)
+    - [Server API](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/serverAPI)
+    - [sqlScriptCreator](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/sqlScriptCreator)
 - 04_deploy contain the files to deploy the application on a virtual machine
 
 
