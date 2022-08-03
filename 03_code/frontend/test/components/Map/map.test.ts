@@ -5,6 +5,7 @@ import {createTestingPinia} from "@pinia/testing";
 
 const wrapper = mount(Map, {
     props: {
+        isInfoPanelVisible : false,
         loadingFinished : true
     },
     global: {

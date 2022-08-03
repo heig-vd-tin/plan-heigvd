@@ -6,6 +6,9 @@ import {currentBuildingStore} from "../../../src/stores/currentBuilding";
 import {expect, test} from "vitest";
 
 const wrapper = mount(BuildingChange,{
+    props : {
+      onHover : false
+    },
     global: {
         plugins: [createTestingPinia()],
     },
