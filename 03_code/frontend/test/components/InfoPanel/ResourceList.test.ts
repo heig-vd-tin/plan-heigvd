@@ -5,7 +5,7 @@ import {nextTick} from "vue";
 
 const wrapper = mount(ResourceList,{
     props : {
-        resources : {name : 'a', type : 'b'}
+        resources : [{name : 'a', type : 'b'}]
     }
 })
 

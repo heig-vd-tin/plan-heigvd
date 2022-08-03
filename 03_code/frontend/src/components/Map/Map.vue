@@ -1,3 +1,5 @@
+// Component that display the map. Contain the zoom change tool
+
 <template>
   <div ref="maproot" class="map"></div>
   <div
@@ -91,15 +93,23 @@ onMounted(() => {
   //create the map
   map.value = createMap(maproot.value, view, layers)
 
-  // add the openlayers Select interraction to the map
+  // add the openlayers Select interaction to the map
   map.value.addInteraction(selects.select)
   map.value.addInteraction(selects.selectHover)
 
   // event on openlayers select selection
   selects.select.on('select', (e) => {
     const data = getInteractionData(e)
-    if (data !== null) emit('roomSelected', data)
-    else emit('roomUnselected')
+    if (data !== null) {
+      roomSelected.selected = []
+      roomSelected.selectedBySearch = false
+      roomSelected.selected.push(...data)
+      emit('roomSelected')
+    }
+    else {
+      roomSelected.selected = []
+      emit('roomUnselected')
+    }
   })
 })
 
@@ -173,29 +183,21 @@ watch(() => currentBuilding.selected, () => {
 
 // Detect when the user click on a suggestion in the research bar
 // add to the openlayers Select and send the data to the info panel
-watch(() => roomSelected.selected, (newRoom) => {
-  if (newRoom !== undefined) {
+watch(() => roomSelected.selected, (newRooms) => {
+  if (newRooms.length !== 0 && roomSelected.selectedBySearch) {
     // Add to the openlayers Select
-    const feature = featureStore().getRoomFeature(newRoom)
+    selects.select.getFeatures().clear()
+    const feature = featureStore().getRoomFeature(newRooms[0].name, currentBuilding.selected, currentFloor.currentFloorName)
     if (feature !== undefined) {
-      selects.select.getFeatures().clear()
       selects.select.getFeatures().push(feature)
       const extend = feature.getGeometry()?.getExtent()
       if (extend !== undefined) {
         view.fit(extend)
       }
-
-      // send to the info Panel
-      const info : Info[] = [{
-        flag : 'room',
-        id : newRoom.room_id,
-        name : newRoom.room_name,
-        type : newRoom.room_type,
-        surface : newRoom.room_surface,
-        capacity : newRoom.room_capacity
-      }]
-      emit('roomSelected', info)
     }
+  }
+  else if(newRooms.length === 0){
+    selects.select.getFeatures().clear()
   }
 })
 

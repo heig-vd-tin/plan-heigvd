@@ -1,3 +1,5 @@
+// Section of the filter panel
+
 <template>
   <div class="filter-section">
     <Collapse
@@ -44,6 +46,7 @@ function change(e : Event) {
   isAllCheckboxesUnchecked.value = checkIfAllCheckboxesIsUncheked();
 }
 
+// format the list
 function getFormat(name : string) : string{
   const n1 = name.replaceAll('_', ' ')
   let n2
@@ -58,6 +61,7 @@ function getFormat(name : string) : string{
 
 const isAllCheckboxesUnchecked = ref(false)
 
+// function that verify if all checkbox are checked
 function checkIfAllCheckboxesIsUncheked()  {
   const checkboxes = document.getElementsByClassName('input-checkbox')
   for (const c of Array.from(checkboxes)) {
@@ -68,6 +72,7 @@ function checkIfAllCheckboxesIsUncheked()  {
   return true
 }
 
+// checked all the checkbox
 function selectAll() {
   const checkboxes = document.getElementsByClassName('input-checkbox')
   for (const c of Array.from(checkboxes)) {
@@ -77,6 +82,7 @@ function selectAll() {
   isAllCheckboxesUnchecked.value = false
 }
 
+// deselect all the checkbox
 function deselectAll() {
   const checkboxes = document.getElementsByClassName('input-checkbox')
   for (const c of Array.from(checkboxes)) {

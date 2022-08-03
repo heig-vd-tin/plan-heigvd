@@ -13,6 +13,7 @@
       <transition name="toolbar">
         <ToolBar
             :isFilterPanelVisible="filterMenuVisibility"
+            @building-changed="initDisplay"
         />
       </transition>
       <transition name="filter-panel">
@@ -23,7 +24,6 @@
       <transition name="info-panel">
         <InfoPanel
             v-show="infoPanelVisibility"
-            :selected-room="roomInfo"
             @close="undisplayRoomInfo"
         />
       </transition>
@@ -51,6 +51,7 @@ import ToolBar from "./components/ToolPanel/ToolBar.vue";
 import {Info} from "./interface/interface";
 import {loadAndDisplayBaseData, loadOtherData} from "./lifecycle/lifecycle";
 import Loading from "./components/Loading/Loading.vue";
+import {roomSelectedStore} from "./stores/roomSelected";
 
 
 const loading = ref(true)
@@ -64,14 +65,13 @@ function enterApp() {
 const infoPanelVisibility = ref(false)
 const roomInfo = ref<Info[]>([])
 
-function displayRoomInfo (info : Info[]) {
+function displayRoomInfo () {
   infoPanelVisibility.value = true
-  roomInfo.value = info
 }
 
 function undisplayRoomInfo () {
   infoPanelVisibility.value = false
-  roomInfo.value = []
+  roomSelectedStore().selected = []
 }
 
 // filter panel
@@ -79,6 +79,12 @@ const filterMenuVisibility = ref(false)
 
 function changeMenuState (newState : boolean) {
   filterMenuVisibility.value = newState
+}
+
+function initDisplay() {
+  if (infoPanelVisibility.value) {
+    undisplayRoomInfo()
+  }
 }
 
 onMounted(async () => {

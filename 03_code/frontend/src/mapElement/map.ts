@@ -1,3 +1,5 @@
+// handle the operation concerning the openlayers map
+
 import {
     backgroundStyleFar,
     backgroundStyleMiddle,
@@ -11,14 +13,16 @@ import {
     ressourceStyleFunction,
     roomByTypeFarStyleFunction,
     roomByTypeMiddleStyleFunction,
-    roomByTypeNearStyleFunction
+    roomByTypeNearStyleFunction, selectedStyleFunction
 } from "./style";
 import {Map, View} from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import {displayStore} from "../stores/display";
 import {BuildingInfo, Layers} from "../interface/interface";
+import {roomSelectedStore} from "../stores/roomSelected";
 
+//
 const zooms = {
     FAR : 17,
     MIDDLE: 19,
@@ -26,6 +30,7 @@ const zooms = {
 }
 
 
+// create the map
 export function createMap(target : HTMLElement | undefined, view : View, layers : Layers) {
     const map = new Map({
         target : target,
@@ -40,7 +45,7 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
         view: view
     })
 
-    // change map when Zoom change
+    // change map when Zoom changed
     map.on('moveend', () => {
         const zoom = view.getZoom()
         if (zoom != undefined) {
@@ -57,7 +62,17 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
                 layers.floorLayer.lineLayer.setStyle(lineStyle)
                 layers.floorLayer.polygonLayer.setStyle(polygonStyle)
                 layers.backgroundLayer.setStyle(backgroundStyleMiddle)
-                layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
+                layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => {
+                    roomSelectedStore().selected.forEach(selected => {
+                        // Keep the selected resource when map moved
+                        if(selected.flag === 'resource' && f.get('id') === selected.id) {
+                            f.setStyle(selectedStyleFunction(f))
+                        }
+                        else {
+                           f.setStyle(ressourceStyleFunction)
+                        }
+                    })
+                })
             }
             setLabelLayerStyleByZoom(layers.floorLayer.labelsLayer, zoom)
         }
@@ -65,7 +80,7 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
     return map
 }
 
-
+// set the correct style depending on the zoom and display
 export function setLabelLayerStyleByZoom(labelsLayer : VectorLayer<VectorSource>, zoom : number | undefined) {
     const display = displayStore()
     if (zoom !== undefined) {
@@ -88,6 +103,7 @@ export function setLabelLayerStyleByZoom(labelsLayer : VectorLayer<VectorSource>
     }
 }
 
+// set the view of the map with the data of the building
 export function setView(view : View, buildingInfo : BuildingInfo) {
     if (buildingInfo != undefined) {
         view.setCenter(buildingInfo.center)

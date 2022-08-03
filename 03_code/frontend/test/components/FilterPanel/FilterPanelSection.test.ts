@@ -5,6 +5,7 @@ import {expect, test} from "vitest";
 const wrapper = mount(FilterPanelSection, {
     props : {
         title : 'test',
+        type : 'checkbox',
         filters : ['as', 'wc']
     }
 })

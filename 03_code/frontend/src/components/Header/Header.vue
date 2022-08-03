@@ -1,19 +1,21 @@
+// header component
+
 <template>
   <header class="header">
     <div class="left-header">
       <div v-show="!inResearchMode" class="left-header-normal">
-      <div class="left-header-btn">
-        <Button  v-show="!menuBtnState" @click="changeBtnState" id="bar-btn">
-          <font-awesome-icon size="lg" :icon="['fas', 'bars']"/>
-        </Button>
-        <Button  v-show="menuBtnState" @click="changeBtnState" id="cross-btn">
-          <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
-        </Button>
+        <div class="left-header-btn">
+          <Button  v-show="!menuBtnState" @click="changeBtnState" id="bar-btn">
+            <font-awesome-icon size="lg" :icon="['fas', 'bars']"/>
+          </Button>
+          <Button  v-show="menuBtnState" @click="changeBtnState" id="cross-btn">
+            <font-awesome-icon size="lg" :icon="['fas', 'xmark']"/>
+          </Button>
+        </div>
+        <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
+        <h1 class="title-text">Plans</h1>
       </div>
-      <img src="../../assets/HEIG-VD_logotype_rouge-rvb.svg" class="logo" alt="logo HEIG-VD">
-      <h1 class="title-text">Plans</h1>
-    </div>
-    <Research @suggestion-selected="changeResearchMode" v-show="inResearchMode" id="left-research-bar"/>
+      <Research @suggestion-selected="changeResearchMode" v-show="inResearchMode" id="left-research-bar"/>
     </div>
     <div class="right-header">
       <Research class="research-bar" id="right-research-bar"/>
@@ -35,8 +37,6 @@ import {ref} from "vue";
 import Research from "./Research.vue";
 import Button from "../Utility/Button.vue";
 
-console.log(innerWidth)
-
 const emit = defineEmits(['btnClick'])
 
 // menu button
@@ -47,10 +47,18 @@ function changeBtnState () {
   emit('btnClick', menuBtnState.value)
 }
 
+// Change the aspect of the header on mobile
 const inResearchMode = ref(false)
 
 function changeResearchMode() {
   inResearchMode.value = !inResearchMode.value
+}
+
+// Correct a bug when the user click the search button in portrait mode and go in landscape mode after
+window.onresize = () => {
+  if (window.innerWidth > 440 && inResearchMode.value === true) {
+    inResearchMode.value = !inResearchMode.value
+  }
 }
 
 </script>
@@ -117,7 +125,15 @@ function changeResearchMode() {
     display: none;
   }
 
+  #left-research-bar {
+    display: none;
+  }
+
   @media only screen and (max-width: 440px) {
+
+    #left-research-bar {
+      display: block;
+    }
 
     .left-header {
       width: 80%;

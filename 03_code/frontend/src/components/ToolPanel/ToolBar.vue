@@ -1,3 +1,5 @@
+// The tool bar that contain the building change tool and the floor change tool
+
 <template>
   <div
       class="toolbar"
@@ -7,7 +9,8 @@
   >
     <Tool tool-name="Site" class="item" id="building-change">
       <BuildingChange
-        :onHover="isHovered"
+          @building-changed="$emit('buildingChanged')"
+          :onHover="isHovered"
       />
     </Tool>
     <Tool tool-name="Etage" :is-last="true" class="item" id="floor-change">
@@ -20,11 +23,15 @@
 import FloorChange from "./FloorChange.vue";
 import BuildingChange from "./BuildingChange.vue";
 import Tool from "./Tool.vue";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 
 const props = defineProps<{
   isFilterPanelVisible : boolean
 }>()
+
+const emit = defineEmits(['buildingChanged'])
+
+// Change the aspect of the building change tool when toolbar is hovered
 
 const isHovered = ref(false)
 
@@ -33,8 +40,16 @@ function onHover() {
 }
 
 function leaveHover() {
-  isHovered.value = false
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0)  {
+    isHovered.value = false
+  }
 }
+
+onMounted(() => {
+  if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    isHovered.value = true
+  }
+})
 
 </script>
 

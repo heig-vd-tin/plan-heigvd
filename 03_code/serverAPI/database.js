@@ -1,5 +1,8 @@
+// Connect to the database and make the request
+
 const {Pool} = require("pg");
 
+// credentials for the connection to the database
 const credentials = {
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'localhost',
@@ -8,8 +11,10 @@ const credentials = {
     database: process.env.DB_NAME || 'plan',
 }
 
+// connection
 const pool = new Pool(credentials);
 
+// SQL request to the database
 async function getBuildings() {
     const text = `SELECT * FROM building;`
     return pool.query(text);
@@ -24,7 +29,6 @@ async function getFeaturesOfBuildingByBuildingId(buildingId) {
     INNER JOIN floor
         ON floor.id = floor_geometry.idx_floor
     WHERE floor_geometry.type = 'polygon' AND floor.idx_building = ${buildingId};`
-    console.log(text)
     return pool.query(text);
 }
 

@@ -1,3 +1,5 @@
+// implement the data fetching strategy
+
 import {getBuildings, getFloorsOfBuildings} from "../api/api";
 import {currentBuildingStore} from "../stores/currentBuilding";
 import {filtersStore} from "../stores/Filters";
@@ -5,6 +7,7 @@ import {currentFloorStore} from "../stores/currentFloor";
 import {fetchBaseFeatures, fetchOtherFeatures} from "./fetchFeatures";
 import {featureStore} from "../stores/feature";
 
+// Function that init stores and fetch the data from the database
 export async function loadAndDisplayBaseData() {
     await initBuildingStore()
     const buildingStore = currentBuildingStore()
@@ -24,6 +27,7 @@ export async function loadAndDisplayBaseData() {
     filtersStore().initStore(featureStore().getResourcesTypeList())
 }
 
+// Function that load the other data
 export async function loadOtherData() {
     const buildingStore = currentBuildingStore()
     if (buildingStore.info !== undefined) {
@@ -37,6 +41,7 @@ export async function loadOtherData() {
     filtersStore().initStore(featureStore().getResourcesTypeList())
 }
 
+// init the current building store with default data
 async function initBuildingStore() {
     const buildings = await getBuildings()
     const buildingStore = currentBuildingStore()
@@ -57,6 +62,7 @@ async function initBuildingStore() {
     buildingStore.initStore()
 }
 
+// init the current floor store with the default data
 function initFloorStore() {
     const buildingStore = currentBuildingStore()
     if (buildingStore.info !== undefined) {

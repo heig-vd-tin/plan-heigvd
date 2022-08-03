@@ -1,1 +1,31 @@
-# To complete...
+on:
+  push:
+    branches:
+      - main
+  create:
+    tags:
+jobs:
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+        with:
+          submodules: true
+      - name: Build docker images
+        run: docker build . -t tb-report -f .devcontainer/Dockerfile
+      - name: Build
+        run: docker run -v $GITHUB_WORKSPACE:/latex -w/latex tb-report make
+      - name: Perms
+        run: docker run -v $GITHUB_WORKSPACE:/latex -w/latex tb-report chmod -r a+rw build
+      - name: Dist directory
+        run: mkdir -p dist
+      - name: Move
+        run : cp build/report.pdf dist
+      - name: Upload
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: build
+          if-no-files-found: error

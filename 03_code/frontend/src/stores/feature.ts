@@ -1,3 +1,5 @@
+// Store all the features of the application
+
 import {defineStore} from "pinia";
 import {Feature} from "ol";
 import {ressourceStyleFunction} from "../mapElement/style";
@@ -9,15 +11,18 @@ export const featureStore = defineStore('features', () => {
     const buildingResourceFeatures = new Map<string, Feature[]>()
     let roomSelectedFeature : Feature | undefined
 
+    // add floor features to the store
     function addFloorFeature(building : string, floor : string, features : FloorFeatures) {
         const key = building + floor
         floorFeatures.set(key, features)
     }
 
+    // add background features to the store
     function addBackgroundFeature(building : string, features : Feature[]) {
         backgroundFeatures.set(building, features)
     }
 
+    // add building resources to the store
     function addBuildingResourceFeature(building : string, features : Feature[]) {
         buildingResourceFeatures.set(building, features)
     }
@@ -32,6 +37,7 @@ export const featureStore = defineStore('features', () => {
 
     }
 
+    // get the resources of the current building and the resources of the current floor
     function getDisplayedResource(filters : string[], building : string, floor : string) {
         let features : Feature[] = []
         const key = building + floor
@@ -50,6 +56,7 @@ export const featureStore = defineStore('features', () => {
         return features
     }
 
+    // get the list of all the type of resource. used for the filters list
     function getResourcesTypeList() {
         const set = new Set<string>()
         Array.from(floorFeatures.values())
@@ -63,11 +70,12 @@ export const featureStore = defineStore('features', () => {
         return  Array.from(set)
     }
 
-    function getRoomFeature(roomSuggestion : RoomSuggestion) {
-        const floorFeature = getFloorFeatures(roomSuggestion.building_name, roomSuggestion.floor_name)
+
+    function getRoomFeature(roomName : string, buildingName : string, floorName : string) {
+        const floorFeature = getFloorFeatures(buildingName, floorName)
         if (floorFeature !== undefined) {
             return roomSelectedFeature = floorFeature.labels
-                .filter(v => v.getProperties().name === roomSuggestion.room_name)[0]
+                .filter(v => v.getProperties().name === roomName)[0]
         }
     }
 

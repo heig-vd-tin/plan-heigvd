@@ -6,6 +6,9 @@ import {currentBuildingStore} from "../../../src/stores/currentBuilding";
 import {expect, test} from "vitest";
 
 const wrapper = mount(BuildingChange,{
+    props : {
+      onHover : false
+    },
     global: {
         plugins: [createTestingPinia()],
     },
@@ -13,4 +16,9 @@ const wrapper = mount(BuildingChange,{
 
 test('changeBuilding', () => {
     expect(wrapper.isVisible())
+})
+
+test('formatName', () => {
+    expect(wrapper.vm.formatName('Cheseaux') === 'CH' )
+    expect(wrapper.vm.formatName('St-Roch') === 'SR' )
 })

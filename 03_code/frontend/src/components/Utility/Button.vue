@@ -1,3 +1,5 @@
+// component of the button used through the application
+
 <template>
   <div class="btn-container">
     <div v-if="selected" class="block selected">
@@ -47,8 +49,10 @@ function click(e : Event) {
   color: var(--font-color);
 }
 
-.btn:hover {
-  background-color: var(--border-color);
+@media (hover: hover) {
+  .btn:hover {
+    background-color: var(--border-color);
+  }
 }
 
 .btn:visited {

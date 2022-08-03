@@ -1,6 +1,8 @@
+// Info panel component
+
 <template>
   <div class="info-panel">
-    <div v-for="(room, index) in selectedRoom" class="info-item" key="index">
+    <div v-for="(room, index) in roomsSelected.selected" class="info-item" key="index">
       <h3 class="item">{{room.name}}</h3>
       <p v-if="room.type != null" class="item">Type : <span>{{room.type}}</span></p>
       <p v-if="room.surface != null" class="item">Surface : <span>{{room.surface}}</span> m2</p>
@@ -23,16 +25,14 @@ import {getPeople, getResourceOfRoom} from "../../api/api";
 import PersonsList from "./PersonsList.vue";
 import ResourceList from "./ResourceList.vue";
 import {Info} from "../../interface/interface";
-
-const props = defineProps<{
-  selectedRoom : Info[]
-}>()
+import {roomSelectedStore} from "../../stores/roomSelected";
 
 const people = ref<string[][]>([])
 const resources = ref<{ name : string, type : string }[][]>([])
 
-
-watch(() => props.selectedRoom, async (newRooms) => {
+const roomsSelected = roomSelectedStore()
+// detect when a room is selected by search
+watch(() => roomsSelected.selected, async (newRooms) => {
   people.value = []
   resources.value = []
   for (const room of newRooms) {

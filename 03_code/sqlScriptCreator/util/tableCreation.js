@@ -1,5 +1,6 @@
+// Create the script for the table creation
 
-
+// main function for the table cration
 function createTable(dbName) {
     let create = `\\connect ${dbName}\n`
     create += `CREATE EXTENSION postgis;\n`
@@ -11,6 +12,7 @@ function createTable(dbName) {
     return create
 }
 
+// create the script of the building table
 function createBuildingTable() {
     return `CREATE TABLE IF NOT EXISTS building ( 
     id SERIAL PRIMARY KEY,
@@ -25,6 +27,7 @@ function createBuildingTable() {
 );\n`
 }
 
+// create the script for the floor table
 function createFloorTable() {
     return `CREATE TABLE IF NOT EXISTS floor (
     id SERIAL PRIMARY KEY,
@@ -37,6 +40,7 @@ function createFloorTable() {
 );\n`
 }
 
+// create the script for the floor_geometry table
 function createFloorGeometryTable() {
     return `CREATE TABLE IF NOT EXISTS floor_geometry (
     id SERIAL PRIMARY KEY,
@@ -50,6 +54,7 @@ function createFloorGeometryTable() {
 );\n`
 }
 
+// create the script for the room table
 function createRoomTable() {
     return `CREATE TABLE IF NOT EXISTS room (
     id SERIAL PRIMARY KEY,
@@ -67,6 +72,7 @@ function createRoomTable() {
 );\n`
 }
 
+// create the script for the resource table
 function createResourceTable() {
     return `CREATE TABLE IF NOT EXISTS resource (
     id SERIAL PRIMARY KEY,

@@ -1,10 +1,14 @@
+// Store the current room selected
+
 import {defineStore} from "pinia";
-import {RoomSuggestion} from "../interface/interface";
+import {Info, RoomSuggestion} from "../interface/interface";
 
 export const roomSelectedStore = defineStore('roomSelected', () => {
-    let selected : RoomSuggestion | undefined
+    const selected : Info[] = []
+    let selectedBySearch = false
 
     return {
-        selected
+        selected,
+        selectedBySearch
     }
 })

@@ -8,17 +8,17 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web-secure.address=:443"
-      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
-      - "--certificatesresolvers.myresolver.acme.email=kylian.bourcoud@gmail.com"
-      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+      # - "--entrypoints.web-secure.address=:443"
+      # - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      # - "--certificatesresolvers.myresolver.acme.email=kylian.bourcoud@gmail.com"
+      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     ports:
       - "80:80"
-      - "443:443"
+     #  - "443:443"
       - "8080:8080"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"  
+      # - "./letsencrypt:/letsencrypt"  
 
   database :
     container_name: plan-heig-database
@@ -36,8 +36,8 @@ services:
 
   server-api:
     container_name: plan-heig-server-api
-    build: ../03_code/serverAPI
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
+    # build: ../03_code/serverAPI
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server-api
     environment: 
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=database
@@ -48,13 +48,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server-api.rule=Host(`${HOST}`) && PathPrefix(`/api`)"
-      - "traefik.http.routers.server-api.entrypoints=web,web-secure"
-      - "traefik.http.routers.server-api.tls.certresolver=myresolver"
+      - "traefik.http.routers.server-api.entrypoints=web"
+      # - "traefik.http.routers.server-api.tls.certresolver=myresolver"
 
   server:
     container_name: plan-heig-server
-    build: ../03_code/frontend
-    # image: registry.gitlab.com/tb-heig/plan-heig-vd/server
+    # build: ../03_code/frontend
+    image: registry.gitlab.com/tb-heig/plan-heig-vd/server
     environment:
      - VITE_API_URL=http://localhost:3001
     ports:
@@ -62,8 +62,8 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server.rule=Host(`${HOST}`)"
-      - "traefik.http.routers.server.entrypoints=web,web-secure"
-      - "traefik.http.routers.server.tls.certresolver=myresolver"
+      - "traefik.http.routers.server.entrypoints=web"
+      # - "traefik.http.routers.server.tls.certresolver=myresolver"
 
 volumes:
   database:

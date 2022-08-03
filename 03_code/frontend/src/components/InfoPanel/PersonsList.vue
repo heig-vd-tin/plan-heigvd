@@ -1,3 +1,5 @@
+// component that contain the list of persons
+
 <template>
   <Collapse title="Personnel :">
     <div

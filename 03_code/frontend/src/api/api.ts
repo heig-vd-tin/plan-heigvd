@@ -1,6 +1,7 @@
 import fetch from 'cross-fetch'
 import {Feature} from "ol";
 
+// function that simplify the request
 async function handleFetch(input : string) {
     return await fetch(input)
         .then(res => {
@@ -10,6 +11,8 @@ async function handleFetch(input : string) {
             return res.json()
         })
 }
+
+// declaration of function that access to the routes of API server
 
 export async function getBuildings() {
     return await handleFetch(`${import.meta.env.VITE_API_URL}/api/buildings`)
@@ -35,6 +38,16 @@ export async function getResourceOfRoom (roomId : number) {
     return await handleFetch(`${import.meta.env.VITE_API_URL}/api/rooms/${roomId}/resources`)
 }
 
+export async function getRoomSuggestions(input : string) {
+    return await handleFetch(`${import.meta.env.VITE_API_URL}/api/rooms/search/${input}`)
+}
+
+export async function getRoomByName(name : string) {
+    return await handleFetch(`${import.meta.env.VITE_API_URL}/api/rooms/${name}`)
+}
+
+// Function that acces to the api of thw website contact.heig-vd.ch
+
 export async function getPeople (search : string) {
     const resp = await fetch(`https://contacts.heig-vd.ch/search/${search}.json`).then(res => res.json())
     const obj = resp.people
@@ -52,10 +65,4 @@ export async function getPersonLocation (id : string) {
     return resp.office
 }
 
-export async function getRoomSuggestions(input : string) {
-    return await handleFetch(`${import.meta.env.VITE_API_URL}/api/rooms/search/${input}`)
-}
 
-export async function getRoomByName(name : string) {
-    return await handleFetch(`${import.meta.env.VITE_API_URL}/api/rooms/${name}`)
-}

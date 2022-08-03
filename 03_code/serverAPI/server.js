@@ -1,3 +1,5 @@
+// Construct the express server and the routes
+
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -6,10 +8,9 @@ const request = require("./database")
 
 app.use(cors())
 
-
+// function to factorize classic request
 async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     const rawData = await fn(param);
-    console.log(rawData)
     const data = rawData.rows
     if (data.length !== 0) {
         res.status(200)
@@ -21,6 +22,7 @@ async function handleBasicRequestWithOneParameter(param, res, errorMsg, fn) {
     }
 }
 
+// function to factorize request with geographical data
 async function handleFeaturesRequest(param, res, errorMsg, fn) {
     const rawData = await fn(param);
     const data = rawData.rows[0].json_build_object
@@ -34,6 +36,7 @@ async function handleFeaturesRequest(param, res, errorMsg, fn) {
     }
 }
 
+/*----------------------------Routes-----------------------------------*/
 app.get('/api/buildings', async (req, res) => {
     const data = await request.getBuildings();
     res.json(data.rows)
@@ -43,7 +46,7 @@ app.get('/api/buildings/:buildingId/features', async (req, res) => {
     await handleFeaturesRequest(
         req.params.buildingId,
         res,
-        'Building Building is inexistent or has no attached features',
+        'Building is inexistent or has no attached features',
         request.getFeaturesOfBuildingByBuildingId
     )
 })
@@ -87,7 +90,7 @@ app.get('/api/floors/:floorId/features', async (req, res) => {
         })
     }
     else {
-        res.status(200)
+        res.status(400)
         res.json({error : 'floor inexistent or has no feature attached'})
     }
 

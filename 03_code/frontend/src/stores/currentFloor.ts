@@ -1,3 +1,5 @@
+// store the data of the current floor
+
 import {defineStore} from "pinia";
 import {ref} from "vue";
 
@@ -10,6 +12,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     const previousFloorName = ref('')
     const nextFloorName = ref('')
 
+    // display the next floor
     function up() {
         if (id.value < floors.value.length - 1) {
             id.value++
@@ -17,6 +20,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
         }
     }
 
+    // display the previous floor
     function down() {
         if (id.value > 0) {
             id.value--
@@ -25,6 +29,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
     }
 
 
+    // set the current floor, the previous floor, and the next floor data
     function setFloors() {
         currentFloorName.value = floors.value[id.value]
 
@@ -43,6 +48,7 @@ export const currentFloorStore = defineStore('currentFloor', () => {
         }
     }
 
+    // init the store with the default value
     function initStore(b : string, f : string[], groundFloor : string) {
         if (b !== ''  && groundFloor !== '' && f.indexOf(groundFloor) !== -1) {
             building = b
