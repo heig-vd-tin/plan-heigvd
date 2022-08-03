@@ -29,7 +29,6 @@ async function getFeaturesOfBuildingByBuildingId(buildingId) {
     INNER JOIN floor
         ON floor.id = floor_geometry.idx_floor
     WHERE floor_geometry.type = 'polygon' AND floor.idx_building = ${buildingId};`
-    console.log(text)
     return pool.query(text);
 }
 

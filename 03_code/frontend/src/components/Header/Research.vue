@@ -153,7 +153,18 @@ function selected(room : RoomSuggestion) {
     )
   }
 
-  roomSelected.selected = room
+  roomSelected.selected = []
+  roomSelected.selectedBySearch = true
+  roomSelected.selected.push({
+    flag : 'room',
+    id : room.room_id,
+    name : room.room_name,
+    type : room.room_type,
+    surface : room.room_surface,
+    capacity : room.room_capacity
+  })
+
+
 
   reinitializeSuggestion()
 
