@@ -71,11 +71,11 @@ export const featureStore = defineStore('features', () => {
     }
 
 
-    function getRoomFeature(roomSuggestion : RoomSuggestion) {
-        const floorFeature = getFloorFeatures(roomSuggestion.building_name, roomSuggestion.floor_name)
+    function getRoomFeature(roomName : string, buildingName : string, floorName : string) {
+        const floorFeature = getFloorFeatures(buildingName, floorName)
         if (floorFeature !== undefined) {
             return roomSelectedFeature = floorFeature.labels
-                .filter(v => v.getProperties().name === roomSuggestion.room_name)[0]
+                .filter(v => v.getProperties().name === roomName)[0]
         }
     }
 

@@ -24,7 +24,6 @@
       <transition name="info-panel">
         <InfoPanel
             v-show="infoPanelVisibility"
-            :selected-room="roomInfo"
             @close="undisplayRoomInfo"
         />
       </transition>
@@ -66,14 +65,13 @@ function enterApp() {
 const infoPanelVisibility = ref(false)
 const roomInfo = ref<Info[]>([])
 
-function displayRoomInfo (info : Info[]) {
+function displayRoomInfo () {
   infoPanelVisibility.value = true
-  roomInfo.value = info
 }
 
 function undisplayRoomInfo () {
   infoPanelVisibility.value = false
-  roomInfo.value = []
+  roomSelectedStore().selected = []
 }
 
 // filter panel
@@ -86,8 +84,6 @@ function changeMenuState (newState : boolean) {
 function initDisplay() {
   if (infoPanelVisibility.value) {
     undisplayRoomInfo()
-    const roomSelected = roomSelectedStore()
-    roomSelected.selected = undefined
   }
 }
 

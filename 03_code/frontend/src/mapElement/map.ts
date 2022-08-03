@@ -13,13 +13,14 @@ import {
     ressourceStyleFunction,
     roomByTypeFarStyleFunction,
     roomByTypeMiddleStyleFunction,
-    roomByTypeNearStyleFunction
+    roomByTypeNearStyleFunction, selectedStyleFunction
 } from "./style";
 import {Map, View} from "ol";
 import VectorLayer from "ol/layer/Vector";
 import VectorSource from "ol/source/Vector";
 import {displayStore} from "../stores/display";
 import {BuildingInfo, Layers} from "../interface/interface";
+import {roomSelectedStore} from "../stores/roomSelected";
 
 //
 const zooms = {
@@ -61,7 +62,17 @@ export function createMap(target : HTMLElement | undefined, view : View, layers 
                 layers.floorLayer.lineLayer.setStyle(lineStyle)
                 layers.floorLayer.polygonLayer.setStyle(polygonStyle)
                 layers.backgroundLayer.setStyle(backgroundStyleMiddle)
-                layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => f.setStyle(ressourceStyleFunction))
+                layers.floorLayer.resourceLayer.getSource()?.getFeatures().forEach(f => {
+                    roomSelectedStore().selected.forEach(selected => {
+                        // Keep the selected resource when map moved
+                        if(selected.flag === 'resource' && f.get('id') === selected.id) {
+                            f.setStyle(selectedStyleFunction(f))
+                        }
+                        else {
+                           f.setStyle(ressourceStyleFunction)
+                        }
+                    })
+                })
             }
             setLabelLayerStyleByZoom(layers.floorLayer.labelsLayer, zoom)
         }
