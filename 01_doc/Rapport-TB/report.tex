@@ -80,7 +80,7 @@ On peut aussi y obtenir les informations sur les différents moyens d'accès à 
 Cependant, elle ne fournit ni sur son site, ni dans le guide de l'étudiant, une interface permettant de s'orienter vers une salle ou une ressource précise.
 
 \section{Description du problème}
-M. Chevallier souhaite mettre à disposition des utilisateurs et utilisatrices une interface interactive pour permettre la visualisation des salles et des plans de la \gls{heig-vd} pour les trois bâtiments du campus.
+M. le Prof. Y. Chevallier souhaite mettre à disposition des utilisateurs et utilisatrices une interface interactive pour permettre la visualisation des salles et des plans de la \gls{heig-vd} pour les trois bâtiments du campus.
 
 \chapter{Analyse}
 \section{Analyse fonctionnelle du système}
@@ -92,7 +92,7 @@ Ceux-ci ont été établis lors de la conception du schéma des cas d'utilisatio
 Celui-ci est en notation \gls{uml}, un des standards utilisés dans la modélisation d'application logiciel,
 et a été réalisé à l'aide de l'application web \gls{diagrams} \cite{diagrams}.
 
-\fig[width=7cm]{Schéma des cas d'utilisation}{useCaseDiagram.drawio.pdf}
+\fig[H, width=7cm]{Schéma des cas d'utilisation}{useCaseDiagram.drawio.pdf}
 
 Ce schéma présente les cas d'utilisation suivants :
 \begin{itemize}
@@ -529,7 +529,7 @@ Cela permet aussi d'éviter les erreurs lors d'insertions de données.
 
 \subsection{Schéma et choix}
 
-\fig[width=12cm]{Schéma conceptuel de la base de données}{DB_model.drawio.pdf}
+\fig[width=10cm]{Schéma conceptuel de la base de données}{DB_model.drawio.pdf}
 
 La conception de la base de données est représentée dans la Figure 3.3.
 Ce schéma a été conçu en notation \gls{uml}. On y aperçoit les cinq tables qui seront décrites ci-après.
@@ -695,9 +695,9 @@ De plus, des outils comme le menu de filtrage ou la recherche risquent de ne pas
 
 \subsection{Design global}
 
-\begin{figure}[h]
+\begin{figure}[H]
     \centering
-    \includegraphics[scale=0.4]{designGlobal.png}
+    \includegraphics[scale=0.35]{designGlobal.png}
     \caption{Design global}
     \label{fig:globalDesign}
 \end{figure}
@@ -720,7 +720,7 @@ Cette page permet d'accéder à plusieurs outils :
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=1]{designChangementEtage.png}
+    \includegraphics[scale=0.8]{designChangementEtage.png}
     \caption{Design de l'outil de changement d'étage}
     \label{fig:floorChange}
 \end{figure}
@@ -735,7 +735,7 @@ afin d'éviter une mauvaise utilisation de l'outil.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[scale=0.4]{designInfo.png}
+    \includegraphics[scale=0.35]{designInfo.png}
     \caption{Design de la fenêtre d'informations}
     \label{fig:infoPanel}
 \end{figure}
@@ -895,7 +895,7 @@ et database.js qui contient le code de connection à la base de données et les 
 
 \subsection{Communications}
 
-\fig[width=12cm]{Diagramme de séquence représentant les communications pour le serveur-api}{serverApi_sequenceDiagram.drawio.pdf}
+\fig[width=10cm]{Diagramme de séquence représentant les communications pour le serveur-api}{serverApi_sequenceDiagram.drawio.pdf}
 
 Le diagramme de la Figure 4.5 présente les communications entre le client web,
 le serveur-api, et la base de données. Le client web va d'abord faire une requête HTTP au serveur-api.
@@ -1292,7 +1292,7 @@ Il faudrait aussi soumettre l'application à un plus grand nombre d'utilisateurs
 \section{Critique de la méthode de travail}
 
 \subsection{Critique du temps accrédité au projet}
-Ce projet atteint 424.5 heures de travail au lieu des 450 heures requises au travail de Bachelor. Il accuse donc un manque de 25.5 heures.
+Ce projet atteint 427.5 heures de travail au lieu des 450 heures requises au travail de Bachelor. Il accuse donc un manque de 22.5 heures.
 Cela est dû à plusieurs facteurs :
 
 \begin{itemize}
@@ -1305,7 +1305,7 @@ Cela est dû à plusieurs facteurs :
 
 Une semaine d'extension a été accordée à l'accomplissement du projet, permettant la récupération de 40 heures.
 
-Au total, environ 52 heures ont été perdues. 26.5 heures ont pu être rattrapées.
+Au total, environ 52 heures ont été perdues. 29.5 heures ont pu être rattrapées.
 
 Certains éléments, comme la maladie, pourraient être comptabilisés comme imprévus et feraient partie des 90 heures planifiées.
 
@@ -1324,7 +1324,7 @@ La Table \ref{temps} compare la planification et le temps pris lors de la réali
             Traitement données    & 95       & 110.5   \\
             Développement         & 137      & 162     \\
             Déploiement           & 30       & 16      \\
-            Documentation         & 75       & 79.5    \\ \hline
+            Documentation         & 75       & 82.5    \\ \hline
             Total                 & 386      & 416
         \end{tabular}
         \caption{Tableau de comparaison entre planification et réalisation \label{temps}}
