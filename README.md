@@ -5,7 +5,6 @@ This project is an interactive map for the HEIG-VD school
 
 It contains four directories :
 - 01_doc is the administrative document for the project. 
-    - You can read the french report that explain the creation process [here]()
 - 02_plan isn't available on the public repository. It contains the geographical data used to create the application. 
 - 03_code contain the Server API, the frontend, and sqlScriptCreator, a program that convert an arborescence of files to SQL scripts.
     - [Frontend](https://gitlab.com/tb-heig/plan-heig-vd/-/tree/dev/03_code/frontend)
