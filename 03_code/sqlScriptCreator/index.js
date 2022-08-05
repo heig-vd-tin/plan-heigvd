@@ -23,7 +23,6 @@ function main () {
     // create the insert script
     const insert = insertDataIntoTables(inputPath, dbName)
     write(outputPath, '03_insert', insert)
-    // console.log(insert)
 }
 
 main()

@@ -163,7 +163,6 @@ function insertRoom(roomName, floorName, gis, data) {
     else {
         d = data.get(roomName)
     }
-    console.log(`${roomName} -> ${d}`)
     return `insert into room (name, second_name, type, surface, capacity, idx_floor, geometry) select '${roomName}',${d.secondName} , ${d.type}, ${d.surface}, ${d.capacity}, id, ST_GeomFromGeoJSON('${JSON.stringify(gis)}') from floor where name = '${floorName}';\n`
 }
 
