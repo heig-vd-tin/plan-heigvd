@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="Rq3qitw-6XwpDFZkV5MT" name="Page-1">
-        <mxGraphModel dx="461" dy="424" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="607" dy="464" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -10,7 +10,7 @@
                 <mxCell id="10" style="edgeStyle=none;html=1;entryX=0.869;entryY=0.992;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.86;exitY=-0.022;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-1" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="11" value="Envoi donnée&amp;nbsp;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="10" vertex="1" connectable="0">
+                <mxCell id="11" value="Envoi données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="10" vertex="1" connectable="0">
                     <mxGeometry x="-0.0929" y="-1" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
@@ -45,9 +45,9 @@
                 <mxCell id="12" style="edgeStyle=none;html=1;entryX=0.022;entryY=0.197;entryDx=0;entryDy=0;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-4" target="3" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="13" value="Demande données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="12" vertex="1" connectable="0">
+                <mxCell id="13" value="Demande les données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="12" vertex="1" connectable="0">
                     <mxGeometry x="-0.6644" relative="1" as="geometry">
-                        <mxPoint x="46" as="offset"/>
+                        <mxPoint x="46" y="-6" as="offset"/>
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="16" style="edgeStyle=none;html=1;exitX=-0.009;exitY=0.822;exitDx=0;exitDy=0;exitPerimeter=0;" parent="1" source="KsPwZzBYxA5jOOF4thBN-4" edge="1">
@@ -88,7 +88,7 @@
                 <mxCell id="8" style="edgeStyle=none;html=1;exitX=0.12;exitY=0.992;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.124;entryY=0.019;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="3" target="KsPwZzBYxA5jOOF4thBN-1" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="9" value="Demande donnée" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="8" vertex="1" connectable="0">
+                <mxCell id="9" value="Demande données" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" parent="8" vertex="1" connectable="0">
                     <mxGeometry x="-0.2629" relative="1" as="geometry">
                         <mxPoint as="offset"/>
                     </mxGeometry>
