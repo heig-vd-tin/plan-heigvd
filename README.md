@@ -1,5 +1,7 @@
 # Plan HEIG-VD
 
+![preview](assets/preview.png)
+
 ## Description
 
 This project is an interactive map for the **HEIG-VD** school
