@@ -1,0 +1,33 @@
+{
+  "name": "frontend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/free-solid-svg-icons": "^6.1.1",
+    "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "ol": "^6.14.1",
+    "pinia": "^2.0.14",
+    "vue": "^3.2.25"
+  },
+  "devDependencies": {
+    "@pinia/testing": "^0.0.12",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vue/test-utils": "^2.0.0-rc.18",
+    "cross-fetch": "^3.1.5",
+    "dotenv": "^16.0.1",
+    "jsdom": "^19.0.0",
+    "msw": "^0.42.0",
+    "typescript": "^4.5.4",
+    "vite": "^2.9.9",
+    "vitest": "^0.13.1",
+    "vue-tsc": "^0.34.7"
+  }
+}

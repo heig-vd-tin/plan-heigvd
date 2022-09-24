@@ -1,1 +1,0 @@
-CREATE DATABASE plan WITH OWNER "postgres"  ENCODING 'UTF8';
